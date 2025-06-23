@@ -1,6 +1,7 @@
 //Brian Sheppard
 //10/04/2014
 //Project 4. PP 4.1b
+//Released under the MIT License; see LICENSE for details.
 
 import java.util.Scanner;
 import java.text.DecimalFormat;
