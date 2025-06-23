@@ -4,40 +4,84 @@
 import java.text.DecimalFormat;
 
 
+/**
+ * Represents a sphere and provides methods for working with
+ * its diameter, surface area and volume.
+ */
 public class Sphere
 {
-   private double diameter, spherev, spherea;   
+   /** Current diameter of the sphere */
+   private double diameter;
+   /** Volume calculated with the initial diameter */
+   private double spherev;
+   /** Surface area calculated with the initial diameter */
+   private double spherea;
 
+   /**
+    * Creates a Sphere using the provided initial diameter.
+    * The constructor also precomputes the volume and area
+    * from this starting diameter.
+    *
+    * @param initial starting diameter value
+    */
    public Sphere (double initial)
    {
       diameter = initial;
       spherev = ((4.0/3.0) * Math.PI * Math.pow((0.5 * diameter), 3));
       spherea = (4.0 * Math.PI * Math.pow((0.5 * diameter), 2));
    }
-   public void setDiameter (double newdiameter)   
+
+   /**
+    * Updates the sphere's diameter.
+    *
+    * @param newdiameter the new diameter value
+    */
+   public void setDiameter (double newdiameter)
    {
       diameter = newdiameter;
    }
+
+   /**
+    * Retrieves the current diameter of the sphere.
+    *
+    * @return diameter value
+    */
    public double getDiameter ()
    {
       return diameter;
    }
+
+   /**
+    * Calculates the volume using the current diameter.
+    *
+    * @return sphere volume
+    */
    public double getVolume ()
-   {      
-      
-      
+   {
       double volume = (4.0/3.0) * Math.PI * Math.pow((0.5 * diameter), 3);
       return volume;
    }
+
+   /**
+    * Calculates the surface area using the current diameter.
+    *
+    * @return sphere surface area
+    */
    public double getArea ()
    {
       double area = 4.0 * Math.PI * Math.pow((0.5 * diameter), 2);
       return area;
    }
-    public String toString ()
+
+   /**
+    * Returns a string describing the initially computed
+    * volume and surface area.
+    */
+   public String toString ()
    {
       DecimalFormat fmt = new DecimalFormat ("0.###");
-   
-      return "a volume of " + fmt.format(spherev) + ", and an area of " + fmt.format(spherea) + ".";
+
+      return "a volume of " + fmt.format(spherev) +
+             ", and an area of " + fmt.format(spherea) + ".";
    }
 }
