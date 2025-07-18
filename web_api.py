@@ -757,4 +757,4 @@ if __name__ == "__main__":
     print("📚 API Documentation at: http://localhost:8000/api/docs")
     print("🎮 Interactive Demo at: http://localhost:8000/demo")
     
-    uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run(app, host="0.0.0.0", port=8000)

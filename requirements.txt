@@ -12,10 +12,11 @@ packaging>=25.0
 # All packages tested and working as of 2025-01-18
 
 # Optional dependencies for enhanced functionality
-# (commented out - will be added as we build web interface)
-# scipy>=1.14.0,<2.0.0
-# matplotlib>=3.8.0,<4.0.0
-# plotly>=5.22.0,<6.0.0
+# (required for web interface)
+scipy>=1.14.0,<2.0.0
+matplotlib>=3.8.0,<4.0.0
+plotly>=5.22.0,<6.0.0
+pandas>=2.0.0,<3.0.0
 
 # Development dependencies
 # (commented out - will be added for CI/CD)
@@ -24,11 +25,10 @@ packaging>=25.0
 # flake8>=7.0.0,<8.0.0
 # mypy>=1.11.0,<2.0.0
 
-# Web framework dependencies (for future web interface)
-# (commented out - will be added for web deployment)
-# fastapi>=0.115.0,<1.0.0
-# uvicorn>=0.32.0,<1.0.0
-# pydantic>=2.11.0,<3.0.0
+# Web framework dependencies (for web deployment)
+fastapi>=0.115.0,<1.0.0
+uvicorn>=0.32.0,<1.0.0
+pydantic>=2.11.0,<3.0.0
 
 # Note: Java dependencies managed separately via SDKMAN
 # - OpenJDK 11.0.21 (LTS)

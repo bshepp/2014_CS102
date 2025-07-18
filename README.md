@@ -26,6 +26,9 @@ This project has evolved from a simple 2014 CS102 sphere calculator into a compr
 - **Docker Support**: Containerized testing environment
 - **Security Scanning**: Automated vulnerability detection
 - **Performance Monitoring**: Benchmarking and optimization
+- **AWS Deployment**: Production-ready cloud infrastructure
+- **SSL Security**: HTTPS with custom domain
+- **Auto-scaling**: ECS Fargate with load balancing
 
 ## 📊 **Project Statistics**
 
@@ -77,6 +80,14 @@ This project has evolved from a simple 2014 CS102 sphere calculator into a compr
    ```
 
 ### **Web Interface**
+
+#### **Production (Live)**
+🌐 **https://geometry-engine-api.com**
+- **Interactive API**: `/api/docs` (Swagger UI)
+- **Alternative Docs**: `/api/redoc` (ReDoc)
+- **Health Check**: `/api/health`
+
+#### **Local Development**
 Access the web interface at `http://localhost:8000`
 - **Interactive API**: `/api/docs` (Swagger UI)
 - **Alternative Docs**: `/api/redoc` (ReDoc)
@@ -172,10 +183,34 @@ curl -X POST "http://localhost:8000/api/query" \
 - **Mathematical Modeling**: Advanced geometric analysis
 - **Machine Learning**: Feature space visualization
 
+## 🚀 **Production Deployment**
+
+### **AWS Infrastructure**
+- **Domain**: https://geometry-engine-api.com
+- **Platform**: AWS ECS Fargate with Application Load Balancer
+- **SSL**: Let's Encrypt certificate with auto-renewal
+- **Scaling**: Auto-scaling ECS service
+- **Monitoring**: CloudWatch logs and metrics
+- **Registry**: Amazon ECR for Docker images
+
+### **Deployment Features**
+- **Zero-downtime deployments**: Rolling updates with health checks
+- **SSL/TLS encryption**: HTTPS with HTTP redirect
+- **Load balancing**: Multi-AZ deployment with health checks
+- **Container orchestration**: ECS Fargate serverless containers
+- **DNS management**: Route 53 with custom domain
+
+### **Production Monitoring**
+- **Health checks**: `/api/health` endpoint
+- **Logging**: CloudWatch integration
+- **Metrics**: Container and application metrics
+- **Alerting**: CloudWatch alarms for failures
+
 ## 📈 **Evolution Timeline**
 
 - **2014**: Original CS102 sphere calculator (Java)
 - **2024**: Complete transformation to N-dimensional engine
+- **2025**: Production deployment on AWS
 - **Features Added**:
   - N-dimensional geometry support
   - Web interface with 3D/4D visualization
@@ -184,6 +219,7 @@ curl -X POST "http://localhost:8000/api/query" \
   - CI/CD pipeline and Docker support
   - Advanced tiling and tessellation
   - Mathematical accuracy verification
+  - Production AWS deployment
 
 ## 🛠️ **Development**
 
