@@ -13,10 +13,6 @@ public class Sphere
 {
    /** Current diameter of the sphere */
    private double diameter;
-   /** Volume calculated with the initial diameter */
-   private double spherev;
-   /** Surface area calculated with the initial diameter */
-   private double spherea;
 
    /**
     * Creates a Sphere using the provided initial diameter.
@@ -27,9 +23,7 @@ public class Sphere
     */
    public Sphere (double initial)
    {
-      diameter = initial;
-      spherev = ((4.0/3.0) * Math.PI * Math.pow((0.5 * diameter), 3));
-      spherea = (4.0 * Math.PI * Math.pow((0.5 * diameter), 2));
+      setDiameter(initial);
    }
 
    /**
@@ -39,6 +33,9 @@ public class Sphere
     */
    public void setDiameter (double newdiameter)
    {
+      if (newdiameter < 0) {
+         throw new IllegalArgumentException("Diameter cannot be negative");
+      }
       diameter = newdiameter;
    }
 
@@ -81,8 +78,7 @@ public class Sphere
    public String toString ()
    {
       DecimalFormat fmt = new DecimalFormat ("0.###");
-
-      return "a volume of " + fmt.format(spherev) +
-             ", and an area of " + fmt.format(spherea) + ".";
+   
+      return "a volume of " + fmt.format(getVolume()) + ", and an area of " + fmt.format(getArea()) + ".";
    }
 }
