@@ -297,4 +297,6 @@ If these solutions don't work:
 
 4. **Review the full error message** - often contains specific details about the issue
 
+5. **For AI collaboration troubleshooting** - Reference the `ai_cognitive_framework_geometry_engine.json` file which contains detailed patterns of successful collaboration, common troubleshooting approaches, and escalation strategies used by the GeometryOracle AI instance.
+
 Remember: Most issues are environment-related and can be resolved by recreating the virtual environment and reinstalling dependencies.

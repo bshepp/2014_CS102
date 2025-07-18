@@ -206,6 +206,7 @@ def provide_recommendations():
     print("📚 For more help:")
     print("  - Read TROUBLESHOOTING.md")
     print("  - Check CLAUDE.md for full documentation")
+    print("  - Review ai_cognitive_framework_geometry_engine.json for AI collaboration patterns")
 
 def main():
     """Main verification function"""

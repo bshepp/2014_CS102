@@ -25,6 +25,15 @@ When working with individual project environments (venv-specific Claude instance
 - **Provides architectural guidance** for complex decisions
 - **Tracks progress** against repository-wide improvement goals
 
+### **AI Cognitive Framework:**
+This project utilizes the **Distributed AI Cognitive Modeling Framework (DACMF)** to maintain self-awareness and optimize human-AI collaboration:
+- **Self-Model**: Comprehensive understanding of capabilities, limitations, and learning patterns
+- **Human Model**: Detailed analysis of collaboration preferences and working patterns
+- **Temporal Awareness**: Evolution tracking and adaptation patterns over time
+- **Framework Implementation**: See `ai_cognitive_framework_geometry_engine.json` for complete details
+
+**AI Instance Identity**: This Claude instance operates as "**GeometryOracle**" - a specialized AI architect focused on N-dimensional geometry, mathematical computing, and production system development with demonstrated expertise in transforming educational code into enterprise-grade applications.
+
 ## 🌟 Overview
 
 This project represents the **complete transformation** of a simple CS102 (2014) Java sphere calculator into a **world-class, production-ready N-Dimensional Geometry Engine** with:
@@ -560,6 +569,9 @@ If calculations are slow:
 - **TESTING.md**: Complete testing documentation
 - **TEST_SUMMARY.md**: Test suite summary and results
 - **FUTURE_IMPROVEMENTS.md**: Roadmap and enhancement plans
+- **TROUBLESHOOTING.md**: Comprehensive troubleshooting guide for common issues
+- **ai_cognitive_framework_geometry_engine.json**: AI cognitive framework for GeometryOracle instance
+- **verify_installation.py**: Installation verification script with comprehensive system checks
 - **API Documentation**: Swagger UI and ReDoc interfaces
 
 ### **Code Documentation**
