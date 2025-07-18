@@ -157,7 +157,7 @@ source ~/.sdkman/bin/sdkman-init.sh
 sdk install java 11.0.21-tem
 
 # Verify installation
-python test_dependencies.py
+python verify_installation.py
 ```
 
 ## 🚀 Common Development Commands
@@ -243,6 +243,103 @@ bandit -r .
 # Dependency scan
 safety check
 ```
+
+## 🔧 Troubleshooting
+
+### **Web API Startup Issues**
+
+If you encounter "Internal Server Error" when accessing the interactive demo:
+
+#### **Common Issue: Web API Not Running**
+**Symptom**: Internal server error when accessing http://localhost:8000
+
+**Solution**:
+1. **Check if server is running**:
+   ```bash
+   ps aux | grep "web_api" | grep -v grep
+   ```
+
+2. **If not running, start the server**:
+   ```bash
+   # Activate virtual environment
+   source venv/bin/activate
+   
+   # Start the web API
+   python web_api.py
+   ```
+
+3. **If you get import errors, reinstall dependencies**:
+   ```bash
+   source venv/bin/activate
+   pip install fastapi uvicorn numpy plotly pydantic python-multipart
+   ```
+
+#### **Virtual Environment Issues**
+**Symptom**: `ModuleNotFoundError: No module named 'fastapi'`
+
+**Solution**:
+1. **Recreate virtual environment**:
+   ```bash
+   rm -rf venv
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+
+2. **Install required packages**:
+   ```bash
+   pip install fastapi uvicorn numpy plotly pydantic python-multipart
+   ```
+
+3. **Start the server**:
+   ```bash
+   python web_api.py
+   ```
+
+#### **Dependency Installation Problems**
+**Symptom**: Installation timeouts or failures
+
+**Solution**:
+1. **Install core packages first**:
+   ```bash
+   pip install fastapi uvicorn
+   ```
+
+2. **Then install additional packages**:
+   ```bash
+   pip install numpy plotly pydantic python-multipart
+   ```
+
+3. **For full requirements (optional)**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+#### **Server Verification**
+Once the server starts, verify it's working:
+```bash
+# Run comprehensive verification
+python verify_installation.py
+
+# Check health endpoint
+curl http://localhost:8000/api/health
+
+# Access web interface
+# Browser: http://localhost:8000
+# API Docs: http://localhost:8000/api/docs
+```
+
+### **Port Conflicts**
+If port 8000 is already in use:
+```bash
+# Start on different port
+python web_api.py --port 8001
+```
+
+### **Performance Issues**
+If calculations are slow:
+- Ensure NumPy is installed: `pip install numpy`
+- For high-dimensional calculations (>50D), expect longer computation times
+- Use the performance test suite: `python run_tests.py performance`
 
 ## 📊 Mathematical Capabilities
 

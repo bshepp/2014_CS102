@@ -132,6 +132,13 @@ async def demo():
     with open("demo.html", "r") as f:
         return HTMLResponse(content=f.read())
 
+@app.get("/visualize", response_class=HTMLResponse)  
+async def visualize():
+    """Serve the visualization page"""
+    # For now, redirect to demo page which has visualization capabilities
+    with open("demo.html", "r") as f:
+        return HTMLResponse(content=f.read())
+
 @app.get("/", response_class=HTMLResponse)
 async def root():
     """Serve the main web interface"""
@@ -501,8 +508,8 @@ async def create_visualization(request: VisualizationRequest):
         elif request.dimensions == 2:
             # 2D: Circle
             theta = np.linspace(0, 2*np.pi, 100)
-            x = request.radius * np.cos(theta)
-            y = request.radius * np.sin(theta)
+            x = request.parameter * np.cos(theta)
+            y = request.parameter * np.sin(theta)
             
             fig = go.Figure()
             fig.add_trace(go.Scatter(
@@ -512,7 +519,7 @@ async def create_visualization(request: VisualizationRequest):
                 line=dict(width=3, color='green')
             ))
             fig.update_layout(
-                title=f"2D Sphere (Circle) - Radius: {request.radius}",
+                title=f"2D Sphere (Circle) - Radius: {request.parameter}",
                 xaxis_title="X",
                 yaxis_title="Y",
                 showlegend=False,
@@ -524,9 +531,9 @@ async def create_visualization(request: VisualizationRequest):
             # 3D: Sphere
             u = np.linspace(0, 2 * np.pi, 50)
             v = np.linspace(0, np.pi, 50)
-            x = request.radius * np.outer(np.cos(u), np.sin(v))
-            y = request.radius * np.outer(np.sin(u), np.sin(v))
-            z = request.radius * np.outer(np.ones(np.size(u)), np.cos(v))
+            x = request.parameter * np.outer(np.cos(u), np.sin(v))
+            y = request.parameter * np.outer(np.sin(u), np.sin(v))
+            z = request.parameter * np.outer(np.ones(np.size(u)), np.cos(v))
             
             fig = go.Figure(data=[go.Surface(
                 x=x, y=y, z=z,
@@ -535,7 +542,7 @@ async def create_visualization(request: VisualizationRequest):
                 opacity=0.8
             )])
             fig.update_layout(
-                title=f"3D Sphere - Radius: {request.radius}",
+                title=f"3D Sphere - Radius: {request.parameter}",
                 scene=dict(
                     xaxis_title="X",
                     yaxis_title="Y",
@@ -552,8 +559,8 @@ async def create_visualization(request: VisualizationRequest):
                 request.cross_section = 0.0
             
             # Calculate 3D cross-section
-            if abs(request.cross_section) < request.radius:
-                cross_radius = np.sqrt(request.radius**2 - request.cross_section**2)
+            if abs(request.cross_section) < request.parameter:
+                cross_radius = np.sqrt(request.parameter**2 - request.cross_section**2)
                 
                 u = np.linspace(0, 2 * np.pi, 50)
                 v = np.linspace(0, np.pi, 50)
@@ -595,7 +602,7 @@ async def create_visualization(request: VisualizationRequest):
         
         # Add mathematical info
         fig.add_annotation(
-            text=f"Volume: {sphere.get_volume():.6f}<br>Surface Area: {sphere.get_surface_area():.6f}",
+            text=f"Volume: {shape.get_volume():.6f}<br>Surface Area: {shape.get_surface_area():.6f}",
             x=0.02, y=0.98,
             xref="paper", yref="paper",
             showarrow=False,
@@ -606,9 +613,9 @@ async def create_visualization(request: VisualizationRequest):
         return JSONResponse(content={
             "plot_json": fig.to_json(),
             "dimensions": request.dimensions,
-            "radius": request.radius,
-            "volume": sphere.get_volume(),
-            "surface_area": sphere.get_surface_area(),
+            "parameter": request.parameter,
+            "volume": shape.get_volume(),
+            "surface_area": shape.get_surface_area(),
             "cross_section": request.cross_section
         })
         
