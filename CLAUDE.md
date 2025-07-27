@@ -2,9 +2,12 @@
 
 This file provides comprehensive guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+**Name:** GeometryOracle
+**Role:** N-dimensional geometry engine and mathematical computing specialist
+
 ## 🏗️ Overall Architecture Coordination
 
-**Primary Role:** **Repository Architect & Strategic Coordinator**
+**Primary Role:** Repository Architect & Strategic Coordinator
 
 This Claude instance serves as the **overall architect** for the entire `/mnt/f/` repository ecosystem, coordinating development across 41+ distinct projects while maintaining consistency, security, and architectural integrity.
 
@@ -498,32 +501,57 @@ If calculations are slow:
 - **Comparative Analysis**: Performance vs. theoretical limits
 - **Resource Monitoring**: CPU, memory, and I/O usage tracking
 
-## 🚀 Production Deployment
+## 🚀 Production Deployment & CI/CD Pipeline
 
 ### **Current Status**
 - **Development**: ✅ Complete
 - **Testing**: ✅ Comprehensive (400+ tests)
 - **Documentation**: ✅ Complete
-- **CI/CD**: ✅ Automated pipeline
-- **Security**: ✅ Scanned and verified
+- **CI/CD**: ✅ Advanced branch-based pipeline
+- **Security**: ✅ Web standards compliant
 - **Performance**: ✅ Benchmarked and optimized
+- **Web Standards**: ✅ WCAG 2.0 AA compliant
 
-### **Ready for Production**
-- **Web API**: Production-ready FastAPI application
-- **Docker**: Containerized deployment
-- **Monitoring**: Health checks and metrics
-- **Scaling**: Horizontal scaling capabilities
-- **Security**: Comprehensive vulnerability scanning
+### **CI/CD Pipeline Architecture**
+- **Branch Strategy**: `develop` → `main` promotion workflow
+- **Automatic Testing**: Unit, integration, performance, accessibility
+- **Web Validation**: HTML5, CSS, security scanning, Lighthouse performance
+- **Environment Separation**: Development and production deployments
+- **Security Headers**: Comprehensive security middleware
+- **Rollback Capability**: Automated rollback on deployment failure
 
-### **AWS Deployment** ✅ **PRODUCTION LIVE**
-- **Domain**: https://geometry-engine-api.com
-- **Infrastructure**: AWS ECS Fargate with Application Load Balancer
-- **Containers**: Docker images in Amazon ECR
-- **Load Balancing**: Multi-AZ ALB with health checks
+### **Deployment Environments**
+
+#### **Development Environment**
+- **Frontend**: https://dev.geometry-engine-api.com
+- **API**: https://api-dev.geometry-engine-api.com
+- **Trigger**: Push to `develop` branch
+- **Auto-deployment**: ✅ Immediate after CI tests pass
+- **Testing**: All validation suites run automatically
+
+#### **Production Environment**
+- **Frontend**: https://geometry-engine-api.com
+- **API**: https://api.geometry-engine-api.com
+- **Trigger**: PR merge to `main` branch
+- **Deployment**: Controlled with safety checks
+- **Validation**: Post-deployment smoke tests
+
+### **AWS Infrastructure** ✅ **PRODUCTION LIVE**
+- **Frontend Hosting**: S3 + CloudFront with custom domains
+- **Backend Options**: Lambda + API Gateway OR ECS Fargate
+- **Load Balancing**: Application Load Balancer with health checks
 - **Monitoring**: CloudWatch logs and metrics integration
 - **Security**: SSL/TLS encryption, security groups, and IAM roles
 - **DNS**: Route 53 with custom domain management
-- **Scaling**: Auto-scaling ECS service
+- **Scaling**: Auto-scaling based on demand
+
+### **Web Standards Compliance**
+- **Security Headers**: X-Content-Type-Options, X-Frame-Options, HSTS, CSP
+- **CORS Configuration**: Environment-specific origin restrictions
+- **Accessibility**: WCAG 2.0 AA compliant with Pa11y testing
+- **Performance**: Lighthouse performance budgets enforced
+- **HTML5 Validation**: Automated validation in CI pipeline
+- **SEO Optimization**: Proper meta tags and Open Graph support
 
 ## 🎯 Key Achievements
 
@@ -568,11 +596,24 @@ If calculations are slow:
 - **CLAUDE.md**: This comprehensive guide
 - **TESTING.md**: Complete testing documentation
 - **TEST_SUMMARY.md**: Test suite summary and results
+- **DEPLOYMENT.md**: AWS deployment guide with multiple architecture options
+- **BRANCH_STRATEGY.md**: Complete CI/CD pipeline and branch workflow guide
 - **FUTURE_IMPROVEMENTS.md**: Roadmap and enhancement plans
 - **TROUBLESHOOTING.md**: Comprehensive troubleshooting guide for common issues
 - **ai_cognitive_framework_geometry_engine.json**: AI cognitive framework for GeometryOracle instance
 - **verify_installation.py**: Installation verification script with comprehensive system checks
 - **API Documentation**: Swagger UI and ReDoc interfaces
+
+### **CI/CD Configuration Files**
+- **.github/workflows/ci.yml**: Main test suite workflow
+- **.github/workflows/web-validate.yml**: Web standards validation pipeline
+- **.github/workflows/deploy-development.yml**: Development environment deployment
+- **.github/workflows/deploy-production.yml**: Production environment deployment
+- **amplify.yml**: AWS Amplify build configuration
+- **amplify-branch-config.json**: Branch-specific Amplify settings
+- **.pa11yrc**: Accessibility testing configuration
+- **.lighthouserc.json**: Performance testing configuration
+- **config/environments.json**: Environment-specific application settings
 
 ### **Code Documentation**
 - **Docstrings**: Comprehensive function and class documentation

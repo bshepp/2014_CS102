@@ -3,6 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Interactive N-Dimensional Geometry Engine - Transform CS102 sphere calculations into infinite dimensions with AI-powered natural language queries">
+    <meta name="keywords" content="geometry, n-dimensional, hypersphere, mathematics, education, CS102">
+    <meta name="author" content="N-Dimensional Geometry Engine Team">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="N-Dimensional Geometry Engine">
+    <meta property="og:description" content="Interactive geometry calculator supporting 1D to 100D+ shapes with AI assistance">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://geometry-engine-api.com">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="N-Dimensional Geometry Engine">
+    <meta name="twitter:description" content="Interactive geometry calculator supporting 1D to 100D+ shapes">
     <title>N-Dimensional Geometry Engine - Interactive Demo</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
@@ -198,24 +209,24 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
+        <header class="header" role="banner">
             <h1>🌌 N-Dimensional Geometry Engine</h1>
             <p>Interactive Demo - From CS102 to Infinite Dimensions</p>
-        </div>
+        </header>
         
-        <div class="demo-grid">
+        <main class="demo-grid" role="main">
             <!-- Sphere Creator Panel -->
             <div class="panel">
                 <h2>🔢 Create N-Dimensional Sphere</h2>
                 <div class="input-group">
                     <label for="dimensions">Dimensions (1-100):</label>
-                    <input type="number" id="dimensions" min="1" max="100" value="3" />
+                    <input type="number" id="dimensions" min="1" max="100" value="3" aria-label="Number of dimensions for the sphere" />
                 </div>
                 <div class="input-group">
                     <label for="radius">Radius:</label>
-                    <input type="number" id="radius" min="0.1" step="0.1" value="1.0" />
+                    <input type="number" id="radius" min="0.1" step="0.1" value="1.0" aria-label="Radius of the sphere" />
                 </div>
-                <button class="btn" onclick="createSphere()">Create Sphere</button>
+                <button class="btn" onclick="createSphere()" aria-label="Create N-dimensional sphere">Create Sphere</button>
                 <div id="sphereResult" class="result" style="display: none;"></div>
             </div>
             
@@ -224,13 +235,13 @@
                 <h2>🤖 AI Query Interface</h2>
                 <div class="input-group">
                     <label for="nlQuery">Ask anything about geometry:</label>
-                    <textarea id="nlQuery" rows="3" placeholder="Examples:
+                    <textarea id="nlQuery" rows="3" aria-label="Natural language geometry query" placeholder="Examples:
 • create a 5D sphere with radius 2
 • volume of 4D sphere radius 1.5
 • compare sphere vs cube in 6 dimensions
 • explain how volume scales with dimension"></textarea>
                 </div>
-                <button class="btn btn-secondary" onclick="processQuery()">Ask AI</button>
+                <button class="btn btn-secondary" onclick="processQuery()" aria-label="Submit query to AI">Ask AI</button>
                 <div id="queryResult" class="result" style="display: none;"></div>
             </div>
             
@@ -239,9 +250,9 @@
                 <h2>☕ Original CS102 Java Code</h2>
                 <div class="input-group">
                     <label for="diameter">Diameter (for original code):</label>
-                    <input type="number" id="diameter" min="0.1" step="0.1" value="2.0" />
+                    <input type="number" id="diameter" min="0.1" step="0.1" value="2.0" aria-label="Diameter for original Java code" />
                 </div>
-                <button class="btn btn-warning" onclick="runOriginalJava()">Run Original Java</button>
+                <button class="btn btn-warning" onclick="runOriginalJava()" aria-label="Run original CS102 Java code">Run Original Java</button>
                 <div id="javaResult" class="result" style="display: none;"></div>
             </div>
             
@@ -250,9 +261,9 @@
                 <h2>📊 Dimension Explorer</h2>
                 <div class="input-group">
                     <label for="exploreDim">Explore dimension:</label>
-                    <input type="number" id="exploreDim" min="1" max="100" value="5" />
+                    <input type="number" id="exploreDim" min="1" max="100" value="5" aria-label="Dimension to explore" />
                 </div>
-                <button class="btn" onclick="exploreDimension()">Explore</button>
+                <button class="btn" onclick="exploreDimension()" aria-label="Explore selected dimension">Explore</button>
                 <div id="dimensionResult" class="result" style="display: none;"></div>
             </div>
             
@@ -261,7 +272,7 @@
                 <h2>📈 Interactive Visualization</h2>
                 <div class="input-group">
                     <label for="vizDim">Visualization Dimensions (1-4):</label>
-                    <select id="vizDim">
+                    <select id="vizDim" aria-label="Visualization dimensions">
                         <option value="1">1D - Line Segment</option>
                         <option value="2">2D - Circle</option>
                         <option value="3" selected>3D - Sphere</option>
@@ -270,23 +281,23 @@
                 </div>
                 <div class="input-group">
                     <label for="vizRadius">Radius:</label>
-                    <input type="number" id="vizRadius" min="0.1" step="0.1" value="1.0" />
+                    <input type="number" id="vizRadius" min="0.1" step="0.1" value="1.0" aria-label="Radius for visualization" />
                 </div>
                 <div class="input-group" id="crossSectionGroup" style="display: none;">
                     <label for="crossSection">Cross-section position (for 4D):</label>
-                    <input type="number" id="crossSection" step="0.1" value="0.0" />
+                    <input type="number" id="crossSection" step="0.1" value="0.0" aria-label="Cross-section position for 4D visualization" />
                 </div>
-                <button class="btn btn-secondary" onclick="createVisualization()">Visualize</button>
-                <div id="visualization" style="margin-top: 20px;"></div>
+                <button class="btn btn-secondary" onclick="createVisualization()" aria-label="Create visualization">Visualize</button>
+                <div id="visualization" style="margin-top: 20px;" role="img" aria-label="Geometry visualization"></div>
             </div>
-        </div>
+        </main>
         
         <!-- Quick Stats Panel -->
         <div class="panel">
             <h2>⚡ Quick Dimensional Comparison</h2>
             <div class="dimension-slider">
                 <label for="dimSlider">Dimension: <span id="dimValue">3</span></label>
-                <input type="range" id="dimSlider" min="1" max="20" value="3" oninput="updateDimensionComparison()" />
+                <input type="range" id="dimSlider" min="1" max="20" value="3" oninput="updateDimensionComparison()" aria-label="Dimension slider" />
             </div>
             <div id="dimensionInfo" class="dimension-info">
                 <!-- Populated by JavaScript -->

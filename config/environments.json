@@ -1,0 +1,106 @@
+{
+  "development": {
+    "name": "Development",
+    "api": {
+      "endpoint": "https://api-dev.geometry-engine-api.com",
+      "timeout": 30000,
+      "retries": 3
+    },
+    "frontend": {
+      "url": "https://dev.geometry-engine-api.com",
+      "cdn": "https://d1234567890.cloudfront.net"
+    },
+    "cors": {
+      "origins": [
+        "https://dev.geometry-engine-api.com",
+        "http://localhost:8000",
+        "http://localhost:3000"
+      ],
+      "credentials": true,
+      "methods": ["GET", "POST", "OPTIONS"],
+      "headers": ["Content-Type", "Authorization"]
+    },
+    "features": {
+      "debug": true,
+      "verbose_logging": true,
+      "performance_monitoring": true,
+      "error_tracking": true
+    },
+    "aws": {
+      "region": "us-east-1",
+      "s3_bucket": "geometry-engine-frontend-dev",
+      "cloudfront_id": "E1234567890DEV",
+      "lambda_function": "geometry-engine-api-dev",
+      "ecs_cluster": "geometry-engine-dev",
+      "ecs_service": "geometry-engine-api-dev"
+    }
+  },
+  "production": {
+    "name": "Production",
+    "api": {
+      "endpoint": "https://api.geometry-engine-api.com",
+      "timeout": 15000,
+      "retries": 5
+    },
+    "frontend": {
+      "url": "https://geometry-engine-api.com",
+      "cdn": "https://d0987654321.cloudfront.net"
+    },
+    "cors": {
+      "origins": [
+        "https://geometry-engine-api.com",
+        "https://www.geometry-engine-api.com"
+      ],
+      "credentials": true,
+      "methods": ["GET", "POST", "OPTIONS"],
+      "headers": ["Content-Type", "Authorization"],
+      "maxAge": 86400
+    },
+    "features": {
+      "debug": false,
+      "verbose_logging": false,
+      "performance_monitoring": true,
+      "error_tracking": true
+    },
+    "aws": {
+      "region": "us-east-1",
+      "s3_bucket": "geometry-engine-frontend-prod",
+      "cloudfront_id": "E0987654321PROD",
+      "lambda_function": "geometry-engine-api-prod",
+      "ecs_cluster": "geometry-engine-prod",
+      "ecs_service": "geometry-engine-api-prod"
+    }
+  },
+  "local": {
+    "name": "Local Development",
+    "api": {
+      "endpoint": "http://localhost:8000",
+      "timeout": 60000,
+      "retries": 1
+    },
+    "frontend": {
+      "url": "http://localhost:8000",
+      "cdn": null
+    },
+    "cors": {
+      "origins": ["*"],
+      "credentials": true,
+      "methods": ["*"],
+      "headers": ["*"]
+    },
+    "features": {
+      "debug": true,
+      "verbose_logging": true,
+      "performance_monitoring": false,
+      "error_tracking": false
+    },
+    "aws": {
+      "region": "us-east-1",
+      "s3_bucket": null,
+      "cloudfront_id": null,
+      "lambda_function": null,
+      "ecs_cluster": null,
+      "ecs_service": null
+    }
+  }
+}

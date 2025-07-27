@@ -28,13 +28,55 @@ app = FastAPI(
     redoc_url="/api/redoc"
 )
 
+# Security headers middleware
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request
+from starlette.responses import Response
+
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        response = await call_next(request)
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["X-XSS-Protection"] = "1; mode=block"
+        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response.headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()"
+        return response
+
+app.add_middleware(SecurityHeadersMiddleware)
+
+# Load environment configuration
+import os
+import json
+
+ENVIRONMENT = os.getenv("ENVIRONMENT", "local")
+
+# Load environment-specific configuration
+config_path = os.path.join(os.path.dirname(__file__), "config", "environments.json")
+if os.path.exists(config_path):
+    with open(config_path, "r") as f:
+        ENV_CONFIG = json.load(f).get(ENVIRONMENT, {})
+else:
+    # Fallback configuration
+    ENV_CONFIG = {
+        "cors": {
+            "origins": ["*"],
+            "credentials": True,
+            "methods": ["GET", "POST", "OPTIONS"],
+            "headers": ["Content-Type", "Authorization"],
+            "maxAge": 3600
+        }
+    }
+
 # Enable CORS for frontend integration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure appropriately for production
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=ENV_CONFIG["cors"]["origins"],
+    allow_credentials=ENV_CONFIG["cors"]["credentials"],
+    allow_methods=ENV_CONFIG["cors"]["methods"],
+    allow_headers=ENV_CONFIG["cors"]["headers"],
+    max_age=ENV_CONFIG["cors"].get("maxAge", 3600),
 )
 
 # Initialize geometry agent

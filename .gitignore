@@ -18,6 +18,27 @@ $RECYCLE.BIN/
 # Operating System Files
 # =========================
 
+# ===== CAF Privacy Layer - GeometryOracle Protection =====
+# Protects GeometryOracle's cognitive development from version control
+
+# Core cognitive framework
+cognitive-framework/cognitive-framework.json
+
+# Private development notes
+private-notes/
+
+# Session logs with debugging context
+session-logs/
+
+# Evolution tracking data
+evolution-tracking/
+
+# Health monitoring
+monitoring-framework/entity-health-tracker.json
+
+# Architectural insights and experiments
+architectural-insights/private-*
+
 # OSX
 # =========================
 
@@ -116,3 +137,33 @@ Thumbs.db
 # Project specific
 test-reports/
 *.class
+
+# AWS and deployment artifacts
+lambda-deployment*.zip
+lambda_package/
+build/
+amplify-backup.json
+
+# CI/CD artifacts
+.lighthouseci/
+pa11y-results.json
+pa11y-screenshot.png
+bandit-report.json
+safety-report.json
+
+# Node.js (for web validation tools)
+node_modules/
+package-lock.json
+npm-debug.log*
+
+# Environment-specific configs (keep templates)
+config/environments.local.json
+amplify.local.yml
+
+# Security scan results
+*.sarif
+security-reports/
+
+# Performance test results
+benchmark-results/
+lighthouse-reports/
