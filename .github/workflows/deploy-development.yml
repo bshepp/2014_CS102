@@ -1,245 +1,202 @@
-name: 🚀 Deploy to Development
+name: Deploy to Development
 
 on:
   push:
-    branches: [ develop, development ]
-  pull_request:
-    branches: [ develop, development ]
-    types: [ closed ]
+    branches: [ develop ]
 
 env:
   AWS_REGION: us-east-1
-  NODE_VERSION: '18'
-  PYTHON_VERSION: '3.11'
-
+  
 jobs:
-  # Run all tests first
-  test-suite:
-    name: 🧪 Run Test Suite
-    uses: ./.github/workflows/ci.yml
-    secrets: inherit
-
-  # Web standards validation
-  web-validation:
-    name: 🌐 Web Standards Check
-    uses: ./.github/workflows/web-validate.yml
-    secrets: inherit
-
-  # Deploy Frontend to Dev Environment
-  deploy-frontend-dev:
-    name: 🎨 Deploy Frontend to Dev
-    needs: [test-suite, web-validation]
-    if: success() && github.event_name == 'push'
+  test:
     runs-on: ubuntu-latest
-    
     steps:
-      - name: 📥 Checkout Code
-        uses: actions/checkout@v4
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+    
+    - name: Run tests
+      run: |
+        python run_tests.py
+    
+    - name: Web validation
+      run: |
+        python web_api.py &
+        sleep 10
+        curl -f http://localhost:8000/api/health
+
+  deploy-frontend:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+    
+    - name: Deploy static files to S3
+      run: |
+        # Copy static files to S3 bucket
+        aws s3 sync demo.html s3://geometry-engine-frontend-dev/
+        aws s3 cp demo.html s3://geometry-engine-frontend-dev/index.html
+    
+    - name: Invalidate CloudFront cache
+      run: |
+        aws cloudfront create-invalidation \
+          --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_DEV }} \
+          --paths "/*"
+
+  deploy-backend-lambda:
+    needs: test
+    runs-on: ubuntu-latest
+    if: vars.BACKEND_TYPE == 'lambda'
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+    
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Create deployment package
+      run: |
+        mkdir lambda_package
+        pip install -r requirements.txt -t lambda_package/
+        cp web_api.py geometry_engine.py lambda_package/
         
-      - name: 🔧 Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-      
-      - name: 📦 Prepare Frontend Assets
-        run: |
-          # Create build directory
-          mkdir -p build
-          
-          # Copy frontend files
-          cp demo.html build/index.html
-          cp -r *.css *.js *.png *.jpg *.svg *.ico build/ 2>/dev/null || true
-          
-          # Update API endpoint for development
-          sed -i "s|http://localhost:8000/api|https://api-dev.geometry-engine-api.com/api|g" build/index.html
-          
-      - name: 🚀 Deploy to S3 (Dev)
-        run: |
-          # Sync to development S3 bucket
-          aws s3 sync build/ s3://geometry-engine-frontend-dev \
-            --delete \
-            --cache-control "public, max-age=3600" \
-            --exclude "*.map" \
-            --exclude ".git/*"
-      
-      - name: 🔄 Invalidate CloudFront (Dev)
-        run: |
-          aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_DEV }} \
-            --paths "/*"
-      
-      - name: ✅ Frontend Deployment Complete
-        run: |
-          echo "🎉 Frontend deployed to development!"
-          echo "🌐 URL: https://dev.geometry-engine-api.com"
-
-  # Deploy Backend API to Dev Environment
-  deploy-backend-dev:
-    name: 🔧 Deploy Backend API to Dev
-    needs: [test-suite, web-validation]
-    if: success() && github.event_name == 'push'
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: 📥 Checkout Code
-        uses: actions/checkout@v4
+        # Add Lambda handler
+        echo "
+        from mangum import Mangum
+        handler = Mangum(app)
+        " >> lambda_package/web_api.py
         
-      - name: 🐍 Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-      
-      - name: 🔧 Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-      
-      # Option A: Lambda Deployment
-      - name: 📦 Package Lambda Function
-        if: ${{ vars.BACKEND_TYPE == 'lambda' }}
-        run: |
-          # Install dependencies
-          pip install -r requirements.txt -t lambda_package/
-          pip install mangum -t lambda_package/
-          
-          # Copy application files
-          cp web_api.py geometry_engine.py lambda_package/
-          
-          # Add Lambda handler
-          echo "from mangum import Mangum" >> lambda_package/web_api.py
-          echo "handler = Mangum(app)" >> lambda_package/web_api.py
-          
-          # Create deployment package
-          cd lambda_package
-          zip -r ../lambda-deployment.zip .
-          cd ..
-      
-      - name: 🚀 Deploy to Lambda (Dev)
-        if: ${{ vars.BACKEND_TYPE == 'lambda' }}
-        run: |
-          aws lambda update-function-code \
-            --function-name geometry-engine-api-dev \
-            --zip-file fileb://lambda-deployment.zip
-          
-          # Update environment variables
-          aws lambda update-function-configuration \
-            --function-name geometry-engine-api-dev \
-            --environment Variables="{
-              ENVIRONMENT=development,
-              CORS_ORIGINS='https://dev.geometry-engine-api.com,http://localhost:8000'
-            }"
-      
-      # Option B: ECS Deployment
-      - name: 🐳 Build Docker Image
-        if: ${{ vars.BACKEND_TYPE == 'ecs' }}
-        run: |
-          docker build -t geometry-engine-api:dev .
-          
-      - name: 📤 Push to ECR
-        if: ${{ vars.BACKEND_TYPE == 'ecs' }}
-        run: |
-          aws ecr get-login-password --region ${{ env.AWS_REGION }} | \
-            docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
-          
-          docker tag geometry-engine-api:dev \
-            ${{ secrets.ECR_REGISTRY }}/geometry-engine-api:dev-${{ github.sha }}
-          
-          docker push ${{ secrets.ECR_REGISTRY }}/geometry-engine-api:dev-${{ github.sha }}
-      
-      - name: 🔄 Update ECS Service (Dev)
-        if: ${{ vars.BACKEND_TYPE == 'ecs' }}
-        run: |
-          # Update task definition
-          aws ecs register-task-definition \
-            --family geometry-engine-api-dev \
-            --container-definitions "[{
-              \"name\": \"geometry-engine-api\",
-              \"image\": \"${{ secrets.ECR_REGISTRY }}/geometry-engine-api:dev-${{ github.sha }}\",
-              \"environment\": [
-                {\"name\": \"ENVIRONMENT\", \"value\": \"development\"},
-                {\"name\": \"CORS_ORIGINS\", \"value\": \"https://dev.geometry-engine-api.com\"}
-              ]
-            }]"
-          
-          # Update service
-          aws ecs update-service \
-            --cluster geometry-engine-dev \
-            --service geometry-engine-api-dev \
-            --force-new-deployment
-      
-      - name: ✅ Backend Deployment Complete
-        run: |
-          echo "🎉 Backend API deployed to development!"
-          echo "🔧 API URL: https://api-dev.geometry-engine-api.com"
-
-  # Create PR to Production branch
-  create-production-pr:
-    name: 📋 Create Production PR
-    needs: [deploy-frontend-dev, deploy-backend-dev]
-    if: success()
-    runs-on: ubuntu-latest
+        # Create zip
+        cd lambda_package
+        zip -r ../lambda-deployment-dev.zip .
+        cd ..
     
-    steps:
-      - name: 📥 Checkout Code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      
-      - name: 📝 Create Pull Request
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: auto-deploy/dev-to-prod-${{ github.run_number }}
-          base: main
-          title: "🚀 Deploy to Production - Development Build #${{ github.run_number }}"
-          body: |
-            ## 🎯 Automated Production Deployment Request
-            
-            This PR was automatically created after successful deployment to development.
-            
-            ### ✅ Development Validation Passed:
-            - All tests passed (unit, integration, performance)
-            - Web standards validation passed
-            - Frontend deployed to: https://dev.geometry-engine-api.com
-            - Backend API deployed to: https://api-dev.geometry-engine-api.com
-            
-            ### 📊 Test Results:
-            - Test Suite: ✅ Passed
-            - Web Validation: ✅ Passed
-            - Accessibility: ✅ WCAG 2.0 AA Compliant
-            - Performance: ✅ Lighthouse score > 80
-            
-            ### 🔄 Changes:
-            ${{ github.event.head_commit.message }}
-            
-            ### 🚦 Next Steps:
-            1. Review changes in development environment
-            2. Approve this PR to trigger production deployment
-            3. Monitor production deployment status
-            
-            ---
-            🤖 *This PR was automatically generated by the CI/CD pipeline*
-          labels: |
-            deployment
-            automated
-            production-ready
-          assignees: ${{ github.actor }}
+    - name: Deploy to Lambda
+      run: |
+        aws lambda update-function-code \
+          --function-name geometry-engine-api-dev \
+          --zip-file fileb://lambda-deployment-dev.zip
 
-  # Notification
-  notify-success:
-    name: 📢 Notify Success
-    needs: [deploy-frontend-dev, deploy-backend-dev]
-    if: success()
-    runs-on: ubuntu-latest
-    
+  deploy-backend-ecs:
+    needs: test
+    runs-on: ubuntu-latest  
+    if: vars.BACKEND_TYPE == 'ecs'
     steps:
-      - name: 📨 Send Notification
-        run: |
-          echo "::notice title=Development Deployment Complete::Frontend and Backend successfully deployed to development environment"
-          echo "Frontend: https://dev.geometry-engine-api.com"
-          echo "API: https://api-dev.geometry-engine-api.com"
-          echo "Production PR created for review"
+    - uses: actions/checkout@v4
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+    
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+    
+    - name: Build, tag, and push image to Amazon ECR
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: geometry-engine-api
+        IMAGE_TAG: dev-${{ github.sha }}
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+    
+    - name: Update ECS service
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: geometry-engine-api
+        IMAGE_TAG: dev-${{ github.sha }}
+      run: |
+        # Update task definition with new image
+        aws ecs describe-task-definition \
+          --task-definition geometry-engine-api-dev \
+          --query taskDefinition > task-def.json
+        
+        # Update image URI in task definition
+        jq --arg IMAGE "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" \
+          '.containerDefinitions[0].image = $IMAGE' task-def.json > new-task-def.json
+        
+        # Register new task definition
+        aws ecs register-task-definition \
+          --cli-input-json file://new-task-def.json
+        
+        # Update service
+        aws ecs update-service \
+          --cluster geometry-engine-dev \
+          --service geometry-engine-api-dev \
+          --task-definition geometry-engine-api-dev
+
+  create-pr-to-production:
+    needs: [deploy-frontend, deploy-backend-lambda, deploy-backend-ecs]
+    if: always() && (needs.deploy-frontend.result == 'success' && (needs.deploy-backend-lambda.result == 'success' || needs.deploy-backend-lambda.result == 'skipped') && (needs.deploy-backend-ecs.result == 'success' || needs.deploy-backend-ecs.result == 'skipped'))
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+    
+    - name: Create Pull Request to Production
+      run: |
+        # Create PR from develop to main
+        gh pr create \
+          --title "🚀 Deploy to Production - $(date '+%Y-%m-%d %H:%M')" \
+          --body "$(cat <<'EOF'
+        ## 🚀 Production Deployment Request
+        
+        **Source Branch:** develop
+        **Target Branch:** main
+        **Status:** ✅ Development deployment successful
+        
+        ### Changes Included
+        - Latest commits from develop branch
+        - All tests passing
+        - Web validation successful
+        - Development environment deployed and verified
+        
+        ### Pre-deployment Checklist
+        - [ ] Review all changes
+        - [ ] Verify development environment functionality  
+        - [ ] Confirm no breaking changes
+        - [ ] Check security implications
+        
+        ### Post-deployment Tasks
+        - [ ] Verify production deployment
+        - [ ] Monitor application health
+        - [ ] Update documentation if needed
+        
+        **Auto-generated by GitHub Actions** 🤖
+        EOF
+        )" \
+          --base main \
+          --head develop
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

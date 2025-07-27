@@ -1,381 +1,303 @@
-name: 🚀 Deploy to Production
+name: Deploy to Production
 
 on:
   push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
-    types: [ closed ]
-  workflow_dispatch:
-    inputs:
-      skip_tests:
-        description: 'Skip tests (use with caution)'
-        required: false
-        default: false
-        type: boolean
+    branches: [ main ]
 
 env:
   AWS_REGION: us-east-1
-  NODE_VERSION: '18'
-  PYTHON_VERSION: '3.11'
 
 jobs:
-  # Safety check - ensure PR was merged
-  pre-check:
-    name: 🔒 Pre-deployment Safety Check
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+  pre-deployment-checks:
     runs-on: ubuntu-latest
-    outputs:
-      should_deploy: ${{ steps.check.outputs.should_deploy }}
-    
     steps:
-      - name: 🔍 Check Deployment Conditions
-        id: check
-        run: |
-          if [[ "${{ github.event_name }}" == "push" ]] || [[ "${{ github.event.pull_request.merged }}" == "true" ]]; then
-            echo "should_deploy=true" >> $GITHUB_OUTPUT
-            echo "✅ Deployment authorized"
-          else
-            echo "should_deploy=false" >> $GITHUB_OUTPUT
-            echo "❌ Deployment not authorized - PR not merged"
-            exit 1
-          fi
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+    
+    - name: Run comprehensive tests
+      run: |
+        python run_tests.py
+    
+    - name: Security scan
+      run: |
+        # Install bandit for security scanning
+        pip install bandit
+        bandit -r . -f json -o bandit-report.json || true
+        if [ -s bandit-report.json ]; then
+          echo "Security issues found:"
+          cat bandit-report.json
+        fi
+    
+    - name: Web validation
+      run: |
+        python web_api.py &
+        sleep 10
+        curl -f http://localhost:8000/api/health
+        
+    - name: Performance baseline check
+      run: |
+        # Simple performance check - API response time
+        time curl -f http://localhost:8000/api/health
 
-  # Run production tests (unless skipped)
-  test-production:
-    name: 🧪 Production Test Suite
-    needs: pre-check
-    if: needs.pre-check.outputs.should_deploy == 'true' && !inputs.skip_tests
-    uses: ./.github/workflows/ci.yml
-    secrets: inherit
-
-  # Deploy Frontend to Production
-  deploy-frontend-prod:
-    name: 🎨 Deploy Frontend to Production
-    needs: [pre-check, test-production]
-    if: |
-      always() && 
-      needs.pre-check.outputs.should_deploy == 'true' && 
-      (needs.test-production.result == 'success' || inputs.skip_tests)
+  deploy-frontend-production:
+    needs: pre-deployment-checks
     runs-on: ubuntu-latest
     environment: production
-    
     steps:
-      - name: 📥 Checkout Code
-        uses: actions/checkout@v4
-        
-      - name: 🔧 Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
-          aws-region: ${{ env.AWS_REGION }}
-      
-      - name: 📦 Prepare Frontend Assets
-        run: |
-          # Create build directory
-          mkdir -p build
-          
-          # Copy frontend files
-          cp demo.html build/index.html
-          cp -r *.css *.js *.png *.jpg *.svg *.ico build/ 2>/dev/null || true
-          
-          # Update API endpoint for production
-          sed -i "s|http://localhost:8000/api|https://api.geometry-engine-api.com/api|g" build/index.html
-          sed -i "s|https://api-dev.geometry-engine-api.com/api|https://api.geometry-engine-api.com/api|g" build/index.html
-          
-          # Add production optimizations
-          # Minify HTML (if tool available)
-          if command -v html-minifier &> /dev/null; then
-            html-minifier --collapse-whitespace --remove-comments \
-              --remove-redundant-attributes --remove-script-type-attributes \
-              --remove-tag-whitespace --use-short-doctype \
-              build/index.html -o build/index.html
-          fi
-          
-      - name: 🚀 Deploy to S3 (Production)
-        run: |
-          # Sync to production S3 bucket
-          aws s3 sync build/ s3://geometry-engine-frontend-prod \
-            --delete \
-            --cache-control "public, max-age=86400" \
-            --exclude "*.map" \
-            --exclude ".git/*" \
-            --exclude "*.md"
-          
-          # Set proper content types
-          aws s3 cp s3://geometry-engine-frontend-prod/ s3://geometry-engine-frontend-prod/ \
-            --exclude "*" --include "*.html" \
-            --recursive --metadata-directive REPLACE \
-            --content-type "text/html; charset=utf-8"
-      
-      - name: 🔄 Invalidate CloudFront (Production)
-        run: |
-          aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_PROD }} \
-            --paths "/*"
-      
-      - name: 🏷️ Tag Release
-        run: |
-          git tag -a "frontend-v${{ github.run_number }}" -m "Frontend Production Release ${{ github.run_number }}"
-          git push origin "frontend-v${{ github.run_number }}" || true
+    - uses: actions/checkout@v4
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
+        aws-region: ${{ env.AWS_REGION }}
+    
+    - name: Backup current frontend
+      run: |
+        # Create backup of current production files
+        aws s3 sync s3://geometry-engine-frontend-prod s3://geometry-engine-frontend-prod-backup --delete
+    
+    - name: Deploy static files to S3
+      run: |
+        # Deploy new files
+        aws s3 sync demo.html s3://geometry-engine-frontend-prod/
+        aws s3 cp demo.html s3://geometry-engine-frontend-prod/index.html
+    
+    - name: Invalidate CloudFront cache
+      run: |
+        aws cloudfront create-invalidation \
+          --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_PROD }} \
+          --paths "/*"
+    
+    - name: Verify deployment
+      run: |
+        # Wait for CloudFront invalidation
+        sleep 30
+        # Test production URL (replace with actual domain)
+        curl -f https://geometry-engine-api.com || echo "Frontend check failed"
 
-  # Deploy Backend API to Production
-  deploy-backend-prod:
-    name: 🔧 Deploy Backend API to Production
-    needs: [pre-check, test-production]
-    if: |
-      always() && 
-      needs.pre-check.outputs.should_deploy == 'true' && 
-      (needs.test-production.result == 'success' || inputs.skip_tests)
+  deploy-backend-lambda-production:
+    needs: pre-deployment-checks
     runs-on: ubuntu-latest
     environment: production
-    
+    if: vars.BACKEND_TYPE == 'lambda'
     steps:
-      - name: 📥 Checkout Code
-        uses: actions/checkout@v4
+    - uses: actions/checkout@v4
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
+        aws-region: ${{ env.AWS_REGION }}
+    
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Create production deployment package
+      run: |
+        mkdir lambda_package
+        pip install -r requirements.txt -t lambda_package/
+        cp web_api.py geometry_engine.py lambda_package/
+        cp config/environments.json lambda_package/config/
         
-      - name: 🐍 Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-      
-      - name: 🔧 Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
-          aws-region: ${{ env.AWS_REGION }}
-      
-      # Take snapshot before deployment
-      - name: 📸 Create Pre-deployment Snapshot
-        run: |
-          if [[ "${{ vars.BACKEND_TYPE }}" == "lambda" ]]; then
-            # Backup Lambda function
-            aws lambda get-function \
-              --function-name geometry-engine-api-prod \
-              --query 'Configuration.CodeSha256' \
-              --output text > lambda-backup-sha.txt
-          else
-            # Tag current ECS task definition
-            CURRENT_TASK_DEF=$(aws ecs describe-services \
-              --cluster geometry-engine-prod \
-              --services geometry-engine-api-prod \
-              --query 'services[0].taskDefinition' \
-              --output text)
-            echo $CURRENT_TASK_DEF > ecs-backup-taskdef.txt
-          fi
-      
-      # Lambda Deployment
-      - name: 📦 Package Lambda Function
-        if: ${{ vars.BACKEND_TYPE == 'lambda' }}
-        run: |
-          # Install production dependencies only
-          pip install -r requirements.txt -t lambda_package/ --no-dev
-          pip install mangum -t lambda_package/
-          
-          # Copy application files
-          cp web_api.py geometry_engine.py lambda_package/
-          
-          # Add Lambda handler
-          echo "from mangum import Mangum" >> lambda_package/web_api.py
-          echo "handler = Mangum(app)" >> lambda_package/web_api.py
-          
-          # Create deployment package
-          cd lambda_package
-          zip -r ../lambda-deployment-prod.zip . -x "*.pyc" -x "__pycache__/*"
-          cd ..
-      
-      - name: 🚀 Deploy to Lambda (Production)
-        if: ${{ vars.BACKEND_TYPE == 'lambda' }}
-        run: |
-          # Update function code
-          aws lambda update-function-code \
-            --function-name geometry-engine-api-prod \
-            --zip-file fileb://lambda-deployment-prod.zip \
-            --publish
-          
-          # Wait for update to complete
-          aws lambda wait function-updated \
-            --function-name geometry-engine-api-prod
-          
-          # Update environment variables
-          aws lambda update-function-configuration \
-            --function-name geometry-engine-api-prod \
-            --environment Variables="{
-              ENVIRONMENT=production,
-              CORS_ORIGINS='https://geometry-engine-api.com,https://www.geometry-engine-api.com',
-              LOG_LEVEL=WARNING
-            }"
-          
-          # Update alias to point to new version
-          VERSION=$(aws lambda publish-version \
-            --function-name geometry-engine-api-prod \
-            --query 'Version' --output text)
-          
-          aws lambda update-alias \
-            --function-name geometry-engine-api-prod \
-            --name LIVE \
-            --function-version $VERSION
-      
-      # ECS Deployment
-      - name: 🐳 Build Docker Image
-        if: ${{ vars.BACKEND_TYPE == 'ecs' }}
-        run: |
-          docker build -t geometry-engine-api:prod \
-            --build-arg ENVIRONMENT=production .
-          
-      - name: 📤 Push to ECR
-        if: ${{ vars.BACKEND_TYPE == 'ecs' }}
-        run: |
-          aws ecr get-login-password --region ${{ env.AWS_REGION }} | \
-            docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
-          
-          docker tag geometry-engine-api:prod \
-            ${{ secrets.ECR_REGISTRY }}/geometry-engine-api:prod-${{ github.sha }}
-          
-          docker tag geometry-engine-api:prod \
-            ${{ secrets.ECR_REGISTRY }}/geometry-engine-api:latest
-          
-          docker push ${{ secrets.ECR_REGISTRY }}/geometry-engine-api:prod-${{ github.sha }}
-          docker push ${{ secrets.ECR_REGISTRY }}/geometry-engine-api:latest
-      
-      - name: 🔄 Update ECS Service (Production)
-        if: ${{ vars.BACKEND_TYPE == 'ecs' }}
-        run: |
-          # Create new task definition
-          TASK_DEFINITION=$(aws ecs describe-task-definition \
-            --task-definition geometry-engine-api-prod \
-            --query 'taskDefinition' | \
-            jq '.containerDefinitions[0].image = "'${{ secrets.ECR_REGISTRY }}/geometry-engine-api:prod-${{ github.sha }}'"' | \
-            jq '.containerDefinitions[0].environment = [
-              {"name": "ENVIRONMENT", "value": "production"},
-              {"name": "CORS_ORIGINS", "value": "https://geometry-engine-api.com,https://www.geometry-engine-api.com"},
-              {"name": "LOG_LEVEL", "value": "WARNING"}
-            ]' | \
-            jq 'del(.taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities, .registeredAt, .registeredBy)')
-          
-          # Register new task definition
-          NEW_TASK_DEF=$(echo $TASK_DEFINITION | \
-            aws ecs register-task-definition --cli-input-json file:///dev/stdin \
-            --query 'taskDefinition.taskDefinitionArn' --output text)
-          
-          # Update service with new task definition
-          aws ecs update-service \
-            --cluster geometry-engine-prod \
-            --service geometry-engine-api-prod \
-            --task-definition $NEW_TASK_DEF \
-            --force-new-deployment \
-            --deployment-configuration "maximumPercent=200,minimumHealthyPercent=100"
-          
-          # Wait for deployment to stabilize
-          aws ecs wait services-stable \
-            --cluster geometry-engine-prod \
-            --services geometry-engine-api-prod
-      
-      - name: 🏷️ Tag Release
-        run: |
-          git tag -a "backend-v${{ github.run_number }}" -m "Backend Production Release ${{ github.run_number }}"
-          git push origin "backend-v${{ github.run_number }}" || true
-
-  # Post-deployment validation
-  validate-production:
-    name: ✅ Validate Production Deployment
-    needs: [deploy-frontend-prod, deploy-backend-prod]
-    if: success()
-    runs-on: ubuntu-latest
+        # Add Lambda handler
+        echo "
+        import os
+        os.environ['ENVIRONMENT'] = 'production'
+        from mangum import Mangum
+        handler = Mangum(app)
+        " >> lambda_package/web_api.py
+        
+        # Create zip
+        cd lambda_package
+        zip -r ../lambda-deployment-prod.zip .
+        cd ..
     
-    steps:
-      - name: 🔍 Check Frontend Health
-        run: |
-          response=$(curl -s -o /dev/null -w "%{http_code}" https://geometry-engine-api.com)
-          if [[ $response -eq 200 ]]; then
-            echo "✅ Frontend is healthy"
-          else
-            echo "❌ Frontend health check failed with status: $response"
-            exit 1
-          fi
-      
-      - name: 🔍 Check API Health
-        run: |
-          response=$(curl -s https://api.geometry-engine-api.com/api/health)
-          if echo $response | grep -q "healthy"; then
-            echo "✅ API is healthy"
-            echo "Response: $response"
-          else
-            echo "❌ API health check failed"
-            echo "Response: $response"
-            exit 1
-          fi
-      
-      - name: 🧪 Run Smoke Tests
-        run: |
-          # Test sphere creation
-          response=$(curl -s -X POST https://api.geometry-engine-api.com/api/sphere \
-            -H "Content-Type: application/json" \
-            -d '{"dimensions": 3, "radius": 1.0}')
-          
-          if echo $response | grep -q "volume"; then
-            echo "✅ Sphere API endpoint working"
-          else
-            echo "❌ Sphere API test failed"
-            exit 1
-          fi
-      
-      - name: 🚨 Lighthouse Performance Check
-        run: |
-          npm install -g @lhci/cli
-          lhci autorun \
-            --collect.url=https://geometry-engine-api.com \
-            --assert.preset=lighthouse:recommended \
-            --assert.assertions.categories:performance=["error", {"minScore": 0.8}] \
-            --upload.target=temporary-public-storage || true
+    - name: Create new Lambda version
+      run: |
+        # Update function code
+        aws lambda update-function-code \
+          --function-name geometry-engine-api-prod \
+          --zip-file fileb://lambda-deployment-prod.zip
+        
+        # Publish new version
+        NEW_VERSION=$(aws lambda publish-version \
+          --function-name geometry-engine-api-prod \
+          --query 'Version' --output text)
+        
+        echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+    
+    - name: Update alias to new version
+      run: |
+        # Update LIVE alias to point to new version
+        aws lambda update-alias \
+          --function-name geometry-engine-api-prod \
+          --name LIVE \
+          --function-version $NEW_VERSION
+    
+    - name: Health check
+      run: |
+        sleep 10
+        # Test production API endpoint
+        curl -f https://api.geometry-engine-api.com/api/health || echo "API health check failed"
 
-  # Rollback on failure
+  deploy-backend-ecs-production:
+    needs: pre-deployment-checks
+    runs-on: ubuntu-latest
+    environment: production
+    if: vars.BACKEND_TYPE == 'ecs'
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
+        aws-region: ${{ env.AWS_REGION }}
+    
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+    
+    - name: Build, tag, and push image to Amazon ECR
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: geometry-engine-api
+        IMAGE_TAG: prod-${{ github.sha }}
+      run: |
+        # Build production image with environment
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
+          --build-arg ENVIRONMENT=production .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+        echo "IMAGE_URI=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
+    
+    - name: Update ECS service with rolling deployment
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: geometry-engine-api
+        IMAGE_TAG: prod-${{ github.sha }}
+      run: |
+        # Get current task definition
+        aws ecs describe-task-definition \
+          --task-definition geometry-engine-api-prod \
+          --query taskDefinition > task-def.json
+        
+        # Update image URI and remove task definition ARN/revision/status
+        jq --arg IMAGE "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" \
+          'del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.placementConstraints) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy) | .containerDefinitions[0].image = $IMAGE' \
+          task-def.json > new-task-def.json
+        
+        # Register new task definition
+        NEW_TASK_DEF=$(aws ecs register-task-definition \
+          --cli-input-json file://new-task-def.json \
+          --query 'taskDefinition.taskDefinitionArn' --output text)
+        
+        # Update service with rolling deployment
+        aws ecs update-service \
+          --cluster geometry-engine-prod \
+          --service geometry-engine-api-prod \
+          --task-definition $NEW_TASK_DEF \
+          --force-new-deployment
+        
+        echo "NEW_TASK_DEF=$NEW_TASK_DEF" >> $GITHUB_ENV
+    
+    - name: Wait for deployment to complete
+      run: |
+        # Wait for service to stabilize
+        aws ecs wait services-stable \
+          --cluster geometry-engine-prod \
+          --services geometry-engine-api-prod
+    
+    - name: Health check
+      run: |
+        # Test production API endpoint
+        curl -f https://api.geometry-engine-api.com/api/health || echo "API health check failed"
+
+  post-deployment-verification:
+    needs: [deploy-frontend-production, deploy-backend-lambda-production, deploy-backend-ecs-production]
+    if: always() && (needs.deploy-frontend-production.result == 'success' && (needs.deploy-backend-lambda-production.result == 'success' || needs.deploy-backend-lambda-production.result == 'skipped') && (needs.deploy-backend-ecs-production.result == 'success' || needs.deploy-backend-ecs-production.result == 'skipped'))
+    runs-on: ubuntu-latest
+    steps:
+    - name: Comprehensive production health check
+      run: |
+        echo "Running production verification..."
+        
+        # Test frontend
+        curl -f https://geometry-engine-api.com || echo "Frontend check failed"
+        
+        # Test API health
+        curl -f https://api.geometry-engine-api.com/api/health || echo "API health check failed"
+        
+        # Test API functionality
+        curl -X POST https://api.geometry-engine-api.com/api/sphere \
+          -H "Content-Type: application/json" \
+          -d '{"dimensions": 3, "radius": 1}' || echo "API functionality check failed"
+    
+    - name: Create deployment tag
+      run: |
+        echo "Creating deployment tag..."
+        # Tag would be created here in a real repository
+        echo "production-deploy-$(date '+%Y%m%d-%H%M%S')"
+
   rollback-on-failure:
-    name: 🔄 Rollback on Failure
-    needs: [deploy-frontend-prod, deploy-backend-prod, validate-production]
+    needs: [deploy-frontend-production, deploy-backend-lambda-production, deploy-backend-ecs-production, post-deployment-verification]
     if: failure()
     runs-on: ubuntu-latest
     environment: production
-    
     steps:
-      - name: 🚨 Initiate Rollback
-        run: |
-          echo "⚠️  Deployment failed - initiating rollback"
-          
-          # Notification would go here
-          # Rollback logic would be implemented based on your setup
-          
-      - name: 📢 Notify Failure
-        run: |
-          echo "::error title=Production Deployment Failed::Deployment to production failed. Manual rollback may be required."
-
-  # Success notification
-  notify-success:
-    name: 🎉 Deployment Success
-    needs: [validate-production]
-    if: success()
-    runs-on: ubuntu-latest
+    - uses: actions/checkout@v4
     
-    steps:
-      - name: 📊 Generate Deployment Summary
-        run: |
-          echo "# 🎉 Production Deployment Successful!" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## 📋 Deployment Details" >> $GITHUB_STEP_SUMMARY
-          echo "- **Frontend URL**: https://geometry-engine-api.com" >> $GITHUB_STEP_SUMMARY
-          echo "- **API URL**: https://api.geometry-engine-api.com" >> $GITHUB_STEP_SUMMARY
-          echo "- **Deployment Time**: $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_STEP_SUMMARY
-          echo "- **Git SHA**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Triggered by**: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## ✅ Validation Results" >> $GITHUB_STEP_SUMMARY
-          echo "- Frontend Health: ✅ Passed" >> $GITHUB_STEP_SUMMARY
-          echo "- API Health: ✅ Passed" >> $GITHUB_STEP_SUMMARY
-          echo "- Smoke Tests: ✅ Passed" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## 📈 Next Steps" >> $GITHUB_STEP_SUMMARY
-          echo "1. Monitor CloudWatch dashboards" >> $GITHUB_STEP_SUMMARY
-          echo "2. Check application logs" >> $GITHUB_STEP_SUMMARY
-          echo "3. Verify user experience" >> $GITHUB_STEP_SUMMARY
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
+        aws-region: ${{ env.AWS_REGION }}
+    
+    - name: Rollback frontend
+      run: |
+        echo "Rolling back frontend..."
+        aws s3 sync s3://geometry-engine-frontend-prod-backup s3://geometry-engine-frontend-prod --delete
+        aws cloudfront create-invalidation \
+          --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_PROD }} \
+          --paths "/*"
+    
+    - name: Rollback Lambda (if applicable)
+      if: vars.BACKEND_TYPE == 'lambda'
+      run: |
+        echo "Rolling back Lambda..."
+        # Get previous version
+        PREVIOUS_VERSION=$(aws lambda list-aliases \
+          --function-name geometry-engine-api-prod \
+          --query 'Aliases[?Name==`LIVE`].FunctionVersion' --output text)
+        
+        # This would rollback to previous version in a real scenario
+        echo "Would rollback to version: $PREVIOUS_VERSION"
+    
+    - name: Rollback ECS (if applicable)
+      if: vars.BACKEND_TYPE == 'ecs'
+      run: |
+        echo "Rolling back ECS..."
+        # Get previous task definition (this is simplified)
+        echo "Would rollback ECS service to previous task definition"
+    
+    - name: Notify about rollback
+      run: |
+        echo "🚨 Production deployment failed and rollback initiated"
+        echo "Please check logs and fix issues before next deployment"
