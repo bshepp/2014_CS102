@@ -18,10 +18,20 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 # Import our geometry engine
-from geometry_engine import (GeometryAgent, HexagonalTiling, HyperCube,
-                             HyperEllipsoid, HyperPyramid, HyperSphere,
-                             JavaBridge, OriginalSphere, RegularTiling,
-                             Simplex, TilingAnalyzer, VoronoiTiling)
+from geometry_engine import (
+    GeometryAgent,
+    HexagonalTiling,
+    HyperCube,
+    HyperEllipsoid,
+    HyperPyramid,
+    HyperSphere,
+    JavaBridge,
+    OriginalSphere,
+    RegularTiling,
+    Simplex,
+    TilingAnalyzer,
+    VoronoiTiling,
+)
 
 # FastAPI app setup
 app = FastAPI(
@@ -57,6 +67,7 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
 app.add_middleware(SecurityHeadersMiddleware)
 
 import json
+
 # Load environment configuration
 import os
 

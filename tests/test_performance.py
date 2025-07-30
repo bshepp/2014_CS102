@@ -18,10 +18,18 @@ import pytest
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from geometry_engine import (GeometryAgent, HexagonalTiling, HyperCube,
-                             HyperEllipsoid, HyperPyramid, HyperSphere,
-                             RegularTiling, Simplex, TilingAnalyzer,
-                             VoronoiTiling)
+from geometry_engine import (
+    GeometryAgent,
+    HexagonalTiling,
+    HyperCube,
+    HyperEllipsoid,
+    HyperPyramid,
+    HyperSphere,
+    RegularTiling,
+    Simplex,
+    TilingAnalyzer,
+    VoronoiTiling,
+)
 
 
 @pytest.mark.performance

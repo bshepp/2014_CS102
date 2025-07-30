@@ -120,8 +120,7 @@ def test_api_models():
     print("\n📋 Testing API models...")
 
     try:
-        from web_api import (QueryRequest, QueryResponse, SphereRequest,
-                             SphereResponse)
+        from web_api import QueryRequest, QueryResponse, SphereRequest, SphereResponse
 
         # Test SphereRequest
         sphere_req = SphereRequest(dimensions=3, radius=1.5)

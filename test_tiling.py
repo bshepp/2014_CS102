@@ -13,8 +13,13 @@ def test_regular_tiling():
     print("🔲 Testing regular tiling patterns...")
 
     try:
-        from geometry_engine import (HyperCube, HyperSphere, RegularTiling,
-                                     Simplex, TilingAnalyzer)
+        from geometry_engine import (
+            HyperCube,
+            HyperSphere,
+            RegularTiling,
+            Simplex,
+            TilingAnalyzer,
+        )
 
         # Test square tiling
         square = HyperCube(2, 1.0)
@@ -279,8 +284,12 @@ def test_tiling_efficiency():
     print("\n📊 Testing tiling efficiency...")
 
     try:
-        from geometry_engine import (HexagonalTiling, HyperCube, HyperSphere,
-                                     RegularTiling)
+        from geometry_engine import (
+            HexagonalTiling,
+            HyperCube,
+            HyperSphere,
+            RegularTiling,
+        )
 
         bounds = [(0, 10), (0, 10)]
 

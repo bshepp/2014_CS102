@@ -14,10 +14,19 @@ import pytest
 # Add the parent directory to the path so we can import our modules
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from geometry_engine import (GeometryAgent, HexagonalTiling, HyperCube,
-                             HyperEllipsoid, HyperPyramid, HyperSphere,
-                             JavaBridge, RegularTiling, Simplex,
-                             TilingAnalyzer, VoronoiTiling)
+from geometry_engine import (
+    GeometryAgent,
+    HexagonalTiling,
+    HyperCube,
+    HyperEllipsoid,
+    HyperPyramid,
+    HyperSphere,
+    JavaBridge,
+    RegularTiling,
+    Simplex,
+    TilingAnalyzer,
+    VoronoiTiling,
+)
 
 # Test configuration
 pytest_plugins = ["pytest_asyncio"]

@@ -14,9 +14,17 @@ import pytest
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from geometry_engine import (GeometryAgent, HyperCube, HyperEllipsoid,
-                             HyperPyramid, HyperSphere, JavaBridge, NDShape,
-                             OriginalSphere, Simplex)
+from geometry_engine import (
+    GeometryAgent,
+    HyperCube,
+    HyperEllipsoid,
+    HyperPyramid,
+    HyperSphere,
+    JavaBridge,
+    NDShape,
+    OriginalSphere,
+    Simplex,
+)
 
 
 @pytest.mark.unit

@@ -17,9 +17,17 @@ import scipy.special as sp
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from geometry_engine import gamma  # Import gamma function for testing
-from geometry_engine import (HexagonalTiling, HyperCube, HyperEllipsoid,
-                             HyperPyramid, HyperSphere, RegularTiling, Simplex,
-                             TilingAnalyzer, VoronoiTiling)
+from geometry_engine import (
+    HexagonalTiling,
+    HyperCube,
+    HyperEllipsoid,
+    HyperPyramid,
+    HyperSphere,
+    RegularTiling,
+    Simplex,
+    TilingAnalyzer,
+    VoronoiTiling,
+)
 
 
 @pytest.mark.mathematical

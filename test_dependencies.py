@@ -104,8 +104,13 @@ def test_geometry_engine_imports():
     print("=" * 40)
 
     try:
-        from geometry_engine import (GeometryAgent, HyperSphere, JavaBridge,
-                                     NDShape, OriginalSphere)
+        from geometry_engine import (
+            GeometryAgent,
+            HyperSphere,
+            JavaBridge,
+            NDShape,
+            OriginalSphere,
+        )
 
         print("✅ All geometry engine classes imported successfully")
 
