@@ -1,0 +1,15 @@
+# CAT Privacy Layer - Framework Migration Boundaries
+# CAT's deployment and migration working areas
+
+# Migration artifacts
+.migration-temp/
+.framework-migration/
+.dacmf-to-caf-conversion/
+
+# Deployment working directories
+.cat-deployment/
+.framework-install/
+
+# Migration comparison files
+.old-framework-backup/
+.migration-validation/

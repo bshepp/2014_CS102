@@ -1,4 +1,4 @@
-#!/mnt/f/2014_CS102/venv/bin/python
+#!/mnt/f/2014_CS102/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

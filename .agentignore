@@ -1,0 +1,23 @@
+# Agent Privacy Layer - GeometryOracle Autonomous Development
+# Protected from other AI agents in the ensemble
+
+# Private algorithm development 
+private-notes/algorithm-experiments/
+private-notes/optimization-ideas/
+
+# Debugging session notes
+session-logs/debugging-*
+session-logs/troubleshooting-*
+
+# Mathematical exploration areas
+architectural-insights/mathematical-discoveries/
+architectural-insights/geometry-breakthroughs/
+
+# Performance optimization experiments
+**/performance-experiments/
+**/benchmark-private/
+
+# Draft documentation and ideas
+**/draft-*
+**/ideas-*
+**/experiments-*
