@@ -2,6 +2,67 @@
 
 ## N-Dimensional Geometry Engine - Common Issues and Solutions
 
+---
+
+## 🧪 **Test Suite Issues** ✅ **RECENTLY RESOLVED**
+
+### Test Runner Failures - Command Line Errors
+**Problem**: `python run_tests.py` fails with command line argument errors:
+- `Error: No such option: --dif (Possible options: --diff, --pyi)`
+- `bandit -r . - json -o test-reports/bandit.json` fails
+- `safety check --json --output test-reports/safety.json` fails
+
+**Root Cause**: Incorrect command line arguments in `run_tests.py`
+
+**Solution** ✅ **FIXED**:
+1. **Fixed Black command**: Changed `--dif` to `--diff`
+2. **Fixed isort command**: Changed `--dif` to `--diff`
+3. **Fixed Bandit command**: Changed `-` to `-f` for JSON format
+4. **Fixed Safety command**: Removed invalid `--output` parameter
+
+### Missing Test Dependencies
+**Problem**: `ImportError: No module named 'pytest'` or similar errors
+
+**Root Cause**: Development dependencies not installed
+
+**Solution** ✅ **FIXED**:
+```bash
+pip install pytest pytest-cov pytest-benchmark pytest-html
+pip install pytest-asyncio mypy bandit safety scipy numpy
+```
+
+### Missing Test Files
+**Problem**: `ERROR: file or directory not found: tests/test_tiling.py`
+
+**Root Cause**: `test_tiling.py` file was missing from the test suite
+
+**Solution** ✅ **FIXED**:
+- Created comprehensive `tests/test_tiling.py` with 12 test functions
+- All tiling tests now passing (12/12 ✅)
+- Covers RegularTiling, HexagonalTiling, VoronoiTiling, TilingAnalyzer
+
+### Pytest AsyncIO Plugin Missing
+**Problem**: `ImportError: Error importing plugin "pytest_asyncio": No module named 'pytest_asyncio'`
+
+**Root Cause**: `conftest.py` requires pytest_asyncio but it wasn't installed
+
+**Solution** ✅ **FIXED**:
+```bash
+pip install pytest-asyncio
+```
+
+### SciPy Import Errors
+**Problem**: `ImportError: libscipy_openblas-68440149.so: cannot open shared object file`
+
+**Root Cause**: SciPy not properly installed or corrupted
+
+**Solution** ✅ **FIXED**:
+```bash
+pip install scipy numpy
+```
+
+---
+
 ### 🚨 Web API Issues
 
 #### Internal Server Error - Interactive Demo Not Working

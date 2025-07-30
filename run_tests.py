@@ -55,16 +55,16 @@ class TestRunner:
         print("=" * 60)
 
         checks = [
-            (["black", "--check", "--dif", "."], "Code formatting (Black)"),
-            (["isort", "--check-only", "--dif", "."], "Import sorting (isort)"),
+            (["black", "--check", "--diff", "."], "Code formatting (Black)"),
+            (["isort", "--check-only", "--diff", "."], "Import sorting (isort)"),
             (["flake8", "--statistics", "."], "Linting (Flake8)"),
             (["mypy", "--ignore-missing-imports", "."], "Type checking (MyPy)"),
             (
-                ["bandit", "-r", ".", "-", "json", "-o", "test-reports/bandit.json"],
+                ["bandit", "-r", ".", "-f", "json", "-o", "test-reports/bandit.json"],
                 "Security scanning (Bandit)",
             ),
             (
-                ["safety", "check", "--json", "--output", "test-reports/safety.json"],
+                ["safety", "check", "--json"],
                 "Dependency vulnerabilities (Safety)",
             ),
         ]
