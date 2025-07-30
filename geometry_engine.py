@@ -88,10 +88,19 @@ class JavaBridge:
 
         # Format output to match original MultiSphere.java (but FIXED!)
         output = "🐍 PYTHON EQUIVALENT (Java not available, but FIXED!):\n"
-        output += f"A sphere with a diameter of 1 has a volume of {unit_volume:.3f}, and an area of {unit_area:.3f}.\n\n"
+        output += (
+            f"A sphere with a diameter of 1 has a volume of {unit_volume:.3f}, "
+            f"and an area of {unit_area:.3f}.\n\n"
+        )
         output += "Please enter the diameter of your sphere.\n"
-        output += f"The surface area of a sphere with diameter of {diameter:.3f} is {user_area:.3f}.\n\n"
-        output += f"The volume of a sphere with diameter of {diameter:.3f} is {user_volume:.3f}.\n"
+        output += (
+            f"The surface area of a sphere with diameter of {diameter:.3f} "
+            f"is {user_area:.3f}.\n\n"
+        )
+        output += (
+            f"The volume of a sphere with diameter of {diameter:.3f} "
+            f"is {user_volume:.3f}.\n"
+        )
 
         return output
 
@@ -175,7 +184,12 @@ class NDShape(ABC):
             return result
 
     def __str__(self) -> str:
-        return f"{self.get_shape_type()} (dim={self.dimensions}): Volume={self.get_volume():.6f}, Surface Area={self.get_surface_area():.6f}"
+        volume = self.get_volume()
+        surface = self.get_surface_area()
+        return (
+            f"{self.get_shape_type()} (dim={self.dimensions}): "
+            f"Volume={volume:.6f}, Surface Area={surface:.6f}"
+        )
 
 
 class HyperSphere(NDShape):
@@ -222,9 +236,18 @@ class HyperSphere(NDShape):
             return "V₄ = (π²/2)r⁴"
 
         if self.dimensions % 2 == 0:
-            return f"V_{self.dimensions} = (π^{self.dimensions//2}/{self.dimensions//2}!) × r^{self.dimensions}"
+            dim_half = self.dimensions // 2
+            return (
+                f"V_{self.dimensions} = (π^{dim_half}/{dim_half}!) × "
+                f"r^{self.dimensions}"
+            )
         else:
-            return f"V_{self.dimensions} = (2^{(self.dimensions+1)//2} × π^{(self.dimensions-1)//2})/(odd factors) × r^{self.dimensions}"
+            power1 = (self.dimensions + 1) // 2
+            power2 = (self.dimensions - 1) // 2
+            return (
+                f"V_{self.dimensions} = (2^{power1} × π^{power2})"
+                f"/(odd factors) × r^{self.dimensions}"
+            )
 
     def get_surface_area_formula(self) -> str:
         if self.dimensions == 1:
