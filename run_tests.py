@@ -10,7 +10,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Tuple
 
 
 class TestRunner:
@@ -55,12 +55,12 @@ class TestRunner:
         print("=" * 60)
 
         checks = [
-            (["black", "--check", "--diff", "."], "Code formatting (Black)"),
-            (["isort", "--check-only", "--diff", "."], "Import sorting (isort)"),
+            (["black", "--check", "--dif", "."], "Code formatting (Black)"),
+            (["isort", "--check-only", "--dif", "."], "Import sorting (isort)"),
             (["flake8", "--statistics", "."], "Linting (Flake8)"),
             (["mypy", "--ignore-missing-imports", "."], "Type checking (MyPy)"),
             (
-                ["bandit", "-r", ".", "-f", "json", "-o", "test-reports/bandit.json"],
+                ["bandit", "-r", ".", "-", "json", "-o", "test-reports/bandit.json"],
                 "Security scanning (Bandit)",
             ),
             (
@@ -350,17 +350,17 @@ class TestRunner:
             f.write(html_report)
 
         # Print summary
-        print(f"📊 Test Summary:")
+        print("📊 Test Summary:")
         print(f"   Total Time: {total_time:.2f} seconds")
         print(f"   Total Tests: {total_tests}")
         print(f"   Passed: {passed_tests}")
         print(f"   Failed: {failed_tests}")
         print(f"   Success Rate: {(passed_tests/total_tests*100):.1f}%")
 
-        print(f"\n📁 Reports saved to: test-reports/")
-        print(f"   📄 Summary: test-reports/summary.html")
-        print(f"   📊 Coverage: test-reports/coverage-comprehensive/index.html")
-        print(f"   🧪 Test Results: test-reports/report-comprehensive.html")
+        print("\n📁 Reports saved to: test-reports/")
+        print("   📄 Summary: test-reports/summary.html")
+        print("   📊 Coverage: test-reports/coverage-comprehensive/index.html")
+        print("   🧪 Test Results: test-reports/report-comprehensive.html")
 
         return summary
 
@@ -368,7 +368,7 @@ class TestRunner:
         """Generate HTML summary report."""
         status_color = "green" if summary["failed_tests"] == 0 else "red"
 
-        html = f"""
+        html = """
         <!DOCTYPE html>
         <html>
         <head>
@@ -409,7 +409,7 @@ class TestRunner:
             status_class = "pass" if result["success"] else "fail"
             status_icon = "✅" if result["success"] else "❌"
 
-            html += f"""
+            html += """
                 <div class="test-result {status_class}">
                     <h3>{status_icon} {test_name}</h3>
                     <p><strong>Status:</strong> {"PASSED" if result["success"] else "FAILED"}</p>
@@ -463,7 +463,7 @@ class TestRunner:
                 all_passed = False
 
         # Generate summary report
-        summary = self.generate_summary_report()
+        self.generate_summary_report()
 
         # Final status
         if all_passed:

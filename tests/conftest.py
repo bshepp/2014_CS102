@@ -6,7 +6,7 @@ Test configuration and fixtures for the N-Dimensional Geometry Engine
 import asyncio
 import os
 import sys
-from typing import Any, Dict, Generator
+# Unused typing imports removed for Flake8 compliance
 from unittest.mock import MagicMock
 
 import pytest
@@ -24,7 +24,6 @@ from geometry_engine import (
     JavaBridge,
     RegularTiling,
     Simplex,
-    TilingAnalyzer,
     VoronoiTiling,
 )
 

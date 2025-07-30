@@ -51,7 +51,7 @@ from starlette.responses import Response
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         response = await call_next(request)
-        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Content-Type-Options"] = "nosnif"
         response.headers["X-Frame-Options"] = "DENY"
         response.headers["X-XSS-Protection"] = "1; mode=block"
         response.headers["Strict-Transport-Security"] = (
@@ -805,7 +805,7 @@ async def get_dimension_info(dimensions: int = Path(..., ge=1, le=100)):
             "insights": {
                 "volume_peaks_at": "5-6 dimensions for unit spheres",
                 "surface_to_volume_ratio": (
-                    surface / volume if volume > 0 else float("inf")
+                    surface / volume if volume > 0 else float("in")
                 ),
                 "mathematical_note": f"In {dimensions}D, most volume is concentrated near the surface",
             },

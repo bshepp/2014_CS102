@@ -8,9 +8,7 @@ n-dimensional geometry engine with AI-powered natural language interface.
 """
 
 import math
-import sys
 import time
-from typing import Dict, List
 
 
 def print_header(title: str):
@@ -102,7 +100,8 @@ def demo_hypercube_capabilities():
             vertices = cube.get_vertex_count()
             edges = cube.get_edge_count()
             print(
-                f"  {dim:2d}D: Vol={volume:8.1f}, Surf={surface:8.1f}, Vertices={vertices:6d}, Edges={edges:6d}"
+                f"  {dim:2d}D: Vol={volume:8.1f}, Surf={surface:8.1f}, "
+                f"Vertices={vertices:6d}, Edges={edges:6d}"
             )
 
         print("\n🔍 Advanced Properties (4D Cube):")
@@ -142,7 +141,8 @@ def demo_shape_comparisons():
             ratio = sphere_vol / cube_vol
 
             print(
-                f"  {dim:2d}D: Sphere={sphere_vol:8.4f}, Cube={cube_vol:8.4f}, Ratio={ratio:8.4f}"
+                f"  {dim:2d}D: Sphere={sphere_vol:8.4f}, "
+                f"Cube={cube_vol:8.4f}, Ratio={ratio:8.4f}"
             )
 
         print("\n📊 Surface Area Ratios:")
@@ -155,7 +155,8 @@ def demo_shape_comparisons():
             ratio = sphere_surf / cube_surf
 
             print(
-                f"  {dim}D: Sphere={sphere_surf:8.4f}, Cube={cube_surf:8.4f}, Ratio={ratio:8.4f}"
+                f"  {dim}D: Sphere={sphere_surf:8.4f}, "
+                f"Cube={cube_surf:8.4f}, Ratio={ratio:8.4f}"
             )
 
     except Exception as e:
@@ -267,15 +268,16 @@ def demo_performance_metrics():
                 sphere = HyperSphere(dim, 1.0)
                 cube = HyperCube(dim, 1.0)
 
-                sphere_vol = sphere.get_volume()
-                cube_vol = cube.get_volume()
-                sphere_surf = sphere.get_surface_area()
-                cube_surf = cube.get_surface_area()
+                sphere.get_volume()
+                cube.get_volume()
+                sphere.get_surface_area()
+                cube.get_surface_area()
 
             elapsed = time.time() - start_time
 
             print(
-                f"• {dim:3d}D: {elapsed:.4f}s for 1000 shapes ({elapsed*1000:.2f}ms per shape)"
+                f"• {dim:3d}D: {elapsed:.4f}s for 1000 shapes "
+                f"({elapsed*1000:.2f}ms per shape)"
             )
 
         print("\n🚀 Performance Summary:")

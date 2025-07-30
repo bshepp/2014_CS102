@@ -103,7 +103,7 @@ def test_hyperpyramid_properties():
         # Test 3D pyramid properties
         pyramid = HyperPyramid(3, 4.0, 3.0)
 
-        print(f"✅ 3D pyramid advanced properties:")
+        print("✅ 3D pyramid advanced properties:")
         print(f"   - Base volume: {pyramid.get_base_volume():.6f}")
         print(f"   - Base surface area: {pyramid.get_base_surface_area():.6f}")
         print(f"   - Apex distance: {pyramid.get_apex_distance():.6f}")

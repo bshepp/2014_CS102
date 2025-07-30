@@ -7,7 +7,7 @@ Verifies mathematical formulas and calculations are correct
 import math
 import os
 import sys
-from typing import Any, Dict, List, Tuple
+from typing import Dict, List, Tuple
 
 import numpy as np
 import pytest

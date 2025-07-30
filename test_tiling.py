@@ -84,7 +84,7 @@ def test_hexagonal_tiling():
         analyzer = TilingAnalyzer(tiling)
         analysis = analyzer.analyze_pattern()
 
-        print(f"   - Pattern analysis:")
+        print("   - Pattern analysis:")
         print(f"     • Tile density: {analysis['tile_density']:.3f}")
         print(
             f"     • Coordination number: {analysis['mathematical_properties']['coordination_number']}"
@@ -131,7 +131,7 @@ def test_voronoi_tiling():
         analyzer = TilingAnalyzer(tiling)
         analysis = analyzer.analyze_pattern()
 
-        print(f"   - Pattern analysis:")
+        print("   - Pattern analysis:")
         print(f"     • Tile density: {analysis['tile_density']:.3f}")
         print(
             f"     • Is periodic: {analysis['mathematical_properties']['is_periodic']}"
@@ -168,7 +168,7 @@ def test_tiling_analyzer():
         analyzer = TilingAnalyzer(tiling)
         analysis = analyzer.analyze_pattern()
 
-        print(f"✅ Tiling analysis complete:")
+        print("✅ Tiling analysis complete:")
         print(f"   - Basic properties: {analysis['basic_properties']}")
         print(f"   - Coverage efficiency: {analysis['coverage_efficiency']:.3f}")
         print(f"   - Tile density: {analysis['tile_density']:.3f}")
@@ -249,27 +249,27 @@ def test_geometry_agent_tiling():
 
         # Test hexagonal tiling
         result = agent.process_query("hexagonal tiling side 1.0 area 5x5")
-        print(f"✅ Hexagonal tiling query:")
+        print("✅ Hexagonal tiling query:")
         print(f"   {result[:200]}...")
 
         # Test square tiling
         result = agent.process_query("square tiling with cubes area 4x4")
-        print(f"✅ Square tiling query:")
+        print("✅ Square tiling query:")
         print(f"   {result[:200]}...")
 
         # Test triangular tiling
         result = agent.process_query("triangular tiling with simplices bounds 0 6")
-        print(f"✅ Triangular tiling query:")
+        print("✅ Triangular tiling query:")
         print(f"   {result[:200]}...")
 
         # Test Voronoi tiling
         result = agent.process_query("voronoi tiling seeds 10 area 8x8")
-        print(f"✅ Voronoi tiling query:")
+        print("✅ Voronoi tiling query:")
         print(f"   {result[:200]}...")
 
         # Test circle packing
         result = agent.process_query("regular tiling with circles density 1.5 area 6x6")
-        print(f"✅ Circle packing query:")
+        print("✅ Circle packing query:")
         print(f"   {result[:200]}...")
 
         return True
@@ -310,7 +310,7 @@ def test_tiling_efficiency():
 
             # Verify reasonable efficiency values
             if 0.0 <= efficiency <= 1.0:
-                print(f"   ✅ Efficiency within valid range")
+                print("   ✅ Efficiency within valid range")
             else:
                 print(f"   ❌ Efficiency out of range: {efficiency}")
 

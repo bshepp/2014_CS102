@@ -7,7 +7,7 @@ Tests all fundamental geometry classes and their methods
 import math
 import os
 import sys
-from typing import Any, Dict, List
+from typing import Dict, List
 
 import pytest
 

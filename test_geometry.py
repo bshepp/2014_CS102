@@ -17,7 +17,7 @@ def test_original_sphere():
 
     # Test with diameter 2.5
     sphere.set_diameter(2.5)
-    print(f"After setting diameter to 2.5:")
+    print("After setting diameter to 2.5:")
     print(f"  Diameter: {sphere.get_diameter()}")
     print(f"  Volume: {sphere.get_volume():.3f}")
     print(f"  Surface Area: {sphere.get_area():.3f}")

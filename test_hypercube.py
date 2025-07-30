@@ -124,7 +124,7 @@ def test_hypercube_properties():
         # Test various properties
         cube = HyperCube(4, 2.0)
 
-        print(f"✅ 4D cube properties:")
+        print("✅ 4D cube properties:")
         print(f"   - Volume: {cube.get_volume()}")
         print(f"   - Surface Area: {cube.get_surface_area()}")
         print(f"   - Vertices: {cube.get_vertex_count()}")

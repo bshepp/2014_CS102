@@ -90,7 +90,7 @@ def test_standard_library():
 
     for module_name in modules_to_test:
         try:
-            module = importlib.import_module(module_name)
+            importlib.import_module(module_name)
             print(f"✅ {module_name}: OK")
         except ImportError as e:
             print(f"❌ {module_name}: Failed - {e}")
@@ -108,23 +108,22 @@ def test_geometry_engine_imports():
             GeometryAgent,
             HyperSphere,
             JavaBridge,
-            NDShape,
             OriginalSphere,
         )
 
         print("✅ All geometry engine classes imported successfully")
 
         # Test basic instantiation
-        agent = GeometryAgent()
+        GeometryAgent()
         print("✅ GeometryAgent instantiation works")
 
-        sphere = HyperSphere(3, 1.0)
+        HyperSphere(3, 1.0)
         print("✅ HyperSphere instantiation works")
 
-        original = OriginalSphere(2.0)
+        OriginalSphere(2.0)
         print("✅ OriginalSphere instantiation works")
 
-        bridge = JavaBridge()
+        JavaBridge()
         print("✅ JavaBridge instantiation works")
 
     except ImportError as e:
@@ -253,8 +252,8 @@ def test_performance():
             start_time = time.time()
 
             sphere = HyperSphere(dim, 1.0)
-            volume = sphere.get_volume()
-            surface = sphere.get_surface_area()
+            sphere.get_volume()
+            sphere.get_surface_area()
 
             elapsed = time.time() - start_time
 
@@ -301,10 +300,10 @@ def run_all_tests():
 if __name__ == "__main__":
     # Install packaging module if needed
     try:
-        import packaging
+        import packaging  # noqa: F401
     except ImportError:
         print("Installing packaging module...")
         subprocess.check_call([sys.executable, "-m", "pip", "install", "packaging"])
-        import packaging
+        import packaging  # noqa: F401
 
     run_all_tests()

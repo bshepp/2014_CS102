@@ -98,7 +98,7 @@ def test_original_java():
         response = requests.post(f"{API_BASE}/original-java?diameter=3.0")
         if response.status_code == 200:
             data = response.json()
-            print(f"✅ Original Java execution:")
+            print("✅ Original Java execution:")
             print(f"   - Diameter: {data['diameter']}")
             print(f"   - Java available: {data['java_available']}")
             print(f"   - Result preview: {data['result'][:100]}...")

@@ -2,9 +2,8 @@ import math
 import os
 import re
 import subprocess
-import sys
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional
+from typing import Dict, List
 
 import numpy as np
 
@@ -88,9 +87,9 @@ class JavaBridge:
         user_area = 4.0 * math.pi * pow(user_radius, 2)
 
         # Format output to match original MultiSphere.java (but FIXED!)
-        output = f"🐍 PYTHON EQUIVALENT (Java not available, but FIXED!):\n"
+        output = "🐍 PYTHON EQUIVALENT (Java not available, but FIXED!):\n"
         output += f"A sphere with a diameter of 1 has a volume of {unit_volume:.3f}, and an area of {unit_area:.3f}.\n\n"
-        output += f"Please enter the diameter of your sphere.\n"
+        output += "Please enter the diameter of your sphere.\n"
         output += f"The surface area of a sphere with diameter of {diameter:.3f} is {user_area:.3f}.\n\n"
         output += f"The volume of a sphere with diameter of {diameter:.3f} is {user_volume:.3f}.\n"
 
@@ -1501,7 +1500,7 @@ class GeometryAgent:
             result += f"Semi-axes = {axes}\n"
             result += f"Formulas:\n• {shape.get_volume_formula()}\n• {shape.get_surface_area_formula()}\n"
             if shape.is_sphere():
-                result += f"Special Properties:\n• This is actually a sphere (all axes equal)\n"
+                result += "Special Properties:\n• This is actually a sphere (all axes equal)\n"
             else:
                 result += (
                     f"Special Properties:\n• Axis ratio: {shape.get_axis_ratio():.6f}\n"
@@ -1527,7 +1526,7 @@ class GeometryAgent:
             # Handle pyramid creation with base and height
             pyramid_params = self._extract_pyramid_parameters(query)
             if not pyramid_params:
-                return f"Please specify base side length and height for pyramid (e.g., 'base 2 height 3')"
+                return "Please specify base side length and height for pyramid (e.g., 'base 2 height 3')"
 
             base_side, height = pyramid_params
             shape = HyperPyramid(dimensions, base_side, height)
@@ -1727,12 +1726,12 @@ class GeometryAgent:
 
         shape = HyperEllipsoid(dimensions, *axes)
 
-        result = f"HyperEllipsoid properties:\n"
+        result = "HyperEllipsoid properties:\n"
         result += f"{shape}\n"
         result += f"Formulas:\n• {shape.get_volume_formula()}\n• {shape.get_surface_area_formula()}\n"
 
         if shape.is_sphere():
-            result += f"Special Note: This is actually a sphere (all axes equal)\n"
+            result += "Special Note: This is actually a sphere (all axes equal)\n"
         else:
             result += (
                 f"Special Properties:\n• Axis ratio: {shape.get_axis_ratio():.6f}\n"
@@ -1758,14 +1757,14 @@ class GeometryAgent:
         # Property queries for simplices
         shape = Simplex(dimensions, parameter)
 
-        result = f"Simplex properties:\n"
+        result = "Simplex properties:\n"
         result += f"{shape}\n"
         result += f"Formulas:\n• {shape.get_volume_formula()}\n• {shape.get_surface_area_formula()}\n"
         result += f"Geometric Properties:\n• Vertices: {shape.get_vertex_count()}\n• Edges: {shape.get_edge_count()}\n"
         result += f"• Circumradius: {shape.get_circumradius():.6f}\n• Inradius: {shape.get_inradius():.6f}\n• Height: {shape.get_height():.6f}\n"
 
         # Face counts
-        result += f"Face counts:\n"
+        result += "Face counts:\n"
         for k in range(dimensions + 1):
             faces = shape.get_face_count(k)
             if faces > 0:
@@ -1807,19 +1806,19 @@ class GeometryAgent:
         # Property queries for pyramids
         pyramid_params = self._extract_pyramid_parameters(query)
         if not pyramid_params:
-            return f"Please specify base side length and height for pyramid (e.g., 'base 2 height 3')"
+            return "Please specify base side length and height for pyramid (e.g., 'base 2 height 3')"
 
         base_side, height = pyramid_params
         shape = HyperPyramid(dimensions, base_side, height)
 
-        result = f"HyperPyramid properties:\n"
+        result = "HyperPyramid properties:\n"
         result += f"{shape}\n"
         result += f"Formulas:\n• {shape.get_volume_formula()}\n• {shape.get_surface_area_formula()}\n"
         result += f"Geometric Properties:\n• Vertices: {shape.get_vertex_count()}\n• Edges: {shape.get_edge_count()}\n"
         result += f"• Slant height: {shape.get_slant_height():.6f}\n• Lateral edge: {shape.get_lateral_edge_length():.6f}\n• Base volume: {shape.get_base_volume():.6f}\n"
 
         # Face counts
-        result += f"Face counts:\n"
+        result += "Face counts:\n"
         for k in range(dimensions + 1):
             faces = shape.get_face_count(k)
             if faces > 0:
@@ -1854,7 +1853,7 @@ class GeometryAgent:
                 analyzer = TilingAnalyzer(tiling)
                 analysis = analyzer.analyze_pattern()
 
-                result = f"Hexagonal Tiling Pattern:\n"
+                result = "Hexagonal Tiling Pattern:\n"
                 result += f"• Dimensions: {dimensions}D\n"
                 result += f"• Side length: {side_length:.3f}\n"
                 result += f"• Bounds: {bounds}\n"
@@ -1894,7 +1893,7 @@ class GeometryAgent:
                 analyzer = TilingAnalyzer(tiling)
                 analysis = analyzer.analyze_pattern()
 
-                result = f"Voronoi Tiling Pattern:\n"
+                result = "Voronoi Tiling Pattern:\n"
                 result += f"• Dimensions: {dimensions}D\n"
                 result += f"• Seed points: {seed_count}\n"
                 result += f"• Bounds: {bounds}\n"
@@ -1903,7 +1902,7 @@ class GeometryAgent:
                     f"• Coverage efficiency: {analysis['coverage_efficiency']:.3f}\n"
                 )
                 result += f"• Tile density: {analysis['tile_density']:.3f} tiles/unit\n"
-                result += f"• Pattern type: Irregular (Voronoi)\n"
+                result += "• Pattern type: Irregular (Voronoi)\n"
 
                 return result
 
@@ -1918,7 +1917,7 @@ class GeometryAgent:
                 analyzer = TilingAnalyzer(tiling)
                 analysis = analyzer.analyze_pattern()
 
-                result = f"Regular Tiling Pattern:\n"
+                result = "Regular Tiling Pattern:\n"
                 result += f"• Base shape: {shape.get_shape_type()}\n"
                 result += f"• Dimensions: {dimensions}D\n"
                 result += f"• Bounds: {bounds}\n"
