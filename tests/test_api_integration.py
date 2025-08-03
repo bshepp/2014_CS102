@@ -119,7 +119,7 @@ class TestSphereEndpoint:
         """Test creating sphere with invalid radius."""
         request_data = {"dimensions": 3, "radius": 0.0}
         response = client.post("/api/sphere", json=request_data)
-        assert response.status_code == 400  # Bad request
+        assert response.status_code == 422  # Validation error
 
     def test_create_sphere_high_dimensions(self):
         """Test creating sphere with high dimensions."""

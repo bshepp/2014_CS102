@@ -223,7 +223,12 @@ class HyperSphere(NDShape):
         return 2 * self.radius
 
     def get_shape_type(self) -> str:
-        return "HyperSphere"
+        if self.dimensions == 2:
+            return "Circle"
+        elif self.dimensions == 3:
+            return "Sphere"
+        else:
+            return f"{self.dimensions}D HyperSphere"
 
     def get_volume_formula(self) -> str:
         if self.dimensions == 1:
@@ -330,7 +335,12 @@ class HyperCube(NDShape):
         return True
 
     def get_shape_type(self) -> str:
-        return "HyperCube"
+        if self.dimensions == 2:
+            return "Square"
+        elif self.dimensions == 3:
+            return "Cube"
+        else:
+            return f"{self.dimensions}D HyperCube"
 
     def get_volume_formula(self) -> str:
         return f"V_{self.dimensions} = s^{self.dimensions}"
@@ -423,7 +433,7 @@ class HyperEllipsoid(NDShape):
 
     def is_sphere(self, tolerance: float = 1e-10) -> bool:
         """Check if this ellipsoid is actually a sphere"""
-        return max(self.semi_axes) - min(self.semi_axes) < tolerance
+        return bool(max(self.semi_axes) - min(self.semi_axes) < tolerance)
 
     def get_shape_type(self) -> str:
         if self.is_sphere():
