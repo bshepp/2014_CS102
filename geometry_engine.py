@@ -531,8 +531,19 @@ class HyperEllipsoid(NDShape):
 
     def get_shape_type(self) -> str:
         if self.is_sphere():
-            return "HyperSphere"
-        return "HyperEllipsoid"
+            if self.dimensions == 2:
+                return "Circle"
+            elif self.dimensions == 3:
+                return "Sphere"
+            else:
+                return "HyperSphere"
+        else:
+            if self.dimensions == 2:
+                return "Ellipse"
+            elif self.dimensions == 3:
+                return "Ellipsoid"
+            else:
+                return "HyperEllipsoid"
 
     def get_volume_formula(self) -> str:
         if self.dimensions == 1:
