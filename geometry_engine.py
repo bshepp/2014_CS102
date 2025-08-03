@@ -447,7 +447,16 @@ class HyperCube(NDShape):
         return cross_section.get_volume()
 
     def __str__(self) -> str:
-        return f"{self.get_shape_type()} (dim={self.dimensions}, side={self.side_length:.3f}): Volume={self.get_volume():.6f}, Surface Area={self.get_surface_area():.6f}, Vertices={self.get_vertex_count()}"
+        shape_type = self.get_shape_type()
+        volume = self.get_volume()
+        surface_area = self.get_surface_area()
+        vertices = self.get_vertex_count()
+        return (
+            f"{shape_type} (dim={self.dimensions}, "
+            f"side={self.side_length:.3f}): "
+            f"Volume={volume:.6f}, Surface Area={surface_area:.6f}, "
+            f"Vertices={vertices}"
+        )
 
 
 class HyperEllipsoid(NDShape):
@@ -462,7 +471,8 @@ class HyperEllipsoid(NDShape):
     def validate_parameters(self):
         if len(self.parameters) != self.dimensions:
             raise ValueError(
-                f"HyperEllipsoid requires exactly {self.dimensions} parameters (semi-axes)"
+                f"HyperEllipsoid requires exactly {self.dimensions} "
+                f"parameters (semi-axes)"
             )
         if any(axis <= 0 for axis in self.parameters):
             raise ValueError("Semi-axes must be positive")
@@ -532,7 +542,11 @@ class HyperEllipsoid(NDShape):
         elif self.dimensions == 3:
             return "V₃ = (4/3)π × a × b × c"
         else:
-            return f"V_{self.dimensions} = (π^{self.dimensions/2} / Γ({self.dimensions/2} + 1)) × ∏aᵢ"
+            dim_half = self.dimensions/2
+            return (
+                f"V_{self.dimensions} = (π^{dim_half} / "
+                f"Γ({dim_half} + 1)) × ∏aᵢ"
+            )
 
     def get_surface_area_formula(self) -> str:
         if self.dimensions == 1:
@@ -579,7 +593,13 @@ class HyperEllipsoid(NDShape):
 
     def __str__(self) -> str:
         axes_str = ", ".join(f"{a:.3f}" for a in self.semi_axes)
-        return f"{self.get_shape_type()} (dim={self.dimensions}, axes=[{axes_str}]): Volume={self.get_volume():.6f}, Surface Area={self.get_surface_area():.6f}"
+        shape_type = self.get_shape_type()
+        volume = self.get_volume()
+        surface_area = self.get_surface_area()
+        return (
+            f"{shape_type} (dim={self.dimensions}, axes=[{axes_str}]): "
+            f"Volume={volume:.6f}, Surface Area={surface_area:.6f}"
+        )
 
 
 class OriginalSphere(HyperSphere):
