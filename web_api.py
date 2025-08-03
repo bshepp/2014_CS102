@@ -5,17 +5,17 @@ Exposes the geometry engine capabilities through REST endpoints
 """
 
 import json
-import math
+import os
 from typing import Any, Dict, List, Optional
 
 import numpy as np
-import plotly.express as px
 import plotly.graph_objects as go
 from fastapi import FastAPI, HTTPException, Path, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse
-from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request
 
 # Import our geometry engine
 from geometry_engine import (
@@ -25,8 +25,6 @@ from geometry_engine import (
     HyperEllipsoid,
     HyperPyramid,
     HyperSphere,
-    JavaBridge,
-    OriginalSphere,
     RegularTiling,
     Simplex,
     TilingAnalyzer,
@@ -36,16 +34,14 @@ from geometry_engine import (
 # FastAPI app setup
 app = FastAPI(
     title="N-Dimensional Geometry Engine API",
-    description="Transform your CS102 sphere calculator into infinite dimensions with AI-powered natural language queries",
+    description="Transform your CS102 sphere calculator into infinite dimensions "
+    "with AI-powered natural language queries",
     version="1.0.0",
     docs_url="/api/docs",
     redoc_url="/api/redoc",
 )
 
 # Security headers middleware
-from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.requests import Request
-from starlette.responses import Response
 
 
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
@@ -66,10 +62,7 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
 
 app.add_middleware(SecurityHeadersMiddleware)
 
-import json
-
 # Load environment configuration
-import os
 
 ENVIRONMENT = os.getenv("ENVIRONMENT", "local")
 
@@ -270,30 +263,42 @@ async def root():
     <head>
         <title>N-Dimensional Geometry Engine</title>
         <style>
-            body { font-family: Arial, sans-serif; margin: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
-            .container { max-width: 1200px; margin: 0 auto; background: rgba(0,0,0,0.3); padding: 40px; border-radius: 15px; }
+            body { font-family: Arial, sans-serif; margin: 40px; background:
+            linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+            .container { max-width: 1200px; margin: 0 auto; background:
+            rgba(0,0,0,0.3); padding: 40px; border-radius: 15px; }
             h1 { text-align: center; font-size: 2.5em; margin-bottom: 10px; }
-            .subtitle { text-align: center; font-size: 1.2em; margin-bottom: 30px; opacity: 0.9; }
-            .section { margin: 30px 0; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px; }
-            .btn { display: inline-block; padding: 12px 25px; margin: 10px; background: #4CAF50; color: white; text-decoration: none; border-radius: 5px; transition: all 0.3s; }
+            .subtitle { text-align: center; font-size: 1.2em;
+            margin-bottom: 30px; opacity: 0.9; }
+            .section { margin: 30px 0; padding: 20px; background:
+            rgba(255,255,255,0.1); border-radius: 10px; }
+            .btn { display: inline-block; padding: 12px 25px; margin: 10px;
+            background: #4CAF50; color: white; text-decoration: none;
+            border-radius: 5px; transition: all 0.3s; }
             .btn:hover { background: #45a049; transform: translateY(-2px); }
-            .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 20px 0; }
-            .feature { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; text-align: center; }
+            .features { display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px; margin: 20px 0; }
+            .feature { background: rgba(255,255,255,0.1); padding: 20px;
+            border-radius: 10px; text-align: center; }
             .api-link { background: #2196F3; }
             .api-link:hover { background: #1976D2; }
             .demo-link { background: #FF9800; }
             .demo-link:hover { background: #F57C00; }
-            .code { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 5px; font-family: monospace; overflow-x: auto; }
+            .code { background: rgba(0,0,0,0.3); padding: 15px;
+            border-radius: 5px; font-family: monospace; overflow-x: auto; }
         </style>
     </head>
     <body>
         <div class="container">
             <h1>🌌 N-Dimensional Geometry Engine</h1>
-            <p class="subtitle">From CS102 (2014) to Infinite Dimensions • AI-Powered • Web-Enabled</p>
-            
+            <p class="subtitle">From CS102 (2014) to Infinite Dimensions •
+            AI-Powered • Web-Enabled</p>
+
             <div class="section">
                 <h2>🚀 Quick Start</h2>
-                <p>Transform your original CS102 sphere calculator into a powerful n-dimensional geometry engine!</p>
+                <p>Transform your original CS102 sphere calculator into a
+                powerful n-dimensional geometry engine!</p>
                 <div>
                     <a href="/api/docs" class="btn api-link">📚 API Documentation</a>
                     <a href="/demo" class="btn demo-link">🎮 Interactive Demo</a>
@@ -306,15 +311,18 @@ async def root():
                 <div class="features">
                     <div class="feature">
                         <h3>🔢 N-Dimensional Shapes</h3>
-                        <p>Spheres, cubes, ellipsoids, simplices, and pyramids from 1D to 100D+</p>
+                        <p>Spheres, cubes, ellipsoids, simplices, and pyramids
+                        from 1D to 100D+</p>
                     </div>
                     <div class="feature">
                         <h3>🔲 Tiling & Tessellations</h3>
-                        <p>Regular tilings, hexagonal patterns, Voronoi diagrams, and space-filling</p>
+                        <p>Regular tilings, hexagonal patterns, Voronoi diagrams,
+                        and space-filling</p>
                     </div>
                     <div class="feature">
                         <h3>🤖 AI Interface</h3>
-                        <p>Natural language queries like "create a 5D ellipsoid with axes 1 2 3 4 5"</p>
+                        <p>Natural language queries like "create a 5D ellipsoid
+                        with axes 1 2 3 4 5"</p>
                     </div>
                     <div class="feature">
                         <h3>☕ Original Java Integration</h3>
@@ -326,7 +334,8 @@ async def root():
                     </div>
                     <div class="feature">
                         <h3>🔍 Pattern Analysis</h3>
-                        <p>Symmetry analysis, coverage efficiency, and mathematical properties</p>
+                        <p>Symmetry analysis, coverage efficiency, and mathematical
+                        properties</p>
                     </div>
                 </div>
             </div>
@@ -339,27 +348,30 @@ async def root():
                     curl -X POST "http://localhost:8000/api/sphere" \\
                          -H "Content-Type: application/json" \\
                          -d '{"dimensions": 4, "radius": 1.5}'
-                    
+
                     # Create a 3D ellipsoid
                     curl -X POST "http://localhost:8000/api/ellipsoid" \\
                          -H "Content-Type: application/json" \\
                          -d '{"dimensions": 3, "semi_axes": [1.0, 2.0, 3.0]}'
-                    
+
                     # Create a 4D pyramid
                     curl -X POST "http://localhost:8000/api/pyramid" \\
                          -H "Content-Type: application/json" \\
-                         -d '{"dimensions": 4, "base_side_length": 2.0, "height": 3.0}'
-                    
+                         -d '{"dimensions": 4, "base_side_length": 2.0,
+                         "height": 3.0}'
+
                     # Create hexagonal tiling
                     curl -X POST "http://localhost:8000/api/tiling" \\
                          -H "Content-Type: application/json" \\
-                         -d '{"tiling_type": "hexagonal", "dimensions": 2, "bounds": [[0, 10], [0, 10]], "side_length": 1.0}'
-                    
+                         -d '{"tiling_type": "hexagonal", "dimensions": 2,
+                         "bounds": [[0, 10], [0, 10]], "side_length": 1.0}'
+
                     # Create Voronoi diagram
                     curl -X POST "http://localhost:8000/api/tiling" \\
                          -H "Content-Type: application/json" \\
-                         -d '{"tiling_type": "voronoi", "dimensions": 2, "bounds": [[0, 10], [0, 10]], "num_random_seeds": 8}'
-                    
+                         -d '{"tiling_type": "voronoi", "dimensions": 2,
+                         "bounds": [[0, 10], [0, 10]], "num_random_seeds": 8}'
+
                     # Natural language query
                     curl -X POST "http://localhost:8000/api/query" \\
                          -H "Content-Type: application/json" \\
@@ -373,7 +385,8 @@ async def root():
                 <ul>
                     <li>Volume peaks around 5-6 dimensions for unit spheres</li>
                     <li>Surface area scales as n × volume / radius</li>
-                    <li>Most volume concentrates near the surface in high dimensions</li>
+                    <li>Most volume concentrates near the surface in high
+                    dimensions</li>
                 </ul>
             </div>
         </div>
@@ -423,7 +436,9 @@ async def create_cube(request: CubeRequest):
                 "vertices": cube.get_vertex_count(),
                 "edges": cube.get_edge_count(),
                 "diagonal": cube.get_diagonal_length(),
-                "cross_section_volume": cube.get_cross_section(request.side_length / 2),
+                "cross_section_volume": cube.get_cross_section(
+                    request.side_length / 2
+                ),
             },
         )
     except Exception as e:
@@ -436,7 +451,8 @@ async def create_ellipsoid(request: EllipsoidRequest):
     try:
         if len(request.semi_axes) != request.dimensions:
             raise ValueError(
-                f"Number of semi-axes ({len(request.semi_axes)}) must match dimensions ({request.dimensions})"
+                f"Number of semi-axes ({len(request.semi_axes)}) must match "
+                f"dimensions ({request.dimensions})"
             )
 
         ellipsoid = HyperEllipsoid(request.dimensions, *request.semi_axes)
@@ -730,7 +746,8 @@ async def create_visualization(request: VisualizationRequest):
                     ]
                 )
                 fig.update_layout(
-                    title=f"4D Sphere Cross-section at w={request.cross_section:.2f}<br>Cross-section radius: {cross_radius:.3f}",
+                    title=f"4D Sphere Cross-section at w={request.cross_section:.2f}"
+                    f"<br>Cross-section radius: {cross_radius:.3f}",
                     scene=dict(
                         xaxis_title="X",
                         yaxis_title="Y",
@@ -751,14 +768,16 @@ async def create_visualization(request: VisualizationRequest):
                     font=dict(size=20),
                 )
                 fig.update_layout(
-                    title=f"4D Sphere - Cross-section at w={request.cross_section:.2f} (outside bounds)",
+                    title=f"4D Sphere - Cross-section at w={request.cross_section:.2f} "
+                    "(outside bounds)",
                     width=700,
                     height=700,
                 )
 
         # Add mathematical info
         fig.add_annotation(
-            text=f"Volume: {shape.get_volume():.6f}<br>Surface Area: {shape.get_surface_area():.6f}",
+            text=f"Volume: {shape.get_volume():.6f}<br>Surface Area: "
+            f"{shape.get_surface_area():.6f}",
             x=0.02,
             y=0.98,
             xref="paper",
@@ -800,14 +819,16 @@ async def get_dimension_info(dimensions: int = Path(..., ge=1, le=100)):
                 "volume": volume,
                 "surface_area": surface,
                 "volume_formula": unit_sphere.get_volume_formula(),
-                "surface_formula": unit_sphere.get_surface_area_formula(),
+                "surface_formula":
+                unit_sphere.get_surface_area_formula(),
             },
             "insights": {
                 "volume_peaks_at": "5-6 dimensions for unit spheres",
                 "surface_to_volume_ratio": (
                     surface / volume if volume > 0 else float("in")
                 ),
-                "mathematical_note": f"In {dimensions}D, most volume is concentrated near the surface",
+                "mathematical_note":
+                f"In {dimensions}D, most volume is concentrated near the surface",
             },
         }
     except Exception as e:
@@ -821,7 +842,8 @@ async def create_tiling(request: TilingRequest):
         # Validate bounds match dimensions
         if len(request.bounds) != request.dimensions:
             raise ValueError(
-                f"Number of bounds ({len(request.bounds)}) must match dimensions ({request.dimensions})"
+                f"Number of bounds ({len(request.bounds)}) must match "
+                f"dimensions ({request.dimensions})"
             )
 
         # Convert bounds to the expected format
@@ -956,5 +978,5 @@ if __name__ == "__main__":
         app,
         host="0.0.0.0",
         port=8000,
-        access_log=False,  # Disable access logging completely to reduce CloudWatch costs
+        access_log=False,  # Disable access logging completely to reduce costs
     )

@@ -7,10 +7,8 @@ Benchmarks computational performance and scalability
 import gc
 import os
 import sys
-import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import Dict, List
 
 import psutil
 import pytest
@@ -365,7 +363,7 @@ class TestMemoryUsage:
         # Create agent and process many queries
         agent = GeometryAgent()
         for i in range(100):
-            result = agent.process_query(
+            agent.process_query(
                 f"create a {i % 10 + 1}D sphere radius {i % 5 + 1}"
             )
 
@@ -532,19 +530,19 @@ class TestStressTests:
         for i in range(1000):
             if i % 4 == 0:
                 sphere = HyperSphere(i % 10 + 1, 1.0)
-                volume = sphere.get_volume()
+                sphere.get_volume()
                 operations += 1
             elif i % 4 == 1:
                 cube = HyperCube(i % 10 + 1, 1.0)
-                surface = cube.get_surface_area()
+                cube.get_surface_area()
                 operations += 1
             elif i % 4 == 2:
                 ellipsoid = HyperEllipsoid(3, 1.0, 2.0, 3.0)
-                ratio = ellipsoid.get_axis_ratio()
+                ellipsoid.get_axis_ratio()
                 operations += 1
             else:
                 simplex = Simplex(i % 5 + 1, 1.0)
-                vertices = simplex.get_vertex_count()
+                simplex.get_vertex_count()
                 operations += 1
 
         end_time = time.time()
@@ -571,7 +569,7 @@ class TestComputationalComplexity:
             def calculate_volume():
                 return sphere.get_volume()
 
-            result = benchmark.pedantic(calculate_volume, iterations=100, rounds=5)
+            benchmark.pedantic(calculate_volume, iterations=100, rounds=5)
             times.append(benchmark.stats["mean"])
 
         # Check that time doesn't grow exponentially
@@ -594,7 +592,7 @@ class TestComputationalComplexity:
             def generate_tiling():
                 return tiling.generate_pattern(bounds, density=1.0)
 
-            result = benchmark.pedantic(generate_tiling, iterations=10, rounds=3)
+            benchmark.pedantic(generate_tiling, iterations=10, rounds=3)
             times.append(benchmark.stats["mean"])
 
         # Check that time scales reasonably with area
@@ -620,7 +618,7 @@ class TestRegressionPerformance:
         # Volume calculation should be fast
         start_time = time.time()
         for _ in range(10000):
-            volume = sphere.get_volume()
+            sphere.get_volume()
         end_time = time.time()
 
         elapsed_time = end_time - start_time
@@ -629,7 +627,7 @@ class TestRegressionPerformance:
         # Surface area calculation should be fast
         start_time = time.time()
         for _ in range(10000):
-            surface_area = sphere.get_surface_area()
+            sphere.get_surface_area()
         end_time = time.time()
 
         elapsed_time = end_time - start_time
@@ -646,7 +644,7 @@ class TestRegressionPerformance:
         # Tiling generation should be reasonably fast
         start_time = time.time()
         for _ in range(100):
-            tiles = tiling.generate_pattern(bounds, density=1.0)
+            tiling.generate_pattern(bounds, density=1.0)
         end_time = time.time()
 
         elapsed_time = end_time - start_time
@@ -659,7 +657,7 @@ class TestRegressionPerformance:
         # Agent queries should be reasonably fast
         start_time = time.time()
         for i in range(100):
-            result = agent.process_query(f"create a 3D sphere radius {i % 5 + 1}")
+            agent.process_query(f"create a 3D sphere radius {i % 5 + 1}")
         end_time = time.time()
 
         elapsed_time = end_time - start_time

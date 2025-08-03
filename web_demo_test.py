@@ -3,7 +3,6 @@
 Comprehensive test of the web API functionality
 """
 
-import json
 import sys
 import time
 
@@ -126,7 +125,8 @@ def test_dimension_info():
                 print(f"   - Unit sphere volume: {unit_sphere['volume']:.6f}")
                 print(f"   - Unit sphere surface: {unit_sphere['surface_area']:.6f}")
                 print(
-                    f"   - Surface/Volume ratio: {data['insights']['surface_to_volume_ratio']:.3f}"
+                    f"   - Surface/Volume ratio: "
+                    f"{data['insights']['surface_to_volume_ratio']:.3f}"
                 )
             else:
                 print(f"❌ {dim}D info failed: {response.status_code}")
@@ -158,7 +158,8 @@ def test_visualization():
                 print(f"   - Plot data: {len(data['plot_json'])} characters")
             else:
                 print(
-                    f"❌ {case['dimensions']}D visualization failed: {response.status_code}"
+                    f"❌ {case['dimensions']}D visualization failed: "
+                    f"{response.status_code}"
                 )
                 print(f"   Error: {response.text}")
         except Exception as e:

@@ -8,9 +8,7 @@ Run this script after installation to ensure everything is set up properly.
 
 import importlib
 import os
-import subprocess
 import sys
-from pathlib import Path
 
 
 def print_header(title):
@@ -140,7 +138,7 @@ def check_geometry_engine():
     print_header("Geometry Engine Check")
 
     try:
-        from geometry_engine import GeometryAgent, HyperCube, HyperSphere
+        from geometry_engine import HyperCube, HyperSphere
 
         print_success("Geometry engine imported successfully")
 
@@ -186,9 +184,7 @@ def test_server_start():
 
     try:
         # Import required modules
-        import uvicorn
-
-        from web_api import app
+        import web_api  # noqa: F401
 
         print_success("Server components ready")
         print("To start server manually:")
@@ -225,7 +221,8 @@ def provide_recommendations():
     print("  - Read TROUBLESHOOTING.md")
     print("  - Check CLAUDE.md for full documentation")
     print(
-        "  - Review ai_cognitive_framework_geometry_engine.json for AI collaboration patterns"
+        "  - Review ai_cognitive_framework_geometry_engine.json for AI "
+        "collaboration patterns"
     )
 
 

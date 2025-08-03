@@ -4,7 +4,6 @@ Tiling Tests for the N-Dimensional Geometry Engine
 Tests tiling patterns and tessellation functionality
 """
 
-import math
 import os
 import sys
 
@@ -16,7 +15,6 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from geometry_engine import (
     HexagonalTiling,
     HyperCube,
-    HyperSphere,
     RegularTiling,
     TilingAnalyzer,
     VoronoiTiling,
