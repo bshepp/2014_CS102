@@ -15,6 +15,7 @@ class JavaBridge:
     """
 
     def __init__(self):
+        self.java_dir = os.path.dirname(os.path.abspath(__file__))
         self.java_available = self._check_java_availability()
         if self.java_available:
             self._compile_java_files()
@@ -107,7 +108,8 @@ class JavaBridge:
     def run_original_sphere(self, diameter: float) -> str:
         """
         Execute the original Java sphere program with given diameter
-        Tries MultiSphere.java first (has main method), then falls back to Python equivalent
+        Tries MultiSphere.java first (has main method),
+        then falls back to Python equivalent
         """
         if not self.java_available:
             return self._python_sphere_equivalent(diameter)
@@ -120,7 +122,7 @@ class JavaBridge:
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
-                cwd=self.java_dir
+                cwd=self.java_dir,
             )
 
             stdout, stderr = process.communicate(input=str(diameter))
@@ -135,7 +137,7 @@ class JavaBridge:
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
                     text=True,
-                    cwd=self.java_dir
+                    cwd=self.java_dir,
                 )
 
                 stdout, stderr = process.communicate(input=str(diameter))
@@ -143,15 +145,18 @@ class JavaBridge:
                 if process.returncode == 0:
                     return f"🎯 ORIGINAL JAVA OUTPUT (Sphere):\n{stdout}"
                 else:
-                    # If Java execution fails (e.g., no main method), fall back to Python
-                    if ("main method not found" in stderr.lower() or 
-                        "no main method" in stderr.lower() or
-                        "main method" in stderr.lower() or
-                        "could not find or load main class" in stderr.lower()):
+                    # If Java execution fails (e.g., no main method),
+                    # fall back to Python
+                    if (
+                        "main method not found" in stderr.lower()
+                        or "no main method" in stderr.lower()
+                        or "main method" in stderr.lower()
+                        or "could not find or load main class" in stderr.lower()
+                    ):
                         return self._python_sphere_equivalent(diameter)
                     return f"Java execution failed: {stderr}"
 
-        except Exception as e:
+        except Exception:
             # Fall back to Python equivalent on any error
             return self._python_sphere_equivalent(diameter)
 
@@ -338,11 +343,11 @@ class HyperSphere(NDShape):
         """Check if a point is inside the hypersphere"""
         if len(point) != self.dimensions:
             raise ValueError("Point dimension mismatch")
-        
+
         # Calculate distance from origin to point
-        distance_squared = sum(coord ** 2 for coord in point)
+        distance_squared = sum(coord**2 for coord in point)
         distance = math.sqrt(distance_squared)
-        
+
         return distance <= self.radius
 
 
