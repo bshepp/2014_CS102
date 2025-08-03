@@ -144,7 +144,7 @@ Preserved and enhanced original CS102 code:
 ## 🛠️ Dependencies and Environment
 
 ### **Python Environment**
-- **Python Version**: 3.11+ (tested on 3.9, 3.10, 3.11, 3.12)
+- **Python Version**: 3.9+ (tested on 3.9, 3.10, 3.11, 3.12)
 - **Virtual Environment**: Required (`venv/` directory)
 - **Package Manager**: pip (latest)
 

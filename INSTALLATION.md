@@ -18,7 +18,7 @@
 
 ### **System Requirements**
 - **Operating System**: Linux, macOS, or Windows 10+
-- **Python**: 3.11 or higher (3.12 recommended)
+- **Python**: 3.9 or higher (3.11+ recommended)
 - **Java**: 11 or higher (for Java integration)
 - **Memory**: 4GB RAM minimum (8GB recommended for high-dimensional operations)
 - **Storage**: 1GB free space (cleaned and organized structure)
