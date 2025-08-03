@@ -9,6 +9,7 @@ import os
 import sys
 from typing import Dict, List
 
+import numpy as np
 import pytest
 
 # Add parent directory to path
@@ -224,7 +225,7 @@ class TestHyperEllipsoid:
         """Test creating hyperellipsoids with various dimensions."""
         ellipse = sample_ellipsoids["2d_ellipse"]
         assert ellipse.dimensions == 2
-        assert ellipse.semi_axes == [1.0, 2.0]
+        assert np.array_equal(ellipse.semi_axes, [1.0, 2.0])
 
     def test_hyperellipsoid_volume(self, sample_ellipsoids, tolerance):
         """Test hyperellipsoid volume calculations."""

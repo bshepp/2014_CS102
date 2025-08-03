@@ -1,0 +1,63 @@
+# Prettier ignore file for N-Dimensional Geometry Engine
+# Files that should not be auto-formatted
+
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build outputs
+build/
+dist/
+coverage/
+htmlcov/
+
+# Generated files
+*.min.js
+*.min.css
+*.bundle.js
+*.chunk.js
+
+# Documentation (preserve manual formatting)
+*.md
+CHANGELOG.md
+CONTRIBUTING.md
+
+# Configuration files (preserve exact formatting)
+.github/
+*.json
+*.yml
+*.yaml
+
+# Test outputs
+test-reports/
+.coverage
+*.junit.xml
+
+# Archive directory
+.archive/
+
+# Python files (use Black/isort instead)
+*.py
+
+# Java files (use different formatters)
+*.java
+*.class
+
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env*
+
+# Lock files and package manifests
+requirements*.txt
+Dockerfile*
+.dockerignore
+
+# Logs
+*.log

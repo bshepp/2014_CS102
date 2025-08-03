@@ -1,0 +1,47 @@
+# Bandit security scanner configuration
+# Excludes directories and files from security scanning
+
+[bandit]
+# Directories to exclude from scanning
+exclude_dirs = [
+    "venv",
+    ".venv", 
+    ".git",
+    "__pycache__",
+    ".pytest_cache",
+    ".mypy_cache",
+    ".benchmarks",
+    ".archive",
+    "htmlcov",
+    "build",
+    "dist",
+    "tests"
+]
+
+# Files to exclude (glob patterns)
+exclude = [
+    "*/tests/*",
+    "*/test_*.py",
+    "*/*_test.py",
+    "*/conftest.py",
+    "demo*.py",
+    "verify_installation.py",
+    "run_tests.py"
+]
+
+# Skip specific test IDs that are acceptable for this project
+skips = [
+    "B101",  # assert_used - acceptable in tests
+    "B601",  # paramiko_calls - not applicable
+    "B602"   # subprocess_popen_with_shell_equals_true - controlled use
+]
+
+# Output format
+format = json
+output = test-reports/bandit.json
+
+# Confidence level (LOW, MEDIUM, HIGH)
+confidence = MEDIUM
+
+# Severity level (LOW, MEDIUM, HIGH)  
+level = MEDIUM

@@ -1,0 +1,44 @@
+# ESLint ignore file for N-Dimensional Geometry Engine
+# Ignores JavaScript files that shouldn't be linted
+
+# Dependencies
+node_modules/
+npm-debug.log*
+
+# Build outputs
+build/
+dist/
+coverage/
+
+# Minified files
+*.min.js
+*.min.css
+
+# Generated files
+*.bundle.js
+*.chunk.js
+
+# Test outputs
+test-reports/
+
+# Configuration files
+.eslintrc.js
+webpack.config.js
+babel.config.js
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Archive directory
+.archive/
+
+# Environment files
+.env*
+
+# Python files (not relevant for ESLint)
+*.py

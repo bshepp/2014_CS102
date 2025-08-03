@@ -172,3 +172,45 @@ security-reports/
 # Performance test results
 benchmark-results/
 lighthouse-reports/
+.benchmarks/
+
+# MyPy type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Additional Python caches
+.ruff_cache/
+.black_cache/
+
+# Jupyter notebooks
+.ipynb_checkpoints/
+*.ipynb
+
+# Local configuration overrides
+.env.development
+.env.staging
+.env.testing
+
+# Additional test files
+test-results.xml
+test-report.html
+*.junit.xml
+
+# IDE workspace files
+.vscode/settings.json
+.vscode/launch.json
+
+# Package lock files for Node.js tools
+yarn.lock
+pnpm-lock.yaml
+
+# macOS specific
+.localized
+
+# Windows specific
+*.lnk
+
+# Backup files
+*.backup
+*.bk

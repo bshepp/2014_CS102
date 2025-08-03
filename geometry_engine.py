@@ -104,6 +104,50 @@ class JavaBridge:
 
         return output
 
+    def run_original_sphere(self, diameter: float) -> str:
+        """
+        Execute the original Sphere.java with given diameter
+        This preserves the exact original CS102 implementation
+        """
+        if not self.java_available:
+            return self._python_sphere_equivalent(diameter)
+
+        try:
+            # Create a temporary input for the Java program
+            process = subprocess.Popen(
+                ["java", "Sphere"],
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+            )
+
+            stdout, stderr = process.communicate(input=str(diameter))
+
+            if process.returncode == 0:
+                return f"🎯 ORIGINAL JAVA OUTPUT:\n{stdout}"
+            else:
+                return f"Java execution failed: {stderr}"
+
+        except Exception as e:
+            return f"Error running Java: {e}"
+
+    def _python_sphere_equivalent(self, diameter: float) -> str:
+        """
+        Python equivalent of the original Sphere logic
+        """
+        radius = diameter / 2.0
+        volume = (4.0 / 3.0) * math.pi * pow(radius, 3)
+        surface_area = 4.0 * math.pi * pow(radius, 2)
+
+        output = "🐍 PYTHON EQUIVALENT (Java not available):\n"
+        output += f"Sphere with diameter {diameter:.3f}:\n"
+        output += f"  Radius: {radius:.3f}\n"
+        output += f"  Volume: {volume:.3f}\n"
+        output += f"  Surface Area: {surface_area:.3f}\n"
+
+        return output
+
     def get_original_sphere_properties(self, diameter: float) -> Dict[str, float]:
         """
         Get sphere properties using the original Java logic
@@ -202,8 +246,8 @@ class HyperSphere(NDShape):
     def validate_parameters(self):
         if len(self.parameters) != 1:
             raise ValueError("HyperSphere requires exactly one parameter (radius)")
-        if self.parameters[0] < 0:
-            raise ValueError("Radius cannot be negative")
+        if self.parameters[0] <= 0:
+            raise ValueError("Radius must be positive")
 
     def get_volume(self) -> float:
         return self.unit_sphere_volume(self.dimensions) * pow(
@@ -266,6 +310,17 @@ class HyperSphere(NDShape):
 
         return f"S_{self.dimensions} = {self.dimensions} × V_{self.dimensions} / r"
 
+    def contains_point(self, point: List[float]) -> bool:
+        """Check if a point is inside the hypersphere"""
+        if len(point) != self.dimensions:
+            raise ValueError("Point dimension mismatch")
+        
+        # Calculate distance from origin to point
+        distance_squared = sum(coord ** 2 for coord in point)
+        distance = math.sqrt(distance_squared)
+        
+        return distance <= self.radius
+
 
 class HyperCube(NDShape):
     """N-dimensional hypercube implementation"""
@@ -277,8 +332,8 @@ class HyperCube(NDShape):
     def validate_parameters(self):
         if len(self.parameters) != 1:
             raise ValueError("HyperCube requires exactly one parameter (side length)")
-        if self.parameters[0] < 0:
-            raise ValueError("Side length cannot be negative")
+        if self.parameters[0] <= 0:
+            raise ValueError("Side length must be positive")
 
     def get_volume(self) -> float:
         return pow(self.side_length, self.dimensions)
@@ -352,7 +407,7 @@ class HyperCube(NDShape):
 
     def get_cross_section(self, distance: float) -> float:
         """Calculate the volume of a cross-section at a given distance"""
-        if distance < 0 or distance > self.side_length:
+        if distance <= 0 or distance >= self.side_length:
             return 0
 
         if self.dimensions == 1:
@@ -380,8 +435,8 @@ class HyperEllipsoid(NDShape):
             raise ValueError(
                 f"HyperEllipsoid requires exactly {self.dimensions} parameters (semi-axes)"
             )
-        if any(axis < 0 for axis in self.parameters):
-            raise ValueError("Semi-axes cannot be negative")
+        if any(axis <= 0 for axis in self.parameters):
+            raise ValueError("Semi-axes must be positive")
 
     def get_volume(self) -> float:
         """Calculate n-dimensional ellipsoid volume"""
@@ -1439,7 +1494,19 @@ class GeometryAgent:
             if "original" in query and "java" in query:
                 return self._handle_original_java_query(query)
 
-            # Create shape queries
+            # Ellipsoid-specific queries (must come before general create)
+            if "ellipse" in query or "ellipsoid" in query or "oval" in query:
+                return self._handle_ellipsoid_query(query)
+
+            # Simplex-specific queries (must come before general create)
+            if "simplex" in query or "triangle" in query or "tetrahedron" in query:
+                return self._handle_simplex_query(query)
+
+            # Pyramid-specific queries (must come before general create)
+            if "pyramid" in query or "cone" in query:
+                return self._handle_pyramid_query(query)
+
+            # Create shape queries (general, after specific shapes)
             if "create" in query or "make" in query:
                 return self._handle_create_query(query)
 
@@ -1450,18 +1517,6 @@ class GeometryAgent:
             # Comparison queries
             if "compare" in query or "vs" in query or "versus" in query:
                 return self._handle_comparison_query(query)
-
-            # Ellipsoid-specific queries
-            if "ellipse" in query or "ellipsoid" in query or "oval" in query:
-                return self._handle_ellipsoid_query(query)
-
-            # Simplex-specific queries
-            if "simplex" in query or "triangle" in query or "tetrahedron" in query:
-                return self._handle_simplex_query(query)
-
-            # Pyramid-specific queries
-            if "pyramid" in query or "cone" in query:
-                return self._handle_pyramid_query(query)
 
             # Tiling-specific queries
             if (
@@ -1749,30 +1804,48 @@ class GeometryAgent:
         if dimensions == -1:
             dimensions = 3
 
-        if "create" in query or "make" in query:
-            return self._handle_create_query(query)
-
-        # Property queries for ellipsoids
+        # Extract axes parameters
         axes = self._extract_multiple_parameters(query)
         if not axes or len(axes) != dimensions:
-            return f"Please specify {dimensions} semi-axes for {dimensions}D ellipsoid"
+            return f"Please specify {dimensions} semi-axes for {dimensions}D ellipsoid (e.g., 'axes 1 2 3')"
 
         shape = HyperEllipsoid(dimensions, *axes)
 
-        result = "HyperEllipsoid properties:\n"
-        result += f"{shape}\n"
-        result += f"Formulas:\n• {shape.get_volume_formula()}\n• {shape.get_surface_area_formula()}\n"
+        if "create" in query or "make" in query:
+            # Create and save the shape
+            name = f"shape{self.shape_counter}"
+            self.shape_counter += 1
+            self.saved_shapes[name] = shape
 
-        if shape.is_sphere():
-            result += "Special Note: This is actually a sphere (all axes equal)\n"
+            result = f"Created {shape.get_shape_type()} '{name}':\n"
+            result += f"{shape}\n"
+            result += f"Semi-axes = {axes}\n"
+            result += f"Formulas:\n• {shape.get_volume_formula()}\n• {shape.get_surface_area_formula()}\n"
+            if shape.is_sphere():
+                result += "Special Properties:\n• This is actually a sphere (all axes equal)\n"
+            else:
+                result += (
+                    f"Special Properties:\n• Axis ratio: {shape.get_axis_ratio():.6f}\n"
+                )
+                if dimensions == 2:
+                    result += f"• Eccentricity: {shape.get_eccentricity():.6f}\n"
+            return result
         else:
-            result += (
-                f"Special Properties:\n• Axis ratio: {shape.get_axis_ratio():.6f}\n"
-            )
-            if dimensions == 2:
-                result += f"• Eccentricity: {shape.get_eccentricity():.6f}\n"
+            # Just show properties without creating
+            result = "HyperEllipsoid properties:\n"
+            result += f"{shape}\n"
+            result += f"Formulas:\n• {shape.get_volume_formula()}\n• {shape.get_surface_area_formula()}\n"
 
-        return result
+            if shape.is_sphere():
+                result += "Special Note: This is actually a sphere (all axes equal)\n"
+            else:
+                result += (
+                    f"Special Properties:\n• Axis ratio: {shape.get_axis_ratio():.6f}\n"
+                )
+                if dimensions == 2:
+                    result += f"• Eccentricity: {shape.get_eccentricity():.6f}\n"
+
+            return result
 
     def _handle_simplex_query(self, query: str) -> str:
         """Handle simplex-specific queries"""
@@ -1833,10 +1906,7 @@ class GeometryAgent:
         if dimensions == -1:
             dimensions = 3
 
-        if "create" in query or "make" in query:
-            return self._handle_create_query(query)
-
-        # Property queries for pyramids
+        # Extract pyramid parameters
         pyramid_params = self._extract_pyramid_parameters(query)
         if not pyramid_params:
             return "Please specify base side length and height for pyramid (e.g., 'base 2 height 3')"
@@ -1844,20 +1914,35 @@ class GeometryAgent:
         base_side, height = pyramid_params
         shape = HyperPyramid(dimensions, base_side, height)
 
-        result = "HyperPyramid properties:\n"
-        result += f"{shape}\n"
-        result += f"Formulas:\n• {shape.get_volume_formula()}\n• {shape.get_surface_area_formula()}\n"
-        result += f"Geometric Properties:\n• Vertices: {shape.get_vertex_count()}\n• Edges: {shape.get_edge_count()}\n"
-        result += f"• Slant height: {shape.get_slant_height():.6f}\n• Lateral edge: {shape.get_lateral_edge_length():.6f}\n• Base volume: {shape.get_base_volume():.6f}\n"
+        if "create" in query or "make" in query:
+            # Create and save the shape
+            name = f"shape{self.shape_counter}"
+            self.shape_counter += 1
+            self.saved_shapes[name] = shape
 
-        # Face counts
-        result += "Face counts:\n"
-        for k in range(dimensions + 1):
-            faces = shape.get_face_count(k)
-            if faces > 0:
-                result += f"• {k}-faces: {faces}\n"
+            result = f"Created {shape.get_shape_type()} '{name}':\n"
+            result += f"{shape}\n"
+            result += f"Base side = {base_side}, Height = {height}\n"
+            result += f"Formulas:\n• {shape.get_volume_formula()}\n• {shape.get_surface_area_formula()}\n"
+            result += f"Geometric Properties:\n• Vertices: {shape.get_vertex_count()}\n• Edges: {shape.get_edge_count()}\n"
+            result += f"• Slant height: {shape.get_slant_height():.6f}\n• Lateral edge: {shape.get_lateral_edge_length():.6f}\n• Base volume: {shape.get_base_volume():.6f}"
+            return result
+        else:
+            # Just show properties without creating
+            result = "HyperPyramid properties:\n"
+            result += f"{shape}\n"
+            result += f"Formulas:\n• {shape.get_volume_formula()}\n• {shape.get_surface_area_formula()}\n"
+            result += f"Geometric Properties:\n• Vertices: {shape.get_vertex_count()}\n• Edges: {shape.get_edge_count()}\n"
+            result += f"• Slant height: {shape.get_slant_height():.6f}\n• Lateral edge: {shape.get_lateral_edge_length():.6f}\n• Base volume: {shape.get_base_volume():.6f}\n"
 
-        return result
+            # Face counts
+            result += "Face counts:\n"
+            for k in range(dimensions + 1):
+                faces = shape.get_face_count(k)
+                if faces > 0:
+                    result += f"• {k}-faces: {faces}\n"
+
+            return result
 
     def _handle_tiling_query(self, query: str) -> str:
         """Handle tiling-specific queries"""

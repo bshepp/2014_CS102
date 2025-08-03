@@ -8,7 +8,13 @@ exclude =
     *.pyc,
     .pytest_cache/,
     .coverage,
-    .archive/
+    .archive/,
+    .mypy_cache/,
+    .benchmarks/,
+    htmlcov/,
+    build/,
+    dist/,
+    *.egg-info/
 per-file-ignores =
     # Allow unused imports in __init__.py files
     __init__.py:F401

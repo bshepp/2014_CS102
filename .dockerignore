@@ -97,3 +97,47 @@ test_*.py
 amplify*.yml
 amplify*.json
 quickstart.sh
+
+# Additional Python caches
+.mypy_cache/
+.ruff_cache/
+.black_cache/
+
+# Performance benchmarks (not needed in containers)
+.benchmarks/
+benchmark-results/
+
+# Additional test outputs
+test-results.xml
+test-report.html
+*.junit.xml
+
+# Local environment configurations
+.env.development
+.env.staging
+.env.testing
+
+# Backup files
+*.backup
+*.bk
+*.orig
+
+# Additional lock files
+yarn.lock
+pnpm-lock.yaml
+
+# Additional IDE files
+.vscode/settings.json
+.vscode/launch.json
+
+# Tool-specific ignore files
+.*ignore
+.*rc
+.isort.cfg
+.lighthouserc.json
+
+# Security reports (sensitive information)
+security-reports/
+*.sarif
+bandit-report.json
+safety-report.json
