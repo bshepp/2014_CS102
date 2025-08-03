@@ -10,7 +10,7 @@ from typing import Any, Dict, List, Optional
 
 import numpy as np
 import plotly.graph_objects as go
-from fastapi import FastAPI, HTTPException, Path, Query
+from fastapi import FastAPI, HTTPException, Path, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel, Field
@@ -30,6 +30,35 @@ from geometry_engine import (
     TilingAnalyzer,
     VoronoiTiling,
 )
+
+# Custom Exception Hierarchy for Proper Error Handling
+class GeometryError(Exception):
+    """Base exception for geometry engine errors"""
+    def __init__(self, message: str, error_code: str = "GEOMETRY_ERROR"):
+        self.message = message
+        self.error_code = error_code
+        super().__init__(self.message)
+
+class GeometryValidationError(GeometryError):
+    """Validation errors - user input issues (HTTP 400)"""
+    def __init__(self, message: str):
+        super().__init__(message, "VALIDATION_ERROR")
+
+class GeometryComputationError(GeometryError):
+    """Computation errors - mathematical/processing issues (HTTP 500)"""
+    def __init__(self, message: str):
+        super().__init__(message, "COMPUTATION_ERROR")
+
+class GeometryNotSupportedError(GeometryError):
+    """Feature not supported errors (HTTP 422)"""
+    def __init__(self, message: str):
+        super().__init__(message, "NOT_SUPPORTED_ERROR")
+
+# Error Response Model
+class ErrorResponse(BaseModel):
+    error_code: str
+    message: str
+    details: Optional[str] = None
 
 # FastAPI app setup
 app = FastAPI(
@@ -61,6 +90,41 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
 
 
 app.add_middleware(SecurityHeadersMiddleware)
+
+# Custom Exception Handlers
+@app.exception_handler(GeometryValidationError)
+async def validation_error_handler(request: Request, exc: GeometryValidationError):
+    return JSONResponse(
+        status_code=400,
+        content=ErrorResponse(
+            error_code=exc.error_code,
+            message=exc.message
+        ).dict()
+    )
+
+@app.exception_handler(GeometryComputationError)
+async def computation_error_handler(request: Request, exc: GeometryComputationError):
+    # Log detailed error server-side but return sanitized error to client
+    import logging
+    logging.error(f"Computation error on {request.url}: {exc.message}")
+    
+    return JSONResponse(
+        status_code=500,
+        content=ErrorResponse(
+            error_code=exc.error_code,
+            message="Internal computation error occurred. Please check your input parameters."
+        ).dict()
+    )
+
+@app.exception_handler(GeometryNotSupportedError)
+async def not_supported_error_handler(request: Request, exc: GeometryNotSupportedError):
+    return JSONResponse(
+        status_code=422,
+        content=ErrorResponse(
+            error_code=exc.error_code,
+            message=exc.message
+        ).dict()
+    )
 
 # Load environment configuration
 
@@ -129,15 +193,19 @@ class SimplexRequest(BaseModel):
     dimensions: int = Field(
         ..., ge=1, le=100, description="Number of dimensions (1-100)"
     )
-    side_length: float = Field(..., gt=0, description="Simplex side length")
+    edge_length: Optional[float] = Field(None, gt=0, description="Simplex edge length")
+    # Backward compatibility alias
+    side_length: Optional[float] = Field(None, gt=0, description="Deprecated: use edge_length")
 
 
 class PyramidRequest(BaseModel):
     dimensions: int = Field(
         ..., ge=1, le=100, description="Number of dimensions (1-100)"
     )
-    base_side_length: float = Field(..., gt=0, description="Base side length")
+    base_edge_length: Optional[float] = Field(None, gt=0, description="Base edge length")
     height: float = Field(..., gt=0, description="Pyramid height")
+    # Backward compatibility alias
+    base_side_length: Optional[float] = Field(None, gt=0, description="Deprecated: use base_edge_length")
 
 
 class TilingRequest(BaseModel):
@@ -155,12 +223,19 @@ class TilingRequest(BaseModel):
     shape_type: Optional[str] = Field(
         None, description="For regular tiling: 'cube', 'sphere', 'simplex'"
     )
-    parameter: Optional[float] = Field(
-        None, gt=0, description="Shape parameter (side length, radius, etc.)"
+    shape_size: Optional[float] = Field(
+        None, gt=0, description="Shape size (cube side_length, sphere radius, simplex edge_length)"
     )
     # Hexagonal tiling parameters
+    hex_side_length: Optional[float] = Field(
+        None, gt=0, description="For hexagonal tiling: hexagon side length"
+    )
+    # Backward compatibility aliases
+    parameter: Optional[float] = Field(
+        None, gt=0, description="Deprecated: use shape_size"
+    )
     side_length: Optional[float] = Field(
-        None, gt=0, description="For hexagonal tiling: side length"
+        None, gt=0, description="Deprecated: use hex_side_length"
     )
     # Voronoi tiling parameters
     seed_points: Optional[List[List[float]]] = Field(
@@ -413,8 +488,10 @@ async def create_sphere(request: SphereRequest):
             shape_type=sphere.get_shape_type(),
             additional_properties={"diameter": 2 * request.radius},
         )
+    except ValueError as e:
+        raise GeometryValidationError(f"Invalid sphere parameters: {str(e)}")
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise GeometryComputationError(f"Failed to create sphere: {str(e)}")
 
 
 @app.post("/api/cube", response_model=ShapeResponse)
@@ -483,12 +560,19 @@ async def create_ellipsoid(request: EllipsoidRequest):
 async def create_simplex(request: SimplexRequest):
     """Create an n-dimensional simplex and return its properties"""
     try:
-        simplex = Simplex(request.dimensions, request.side_length)
+        # Handle backward compatibility
+        edge_length = request.edge_length
+        if edge_length is None and request.side_length is not None:
+            edge_length = request.side_length
+        elif edge_length is None:
+            raise ValueError("edge_length is required")
+            
+        simplex = Simplex(request.dimensions, edge_length)
 
         return ShapeResponse(
             dimensions=request.dimensions,
-            parameter=request.side_length,
-            parameter_name="side_length",
+            parameter=edge_length,
+            parameter_name="edge_length",
             volume=simplex.get_volume(),
             surface_area=simplex.get_surface_area(),
             volume_formula=simplex.get_volume_formula(),
@@ -510,14 +594,21 @@ async def create_simplex(request: SimplexRequest):
 async def create_pyramid(request: PyramidRequest):
     """Create an n-dimensional pyramid and return its properties"""
     try:
+        # Handle backward compatibility
+        base_edge_length = request.base_edge_length
+        if base_edge_length is None and request.base_side_length is not None:
+            base_edge_length = request.base_side_length
+        elif base_edge_length is None:
+            raise ValueError("base_edge_length is required")
+            
         pyramid = HyperPyramid(
-            request.dimensions, request.base_side_length, request.height
+            request.dimensions, base_edge_length, request.height
         )
 
         return ShapeResponse(
             dimensions=request.dimensions,
-            parameter=request.base_side_length,
-            parameter_name="base_side_length",
+            parameter=base_edge_length,
+            parameter_name="base_edge_length",
             volume=pyramid.get_volume(),
             surface_area=pyramid.get_surface_area(),
             volume_formula=pyramid.get_volume_formula(),
@@ -847,16 +938,23 @@ async def create_tiling(request: TilingRequest):
 
         # Create tiling based on type
         if request.tiling_type == "regular":
-            if not request.shape_type or not request.parameter:
-                raise ValueError("Regular tiling requires 'shape_type' and 'parameter'")
+            # Handle backward compatibility for shape size parameter
+            shape_size = request.shape_size
+            if shape_size is None and request.parameter is not None:
+                shape_size = request.parameter
+            elif shape_size is None:
+                raise ValueError("Regular tiling requires 'shape_size' (or deprecated 'parameter')")
+                
+            if not request.shape_type:
+                raise ValueError("Regular tiling requires 'shape_type'")
 
             # Create the base shape
             if request.shape_type == "cube":
-                base_shape = HyperCube(request.dimensions, request.parameter)
+                base_shape = HyperCube(request.dimensions, shape_size)
             elif request.shape_type == "sphere":
-                base_shape = HyperSphere(request.dimensions, request.parameter)
+                base_shape = HyperSphere(request.dimensions, shape_size)
             elif request.shape_type == "simplex":
-                base_shape = Simplex(request.dimensions, request.parameter)
+                base_shape = Simplex(request.dimensions, shape_size)
             else:
                 raise ValueError(f"Unsupported shape type: {request.shape_type}")
 
@@ -865,10 +963,15 @@ async def create_tiling(request: TilingRequest):
         elif request.tiling_type == "hexagonal":
             if request.dimensions != 2:
                 raise ValueError("Hexagonal tiling is only supported in 2D")
-            if not request.side_length:
-                raise ValueError("Hexagonal tiling requires 'side_length'")
+                
+            # Handle backward compatibility for hexagonal side length
+            hex_side_length = request.hex_side_length
+            if hex_side_length is None and request.side_length is not None:
+                hex_side_length = request.side_length
+            elif hex_side_length is None:
+                raise ValueError("Hexagonal tiling requires 'hex_side_length' (or deprecated 'side_length')")
 
-            tiling = HexagonalTiling(request.side_length)
+            tiling = HexagonalTiling(hex_side_length)
 
         elif request.tiling_type == "voronoi":
             if request.dimensions != 2:
