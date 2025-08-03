@@ -1067,7 +1067,7 @@ class HyperPyramid(NDShape):
         return f"{self.get_shape_type()} (dim={self.dimensions}, base={self.base_side_length:.3f}, height={self.height:.3f}): Volume={self.get_volume():.6f}, Surface Area={self.get_surface_area():.6f}, Vertices={self.get_vertex_count()}"
 
 
-class TilingPattern:
+class TilingPattern(ABC):
     """Base class for tiling patterns and tessellations"""
 
     def __init__(self, dimensions: int, base_shape: NDShape, pattern_type: str):
@@ -1077,17 +1077,19 @@ class TilingPattern:
         self.tiles = []
         self.bounds = None
 
+    @abstractmethod
     def generate_pattern(self, bounds: List[tuple], density: float = 1.0) -> List[Dict]:
         """Generate tiling pattern within given bounds"""
-        raise NotImplementedError
+        pass
 
     def get_tile_count(self) -> int:
         """Get total number of tiles in the pattern"""
         return len(self.tiles)
 
+    @abstractmethod
     def get_coverage_efficiency(self) -> float:
         """Calculate space coverage efficiency (0-1)"""
-        raise NotImplementedError
+        pass
 
     def get_pattern_properties(self) -> Dict:
         """Get properties of the tiling pattern"""

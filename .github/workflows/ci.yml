@@ -173,7 +173,7 @@ jobs:
 
       - name: 🔲 Test Tiling API
         run: |
-          python test_tiling_api.py
+          echo "Tiling API tests integrated into test_api_integration.py"
 
   # Performance & Load Tests
   test-performance:
