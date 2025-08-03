@@ -150,24 +150,24 @@ Preserved and enhanced original CS102 code:
 
 ### **Production Dependencies (`requirements.txt`)**
 ```
-fastapi>=0.104.1          # Web framework
-uvicorn>=0.24.0           # ASGI server
-numpy>=1.24.0             # Scientific computing
-plotly>=5.15.0            # Interactive visualizations
-pydantic>=2.5.0           # Data validation
+fastapi>=0.108.0          # Web framework (2024 version)
+uvicorn>=0.25.0           # ASGI server
+numpy>=1.24.0,<2.0.0      # Scientific computing (latest 1.x)
+plotly>=5.18.0            # Interactive visualizations
+pydantic>=2.5.0,<3.0.0    # Data validation
 python-multipart>=0.0.6   # File upload support
 ```
 
 ### **Development Dependencies (`requirements-dev.txt`)**
 ```
 pytest>=7.4.0             # Testing framework
-pytest-cov>=4.1.0         # Coverage reporting
+pytest-cov>=4.0.0         # Coverage reporting
 pytest-benchmark>=4.0.0   # Performance benchmarking
-black>=23.7.0             # Code formatting
-flake8>=6.0.0             # Linting
-mypy>=1.5.0               # Type checking
-bandit>=1.7.0             # Security analysis
-safety>=2.3.0             # Dependency scanning
+black>=24.0.0             # Code formatting (2024 release)
+flake8>=7.0.0             # Linting
+mypy>=1.8.0               # Type checking
+bandit>=1.7.5             # Security analysis
+safety>=3.0.0             # Dependency scanning
 ```
 
 ### **Java Environment**
