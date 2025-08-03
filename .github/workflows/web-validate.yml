@@ -26,11 +26,11 @@ jobs:
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install fastapi uvicorn numpy plotly pydantic python-multipart
+        pip install fastapi uvicorn numpy plotly pydantic python-multipart html5validator
     
     - name: Install web validation tools
       run: |
-        npm install -g @lhci/cli pa11y html5validator
+        npm install -g @lhci/cli pa11y
     
     - name: Start web server
       run: |
