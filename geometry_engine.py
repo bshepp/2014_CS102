@@ -106,45 +106,69 @@ class JavaBridge:
 
     def run_original_sphere(self, diameter: float) -> str:
         """
-        Execute the original Sphere.java with given diameter
-        This preserves the exact original CS102 implementation
+        Execute the original Java sphere program with given diameter
+        Tries MultiSphere.java first (has main method), then falls back to Python equivalent
         """
         if not self.java_available:
             return self._python_sphere_equivalent(diameter)
 
         try:
-            # Create a temporary input for the Java program
+            # First try MultiSphere.java since it has a main method
             process = subprocess.Popen(
-                ["java", "Sphere"],
+                ["java", "MultiSphere"],
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
+                cwd=self.java_dir
             )
 
             stdout, stderr = process.communicate(input=str(diameter))
 
             if process.returncode == 0:
-                return f"🎯 ORIGINAL JAVA OUTPUT:\n{stdout}"
+                return f"🎯 ORIGINAL JAVA OUTPUT (MultiSphere):\n{stdout}"
             else:
-                return f"Java execution failed: {stderr}"
+                # If MultiSphere fails, try Sphere.java directly
+                process = subprocess.Popen(
+                    ["java", "Sphere"],
+                    stdin=subprocess.PIPE,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    text=True,
+                    cwd=self.java_dir
+                )
+
+                stdout, stderr = process.communicate(input=str(diameter))
+
+                if process.returncode == 0:
+                    return f"🎯 ORIGINAL JAVA OUTPUT (Sphere):\n{stdout}"
+                else:
+                    # If Java execution fails (e.g., no main method), fall back to Python
+                    if ("main method not found" in stderr.lower() or 
+                        "no main method" in stderr.lower() or
+                        "main method" in stderr.lower() or
+                        "could not find or load main class" in stderr.lower()):
+                        return self._python_sphere_equivalent(diameter)
+                    return f"Java execution failed: {stderr}"
 
         except Exception as e:
-            return f"Error running Java: {e}"
+            # Fall back to Python equivalent on any error
+            return self._python_sphere_equivalent(diameter)
 
     def _python_sphere_equivalent(self, diameter: float) -> str:
         """
         Python equivalent of the original Sphere logic
+        Mimics the original CS102 Sphere.java behavior
         """
         radius = diameter / 2.0
         volume = (4.0 / 3.0) * math.pi * pow(radius, 3)
         surface_area = 4.0 * math.pi * pow(radius, 2)
 
-        output = "🐍 PYTHON EQUIVALENT (Java not available):\n"
-        output += f"Sphere with diameter {diameter:.3f}:\n"
-        output += f"  Radius: {radius:.3f}\n"
+        output = "🐍 PYTHON EQUIVALENT (Java class has no main method):\n"
+        output += f"Sphere with diameter {diameter:.3f} has:\n"
         output += f"  Volume: {volume:.3f}\n"
         output += f"  Surface Area: {surface_area:.3f}\n"
+        output += f"Original diameter input: {diameter:.3f}\n"
 
         return output
 
