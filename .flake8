@@ -7,7 +7,8 @@ exclude =
     __pycache__/,
     *.pyc,
     .pytest_cache/,
-    .coverage
+    .coverage,
+    .archive/
 per-file-ignores =
     # Allow unused imports in __init__.py files
     __init__.py:F401

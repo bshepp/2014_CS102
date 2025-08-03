@@ -17,6 +17,7 @@ import scipy.special as sp
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import math  # For gamma function testing
+
 from geometry_engine import (
     HexagonalTiling,
     HyperCube,
@@ -149,7 +150,7 @@ class TestHyperSphereFormulas:
 
             # Volume: V_n = (π^(n/2) / Γ(n/2 + 1)) * r^n
             expected_volume = (
-                math.pi ** (dim / 2.0) / gamma(dim / 2.0 + 1)
+                math.pi ** (dim / 2.0) / math.gamma(dim / 2.0 + 1)
             ) * radius**dim
             assert abs(sphere.get_volume() - expected_volume) < tolerance
 
@@ -809,7 +810,7 @@ class TestMathematicalEdgeCases:
             surface_area = sphere.get_surface_area()
 
             # Volume should match theoretical formula
-            expected_volume = (math.pi ** (dim / 2.0)) / gamma(dim / 2.0 + 1)
+            expected_volume = (math.pi ** (dim / 2.0)) / math.gamma(dim / 2.0 + 1)
             assert abs(volume - expected_volume) < tolerance
 
             # Surface area should match theoretical formula
