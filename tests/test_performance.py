@@ -363,9 +363,7 @@ class TestMemoryUsage:
         # Create agent and process many queries
         agent = GeometryAgent()
         for i in range(100):
-            agent.process_query(
-                f"create a {i % 10 + 1}D sphere radius {i % 5 + 1}"
-            )
+            agent.process_query(f"create a {i % 10 + 1}D sphere radius {i % 5 + 1}")
 
         current_memory = self.get_memory_usage()
         memory_increase = current_memory - initial_memory

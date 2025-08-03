@@ -436,9 +436,7 @@ async def create_cube(request: CubeRequest):
                 "vertices": cube.get_vertex_count(),
                 "edges": cube.get_edge_count(),
                 "diagonal": cube.get_diagonal_length(),
-                "cross_section_volume": cube.get_cross_section(
-                    request.side_length / 2
-                ),
+                "cross_section_volume": cube.get_cross_section(request.side_length / 2),
             },
         )
     except Exception as e:
@@ -819,16 +817,14 @@ async def get_dimension_info(dimensions: int = Path(..., ge=1, le=100)):
                 "volume": volume,
                 "surface_area": surface,
                 "volume_formula": unit_sphere.get_volume_formula(),
-                "surface_formula":
-                unit_sphere.get_surface_area_formula(),
+                "surface_formula": unit_sphere.get_surface_area_formula(),
             },
             "insights": {
                 "volume_peaks_at": "5-6 dimensions for unit spheres",
                 "surface_to_volume_ratio": (
                     surface / volume if volume > 0 else float("in")
                 ),
-                "mathematical_note":
-                f"In {dimensions}D, most volume is concentrated near the surface",
+                "mathematical_note": f"In {dimensions}D, most volume is concentrated near the surface",
             },
         }
     except Exception as e:
