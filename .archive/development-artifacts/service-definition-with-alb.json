@@ -1,0 +1,22 @@
+{
+    "serviceName": "geometry-engine-service",
+    "cluster": "geometry-engine-cluster",
+    "taskDefinition": "geometry-engine-task:1",
+    "desiredCount": 1,
+    "launchType": "FARGATE",
+    "networkConfiguration": {
+        "awsvpcConfiguration": {
+            "subnets": ["subnet-0767ccefcdd4cc019", "subnet-0e58bf22b319ab3cc"],
+            "securityGroups": ["sg-0f8596495ae99d850"],
+            "assignPublicIp": "ENABLED"
+        }
+    },
+    "loadBalancers": [
+        {
+            "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:290318879194:targetgroup/geometry-engine-tg/c666d830a636f03f",
+            "containerName": "geometry-engine-container",
+            "containerPort": 8000
+        }
+    ],
+    "healthCheckGracePeriodSeconds": 60
+}

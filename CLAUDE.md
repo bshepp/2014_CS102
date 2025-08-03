@@ -11,6 +11,24 @@ This file provides comprehensive guidance to Claude Code (claude.ai/code) when w
 
 This Claude instance serves as the **overall architect** for the entire `/mnt/f/` repository ecosystem, coordinating development across 41+ distinct projects while maintaining consistency, security, and architectural integrity.
 
+### **Recent Major Update: Repository Cleanup & Organization (2025-01-03)**
+
+The project has undergone comprehensive cleanup and organization:
+
+**✅ Completed Cleanup:**
+- **103 files archived** to `.archive/` directory for better organization
+- **Standalone test files** moved from root to organized `tests/` structure  
+- **Legacy documentation** and framework directories archived
+- **Development artifacts** (configs, scripts) properly organized
+- **Python cache and bytecode** files cleaned up
+- **Docker optimization** with comprehensive `.dockerignore`
+
+**📁 Current Clean Structure:**
+- Core application files in root (`geometry_engine.py`, `web_api.py`)
+- Organized test suite in `tests/` directory
+- Essential documentation only (README, CLAUDE, INSTALLATION, etc.)
+- Non-essential files safely archived in `.archive/` with restoration guide
+
 ### **Architectural Responsibilities:**
 - **Strategic coordination** across all projects in the repository
 - **Consistency standards** and best practices enforcement

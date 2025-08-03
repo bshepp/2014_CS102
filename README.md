@@ -26,7 +26,7 @@ pip install -r requirements.txt
 python web_api.py
 
 # Access the application
-# Web Interface: http://localhost:8000/demo.html
+# Web Interface: http://localhost:8000
 # API Documentation: http://localhost:8000/api/docs
 ```
 
@@ -97,6 +97,33 @@ See [BRANCH_STRATEGY.md](BRANCH_STRATEGY.md) for complete workflow details.
 - **Environment Separation**: Isolated dev and production deployments
 - **Web Validation**: HTML5, accessibility, performance, security checks
 - **Rollback Capability**: Automatic rollback on deployment failure
+
+## 📁 Project Structure
+
+The project has been organized for clarity and production readiness:
+
+### Core Files
+- `geometry_engine.py` - N-dimensional geometry engine (79,216 lines)
+- `web_api.py` - FastAPI web application (32,204 lines)
+- `tests/` - Organized test suite (400+ tests)
+- `requirements.txt` - Production dependencies
+- `Dockerfile` - Production containerization
+
+### Documentation
+- `README.md` - This file
+- `CLAUDE.md` - Comprehensive AI assistant guide
+- `INSTALLATION.md` - Setup instructions
+- `TESTING.md` - Testing procedures
+
+### Archive
+Non-essential files have been moved to `.archive/` for cleaner organization:
+- `.archive/legacy-tests/` - Standalone test files (replaced by organized `tests/`)
+- `.archive/documentation/` - Framework docs, reference materials
+- `.archive/development-artifacts/` - Config files, deployment scripts
+- `.archive/cache/` - Java class files, Python cache
+- `.archive/logs/` - Runtime logs
+
+See [.archive/README.md](.archive/README.md) for restoration instructions.
 
 ## 📚 Documentation
 

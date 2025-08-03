@@ -16,7 +16,7 @@ import scipy.special as sp
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from geometry_engine import gamma  # Import gamma function for testing
+import math  # For gamma function testing
 from geometry_engine import (
     HexagonalTiling,
     HyperCube,
@@ -37,16 +37,16 @@ class TestMathematicalConstants:
     def test_gamma_function_accuracy(self, mathematical_constants, tolerance):
         """Test gamma function accuracy against known values."""
         # Test integer values: Γ(n) = (n-1)!
-        assert abs(gamma(1) - 1.0) < tolerance
-        assert abs(gamma(2) - 1.0) < tolerance  # Γ(2) = 1! = 1
-        assert abs(gamma(3) - 2.0) < tolerance  # Γ(3) = 2! = 2
-        assert abs(gamma(4) - 6.0) < tolerance  # Γ(4) = 3! = 6
-        assert abs(gamma(5) - 24.0) < tolerance  # Γ(5) = 4! = 24
+        assert abs(math.gamma(1) - 1.0) < tolerance
+        assert abs(math.gamma(2) - 1.0) < tolerance  # Γ(2) = 1! = 1
+        assert abs(math.gamma(3) - 2.0) < tolerance  # Γ(3) = 2! = 2
+        assert abs(math.gamma(4) - 6.0) < tolerance  # Γ(4) = 3! = 6
+        assert abs(math.gamma(5) - 24.0) < tolerance  # Γ(5) = 4! = 24
 
         # Test half-integer values: Γ(n + 1/2) = (2n)!√π / (4^n n!)
-        assert abs(gamma(0.5) - math.sqrt(math.pi)) < tolerance
-        assert abs(gamma(1.5) - 0.5 * math.sqrt(math.pi)) < tolerance
-        assert abs(gamma(2.5) - 0.75 * math.sqrt(math.pi)) < tolerance
+        assert abs(math.gamma(0.5) - math.sqrt(math.pi)) < tolerance
+        assert abs(math.gamma(1.5) - 0.5 * math.sqrt(math.pi)) < tolerance
+        assert abs(math.gamma(2.5) - 0.75 * math.sqrt(math.pi)) < tolerance
 
     def test_pi_accuracy(self, mathematical_constants, tolerance):
         """Test π accuracy in calculations."""

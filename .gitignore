@@ -20,6 +20,8 @@ $RECYCLE.BIN/
 
 # ===== CAF Privacy Layer - GeometryOracle Protection =====
 # Protects GeometryOracle's cognitive development from version control
+# NOTE: These directories have been moved to .archive/ but keeping ignore rules
+# for any future regeneration
 
 # Core cognitive framework
 cognitive-framework/cognitive-framework.json
@@ -38,6 +40,9 @@ monitoring-framework/entity-health-tracker.json
 
 # Architectural insights and experiments
 architectural-insights/private-*
+
+# Archive directory is tracked in git but contents are organized there
+# Individual ignore rules above still apply if files regenerate
 
 # OSX
 # =========================

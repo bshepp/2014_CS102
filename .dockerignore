@@ -1,0 +1,99 @@
+# Docker ignore file for N-Dimensional Geometry Engine
+# Excludes unnecessary files from Docker build context
+
+# Archive directory (archived non-essential files)
+.archive/
+
+# Python cache and bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Test outputs and reports
+test-reports/
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
+
+# Log files
+*.log
+logs/
+
+# Documentation (build-time not needed)
+*.md
+!README.md
+docs/
+
+# Development and CI files
+.github/
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Java compiled files
+*.class
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+
+# Editor backups
+*.bak
+*.orig
+
+# Node.js (if any frontend assets)
+node_modules/
+npm-debug.log*
+
+# Jupyter notebooks
+.ipynb_checkpoints/
+
+# Environment files with secrets
+.env
+.env.local
+.env.*.local
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Demo and test files not needed in production
+demo*.py
+test_*.py
+*_test.py
+
+# Configuration files for local development
+amplify*.yml
+amplify*.json
+quickstart.sh

@@ -18,15 +18,22 @@
 
 ### **System Requirements**
 - **Operating System**: Linux, macOS, or Windows 10+
-- **Python**: 3.9 or higher
-- **Java**: 11 or higher (for Java bridge functionality)
+- **Python**: 3.11 or higher (3.12 recommended)
+- **Java**: 11 or higher (for Java integration)
 - **Memory**: 4GB RAM minimum (8GB recommended for high-dimensional operations)
-- **Storage**: 500MB free space
+- **Storage**: 1GB free space (cleaned and organized structure)
 
 ### **Required Software**
 - **Git**: For cloning the repository
 - **Python**: With pip package manager
 - **Java**: OpenJDK 11 or higher
+
+### **Project Structure Note**
+This project has been recently organized with a clean structure:
+- Core files in root directory
+- Tests organized in `tests/` directory  
+- Non-essential files archived in `.archive/` directory
+- Comprehensive `.dockerignore` for optimized containers
 
 ---
 

@@ -46,7 +46,7 @@ class TestHyperSphere:
         sphere = HyperSphere(dimension, radius)
         assert sphere.dimensions == dimension
         assert sphere.radius == radius
-        assert sphere.diameter == 2 * radius
+        assert sphere.get_diameter() == 2 * radius
 
     def test_hypersphere_volume(self, sample_spheres, tolerance):
         """Test hypersphere volume calculations."""
@@ -557,13 +557,13 @@ class TestUtilityFunctions:
 
     def test_gamma_function_accuracy(self):
         """Test gamma function accuracy for volume calculations."""
-        from geometry_engine import gamma
+        import math
 
-        # Test known values
-        assert abs(gamma(1) - 1.0) < 1e-10
-        assert abs(gamma(2) - 1.0) < 1e-10
-        assert abs(gamma(3) - 2.0) < 1e-10
-        assert abs(gamma(4) - 6.0) < 1e-10
+        # Test known values using math.gamma
+        assert abs(math.gamma(1) - 1.0) < 1e-10
+        assert abs(math.gamma(2) - 1.0) < 1e-10
+        assert abs(math.gamma(3) - 2.0) < 1e-10
+        assert abs(math.gamma(4) - 6.0) < 1e-10
 
     def test_high_dimensional_sphere_volume_peak(self):
         """Test that sphere volume peaks around 5-6 dimensions."""

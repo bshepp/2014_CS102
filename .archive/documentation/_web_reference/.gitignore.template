@@ -1,0 +1,96 @@
+# Claude Web Deployment Templates - .gitignore Template
+# Copy this file to .gitignore in your project root
+
+# Dependencies
+node_modules/
+venv/
+env/
+.venv/
+
+# Build outputs
+dist/
+build/
+*.egg-info/
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Coverage reports
+coverage/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Security reports (from CI/CD pipeline)
+*.sarif
+bandit-report.json
+safety-report.json
+semgrep-report.json
+trivy-results.sarif
+snyk.sarif
+
+# SBOM files
+sbom-*.json
+sbom-*.xml
+sbom.spdx.json
+sbom-container.spdx.json
+
+# AWS
+.aws/
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+
+# Cache
+.cache/
+*.cache
+
+# Python specific
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Node.js specific
+.npm
+.node_repl_history
+
+# React specific
+.eslintcache
+
+# Next.js
+.next/
+out/
+
+# Amplify
+amplify/backend/awscloudformation/
+amplify/backend/.temp/
+amplify/backend/amplify-meta.json
+amplify/backend/tags.json
+amplify/.config/
+
+# GitHub Actions artifacts
+.github/outputs/

@@ -1,0 +1,213 @@
+# Comprehensive Web Deployment Validation Pipeline
+# This workflow provides enterprise-grade quality assurance for static websites
+# Customize branch names and validation rules as needed for your project
+
+name: Comprehensive Validation & Testing
+
+on:
+  pull_request:
+    branches: [ main, develop ]  # [CUSTOMIZE]: Add your branch names
+  push:
+    branches: [ main, develop ]  # [CUSTOMIZE]: Add your branch names
+
+jobs:
+  # Job 1: Core Validation
+  validate:
+    runs-on: ubuntu-latest
+    name: Core Validation
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    # HTML5 Validation
+    - name: HTML Validation
+      uses: Cyb3r-Jak3/html5validator-action@v7.2.0
+      with:
+        root: .
+        extra: --ignore-re "backdrop-filter"  # [CUSTOMIZE]: Add CSS properties to ignore
+    
+    # Security: Check for exposed secrets
+    - name: Security - Secret Scanning
+      run: |
+        # Check for potential secrets (exclude docs, .git, .github, node_modules)
+        # [CUSTOMIZE]: Add your documentation files to exclude list
+        if grep -r "ghp_\|ghs_\|ghu_" . --exclude-dir=.git --exclude-dir=.github --exclude-dir=node_modules --exclude="*LESSONS_LEARNED.md" --exclude="*README.md" --exclude="*WEB_DEPLOYMENT_GUIDE.md"; then
+          echo "ERROR: Possible GitHub token found!"
+          exit 1
+        fi
+        if grep -r "AKIA[0-9A-Z]\{16\}" . --exclude-dir=.git --exclude-dir=.github --exclude-dir=node_modules --exclude="*LESSONS_LEARNED.md" --exclude="*README.md" --exclude="*WEB_DEPLOYMENT_GUIDE.md"; then
+          echo "ERROR: Possible AWS key found!"
+          exit 1
+        fi
+        if grep -r "AIza[0-9A-Za-z_-]\{35\}" . --exclude-dir=.git --exclude-dir=.github --exclude-dir=node_modules --exclude="*LESSONS_LEARNED.md" --exclude="*README.md" --exclude="*WEB_DEPLOYMENT_GUIDE.md"; then
+          echo "ERROR: Possible API key found!"
+          exit 1
+        fi
+        echo "✓ No secrets detected"
+    
+    # File size checks
+    - name: Performance - File Size Check
+      run: |
+        # Warn if any file is over 1MB (images, etc)
+        find . -type f -size +1M -exec echo "WARNING: Large file: {} ($(du -h {} | cut -f1))" \;
+        
+        # Error if HTML/JS/CSS files are over 100KB
+        for file in $(find . -name "*.html" -o -name "*.js" -o -name "*.css"); do
+          size=$(stat -c%s "$file" 2>/dev/null || stat -f%z "$file" 2>/dev/null)
+          if [ "$size" -gt 102400 ]; then
+            echo "ERROR: $file is over 100KB ($(du -h $file | cut -f1))"
+            exit 1
+          fi
+        done
+        echo "✓ File sizes OK"
+    
+    # Check for required files
+    - name: Structure - Required Files
+      run: |
+        # [CUSTOMIZE]: Modify required files list for your project structure
+        required_files=("index.html" "amplify.yml" ".gitignore")
+        for file in "${required_files[@]}"; do
+          if [ ! -f "$file" ]; then
+            echo "ERROR: Required file missing: $file"
+            exit 1
+          fi
+        done
+        echo "✓ All required files present"
+
+  # Job 2: Performance Testing
+  performance:
+    runs-on: ubuntu-latest
+    name: Performance & Best Practices
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    # Simple HTTP server for Lighthouse
+    - name: Start HTTP Server
+      run: |
+        python -m http.server 8000 &
+        sleep 3
+    
+    # Lighthouse CI
+    - name: Lighthouse CI
+      uses: treosh/lighthouse-ci-action@v10
+      with:
+        urls: |
+          http://localhost:8000
+        uploadArtifacts: false
+        temporaryPublicStorage: false
+      
+  # Job 3: Accessibility Testing  
+  accessibility:
+    runs-on: ubuntu-latest
+    name: Accessibility (a11y)
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    # Pa11y accessibility testing
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        
+    - name: Accessibility Tests
+      run: |
+        npm install -g pa11y
+        python -m http.server 8000 &
+        sleep 3
+        
+        # Create Pa11y config file directly in workflow to avoid encoding issues
+        cat > pa11y-config.json << 'EOF'
+        {
+          "chromeLaunchConfig": {
+            "args": [
+              "--no-sandbox",
+              "--disable-setuid-sandbox", 
+              "--disable-dev-shm-usage",
+              "--disable-gpu"
+            ]
+          },
+          "standard": "WCAG2AA"
+        }
+        EOF
+        
+        # Validate the generated config
+        echo "Generated config:"
+        cat pa11y-config.json
+        node -e "console.log('Config is valid:', JSON.stringify(require('./pa11y-config.json'), null, 2))"
+        
+        # Basic accessibility check
+        pa11y http://localhost:8000 --config pa11y-config.json || true
+        
+        # Check for color contrast issues with higher threshold  
+        pa11y http://localhost:8000 --config pa11y-config.json --threshold 5
+
+  # Job 4: Code Quality
+  code-quality:
+    runs-on: ubuntu-latest
+    name: Code Quality & Best Practices
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    # JavaScript analysis (even for inline scripts)
+    - name: Extract and Analyze JavaScript
+      run: |
+        # Extract JS from HTML files
+        mkdir -p .temp
+        for file in *.html; do
+          # Extract content between script tags
+          sed -n '/<script>/,/<\/script>/p' "$file" | sed '1d;$d' > ".temp/${file}.js" 2>/dev/null || true
+        done
+        
+        # Basic JS checks
+        echo "Checking for common issues..."
+        
+        # Check for console.log in production (warning only)
+        # [CUSTOMIZE]: Remove this check if console.log is intentional (e.g., for agent discovery)
+        if grep -r "console\.log" .temp/*.js 2>/dev/null; then
+          echo "⚠️  WARNING: console.log statements found"
+        fi
+        
+        # Check for proper error handling
+        if ! grep -r "addEventListener.*error" .temp/*.js 2>/dev/null; then
+          echo "⚠️  WARNING: Consider adding global error handling"
+        fi
+        
+        rm -rf .temp
+
+  # Job 5: Browser Compatibility
+  compatibility:
+    runs-on: ubuntu-latest
+    name: Browser Compatibility
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Check Modern Feature Usage
+      run: |
+        echo "Checking for browser compatibility issues..."
+        
+        # Check for modern JS features that might need polyfills
+        features=("backdrop-filter" "?.Optional" "??Nullish" "Object.fromEntries" "Promise.allSettled")
+        
+        for feature in "${features[@]}"; do
+          if grep -r "$feature" . --include="*.html" --include="*.js" --include="*.css" 2>/dev/null; then
+            echo "ℹ️  INFO: Using $feature - ensure browser support or polyfill"
+          fi
+        done
+        
+        echo "✓ Compatibility check complete"
+
+  # Summary Job
+  summary:
+    runs-on: ubuntu-latest
+    needs: [validate, performance, accessibility, code-quality, compatibility]
+    name: Summary
+    
+    steps:
+    - name: All Checks Passed
+      run: |
+        echo "🎉 All validation checks passed!"
+        echo "Ready for deployment"

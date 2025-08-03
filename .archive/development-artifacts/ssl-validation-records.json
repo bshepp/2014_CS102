@@ -1,0 +1,31 @@
+{
+    "Comment": "SSL certificate validation records",
+    "Changes": [
+        {
+            "Action": "CREATE",
+            "ResourceRecordSet": {
+                "Name": "_337033228726f11bffc80f64235f5829.geometry-engine-api.com.",
+                "Type": "CNAME",
+                "TTL": 300,
+                "ResourceRecords": [
+                    {
+                        "Value": "_1d03abe03daf635ad77d206503d2acf4.xlfgrmvvlj.acm-validations.aws."
+                    }
+                ]
+            }
+        },
+        {
+            "Action": "CREATE",
+            "ResourceRecordSet": {
+                "Name": "_3d9211c2ff6259397c6acc1c798f9fdf.www.geometry-engine-api.com.",
+                "Type": "CNAME",
+                "TTL": 300,
+                "ResourceRecords": [
+                    {
+                        "Value": "_30a0a63bcd22133bb9039de9641c3ebf.xlfgrmvvlj.acm-validations.aws."
+                    }
+                ]
+            }
+        }
+    ]
+}

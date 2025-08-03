@@ -1,0 +1,17 @@
+{
+  "chromeLaunchConfig": {
+    "args": [
+      "--no-sandbox",
+      "--disable-setuid-sandbox", 
+      "--disable-dev-shm-usage",
+      "--disable-gpu"
+    ]
+  },
+  "standard": "WCAG2AA",
+  "timeout": 30000,
+  "wait": 500,
+  "ignore": [
+    "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail",
+    "WCAG2AA.Principle4.Guideline4_1.4_1_2.H91.A.EmptyNoId"
+  ]
+}
