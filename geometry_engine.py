@@ -3,7 +3,7 @@ import os
 import re
 import subprocess
 from abc import ABC, abstractmethod
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import numpy as np
 
@@ -1080,7 +1080,7 @@ class TilingPattern(ABC):
         self.dimensions = dimensions
         self.base_shape = base_shape
         self.pattern_type = pattern_type
-        self.tiles = []
+        self.tiles: List[Dict] = []
         self.bounds = None
 
     @abstractmethod
@@ -1115,7 +1115,7 @@ class TilingPattern(ABC):
 class RegularTiling(TilingPattern):
     """Regular tiling patterns (same shape, same size, regular arrangement)"""
 
-    def __init__(self, dimensions: int, base_shape: NDShape, spacing: float = None):
+    def __init__(self, dimensions: int, base_shape: NDShape, spacing: Optional[float] = None):
         super().__init__(dimensions, base_shape, "regular")
         self.spacing = spacing or self._calculate_optimal_spacing()
 
@@ -1133,7 +1133,7 @@ class RegularTiling(TilingPattern):
     def generate_pattern(self, bounds: List[tuple], density: float = 1.0) -> List[Dict]:
         """Generate regular tiling pattern"""
         self.bounds = bounds
-        self.tiles = []
+        self.tiles: List[Dict] = []
 
         if self.dimensions == 2:
             return self._generate_2d_regular_tiling(bounds, density)
@@ -1347,7 +1347,8 @@ class HexagonalTiling(TilingPattern):
 
     def __init__(self, side_length: float):
         # Create hexagonal shape using coordinates
-        super().__init__(2, None, "hexagonal")
+        from typing import cast
+        super().__init__(2, cast(NDShape, None), "hexagonal")
         self.side_length = side_length
         self.hexagon_height = side_length * math.sqrt(3)
         self.hexagon_width = side_length * 2
@@ -1355,7 +1356,7 @@ class HexagonalTiling(TilingPattern):
     def generate_pattern(self, bounds: List[tuple], density: float = 1.0) -> List[Dict]:
         """Generate hexagonal tiling pattern"""
         self.bounds = bounds
-        self.tiles = []
+        self.tiles: List[Dict] = []
 
         x_min, x_max = bounds[0]
         y_min, y_max = bounds[1]
@@ -1408,13 +1409,14 @@ class VoronoiTiling(TilingPattern):
     """Voronoi diagram tiling pattern"""
 
     def __init__(self, dimensions: int, seed_points: List[List[float]]):
-        super().__init__(dimensions, None, "voronoi")
+        from typing import cast
+        super().__init__(dimensions, cast(NDShape, None), "voronoi")
         self.seed_points = seed_points
 
     def generate_pattern(self, bounds: List[tuple], density: float = 1.0) -> List[Dict]:
         """Generate Voronoi diagram"""
         self.bounds = bounds
-        self.tiles = []
+        self.tiles: List[Dict] = []
 
         # For each seed point, create a Voronoi cell
         for i, seed in enumerate(self.seed_points):
@@ -1626,16 +1628,16 @@ class GeometryAgent:
             return "Please specify a parameter (radius or side length)"
 
         if "cube" in query or "hypercube" in query:
-            shape = HyperCube(dimensions, parameter)
+            cube_shape = HyperCube(dimensions, parameter)
             name = f"shape{self.shape_counter}"
             self.shape_counter += 1
-            self.saved_shapes[name] = shape
+            self.saved_shapes[name] = cube_shape
 
-            result = f"Created {shape.get_shape_type()} '{name}':\n"
-            result += f"{shape}\n"
+            result = f"Created {cube_shape.get_shape_type()} '{name}':\n"
+            result += f"{cube_shape}\n"
             result += f"Side length = {parameter}\n"
-            result += f"Formulas:\n• {shape.get_volume_formula()}\n• {shape.get_surface_area_formula()}\n"
-            result += f"Geometric Properties:\n• Vertices: {shape.get_vertex_count()}\n• Edges: {shape.get_edge_count()}\n• Diagonal: {shape.get_diagonal_length():.6f}"
+            result += f"Formulas:\n• {cube_shape.get_volume_formula()}\n• {cube_shape.get_surface_area_formula()}\n"
+            result += f"Geometric Properties:\n• Vertices: {cube_shape.get_vertex_count()}\n• Edges: {cube_shape.get_edge_count()}\n• Diagonal: {cube_shape.get_diagonal_length():.6f}"
 
             return result
         elif "ellipse" in query or "ellipsoid" in query or "oval" in query:
@@ -1646,7 +1648,7 @@ class GeometryAgent:
                     f"Please specify {dimensions} semi-axes for {dimensions}D ellipsoid"
                 )
 
-            shape = HyperEllipsoid(dimensions, *axes)
+            shape: NDShape = HyperEllipsoid(dimensions, *axes)
             name = f"shape{self.shape_counter}"
             self.shape_counter += 1
             self.saved_shapes[name] = shape
@@ -1666,7 +1668,7 @@ class GeometryAgent:
 
             return result
         elif "simplex" in query or "triangle" in query or "tetrahedron" in query:
-            shape = Simplex(dimensions, parameter)
+            shape: NDShape = Simplex(dimensions, parameter)
             name = f"shape{self.shape_counter}"
             self.shape_counter += 1
             self.saved_shapes[name] = shape
@@ -1685,7 +1687,7 @@ class GeometryAgent:
                 return "Please specify base side length and height for pyramid (e.g., 'base 2 height 3')"
 
             base_side, height = pyramid_params
-            shape = HyperPyramid(dimensions, base_side, height)
+            shape: NDShape = HyperPyramid(dimensions, base_side, height)
             name = f"shape{self.shape_counter}"
             self.shape_counter += 1
             self.saved_shapes[name] = shape
@@ -1699,7 +1701,7 @@ class GeometryAgent:
 
             return result
         else:
-            shape = HyperSphere(dimensions, parameter)
+            shape: NDShape = HyperSphere(dimensions, parameter)
             name = f"shape{self.shape_counter}"
             self.shape_counter += 1
             self.saved_shapes[name] = shape
@@ -1966,7 +1968,7 @@ class GeometryAgent:
         if match:
             return float(match.group(1)), float(match.group(2))
 
-        return None
+        return (0.0, 0.0)
 
     def _handle_pyramid_query(self, query: str) -> str:
         """Handle pyramid-specific queries"""
