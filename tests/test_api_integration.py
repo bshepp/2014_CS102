@@ -272,7 +272,7 @@ class TestEllipsoidEndpoint:
         assert response.status_code == 200
 
         data = response.json()
-        assert data["shape_type"] == "HyperSphere"  # Should be detected as sphere
+        assert data["shape_type"] == "Sphere"  # Should be detected as sphere
         assert data["additional_properties"]["is_sphere"]
         assert data["additional_properties"]["axis_ratio"] == 1.0
 
@@ -302,7 +302,7 @@ class TestSimplexEndpoint:
         assert data["shape_type"] == "Triangle"
         assert data["dimensions"] == 2
         assert data["parameter"] == 1.0
-        assert data["parameter_name"] == "side_length"
+        assert data["parameter_name"] == "edge_length"
 
         # Check mathematical accuracy
         import math
@@ -373,7 +373,7 @@ class TestPyramidEndpoint:
         assert data["shape_type"] == "Triangle"
         assert data["dimensions"] == 2
         assert data["parameter"] == 4.0
-        assert data["parameter_name"] == "base_side_length"
+        assert data["parameter_name"] == "base_edge_length"
 
         # Check mathematical accuracy
         expected_volume = 0.5 * 4.0 * 3.0
@@ -829,7 +829,7 @@ class TestErrorHandling:
         assert response.status_code == 422
 
         response = client.post("/api/sphere", json={"dimensions": 3, "radius": -1.0})
-        assert response.status_code == 400
+        assert response.status_code == 422
 
 
 @pytest.mark.api
