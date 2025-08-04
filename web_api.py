@@ -1030,26 +1030,27 @@ async def create_tiling(request: TilingRequest):
         # Convert tiles to dictionaries for JSON serialization
         tiles_dict = []
         for tile in tiles:
-            if isinstance(tile, dict) and 'shape' in tile:
-                shape = tile['shape']
+            if isinstance(tile, dict) and "shape" in tile:
+                shape = tile["shape"]
                 if isinstance(shape, str):
                     # Shape is a string (e.g., 'hexagon' for hexagonal tiling)
                     tile_dict = {
-                        "position": tile.get('position', [0, 0]),
-                        "rotation": tile.get('rotation', 0),
-                        "scale": tile.get('scale', 1.0),
+                        "position": tile.get("position", [0, 0]),
+                        "rotation": tile.get("rotation", 0),
+                        "scale": tile.get("scale", 1.0),
                         "shape_type": shape.capitalize(),
-                        "vertices": tile.get('vertices', []),
+                        "vertices": tile.get("vertices", []),
                     }
                     # Add shape-specific properties from tile dict
-                    if 'side_length' in tile:
-                        tile_dict["side_length"] = tile['side_length']
-                    if 'radius' in tile:
-                        tile_dict["radius"] = tile['radius']
+                    if "side_length" in tile:
+                        tile_dict["side_length"] = tile["side_length"]
+                    if "radius" in tile:
+                        tile_dict["radius"] = tile["radius"]
                     # Calculate area for hexagon
-                    if shape == 'hexagon' and 'side_length' in tile:
+                    if shape == "hexagon" and "side_length" in tile:
                         import math
-                        s = tile['side_length']
+
+                        s = tile["side_length"]
                         tile_dict["volume"] = (3 * math.sqrt(3) / 2) * s * s
                         tile_dict["surface_area"] = 6 * s
                     else:
@@ -1059,22 +1060,22 @@ async def create_tiling(request: TilingRequest):
                 else:
                     # Shape is an object (e.g., HyperCube for regular tiling)
                     tile_dict = {
-                        "position": tile.get('position', [0, 0]),
-                        "rotation": tile.get('rotation', 0),
-                        "scale": tile.get('scale', 1.0),
+                        "position": tile.get("position", [0, 0]),
+                        "rotation": tile.get("rotation", 0),
+                        "scale": tile.get("scale", 1.0),
                         "shape_type": shape.get_shape_type(),
                         "volume": shape.get_volume(),
                         "surface_area": shape.get_surface_area(),
                     }
                     # Add shape-specific properties
-                    if hasattr(shape, 'radius'):
+                    if hasattr(shape, "radius"):
                         tile_dict["radius"] = shape.radius
-                    if hasattr(shape, 'side_length'):
+                    if hasattr(shape, "side_length"):
                         tile_dict["side_length"] = shape.side_length
-                    if hasattr(shape, 'edge_length'):
+                    if hasattr(shape, "edge_length"):
                         tile_dict["edge_length"] = shape.edge_length
                     tiles_dict.append(tile_dict)
-            elif hasattr(tile, 'center'):
+            elif hasattr(tile, "center"):
                 # Legacy: tile is a shape object directly
                 tile_dict = {
                     "center": tile.center,
@@ -1083,20 +1084,26 @@ async def create_tiling(request: TilingRequest):
                     "surface_area": tile.get_surface_area(),
                 }
                 # Add shape-specific properties
-                if hasattr(tile, 'radius'):
+                if hasattr(tile, "radius"):
                     tile_dict["radius"] = tile.radius
-                if hasattr(tile, 'side_length'):
+                if hasattr(tile, "side_length"):
                     tile_dict["side_length"] = tile.side_length
-                if hasattr(tile, 'edge_length'):
+                if hasattr(tile, "edge_length"):
                     tile_dict["edge_length"] = tile.edge_length
                 tiles_dict.append(tile_dict)
             else:
                 # Fallback for unknown tile structure
-                tiles_dict.append({
-                    "shape_type": tile.__class__.__name__ if hasattr(tile, '__class__') else 'Unknown',
-                    "volume": getattr(tile, 'get_volume', lambda: 0)(),
-                    "surface_area": getattr(tile, 'get_surface_area', lambda: 0)(),
-                })
+                tiles_dict.append(
+                    {
+                        "shape_type": (
+                            tile.__class__.__name__
+                            if hasattr(tile, "__class__")
+                            else "Unknown"
+                        ),
+                        "volume": getattr(tile, "get_volume", lambda: 0)(),
+                        "surface_area": getattr(tile, "get_surface_area", lambda: 0)(),
+                    }
+                )
 
         return TilingResponse(
             tiling_type=request.tiling_type,
