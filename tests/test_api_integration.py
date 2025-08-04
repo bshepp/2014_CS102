@@ -4,13 +4,9 @@ API Integration Tests for the N-Dimensional Geometry Engine
 Tests all REST API endpoints and their responses
 """
 
-import asyncio
-import json
 import os
 import sys
-from typing import Dict
 
-import httpx
 import pytest
 from fastapi.testclient import TestClient
 
