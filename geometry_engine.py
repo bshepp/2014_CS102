@@ -553,11 +553,8 @@ class HyperEllipsoid(NDShape):
         elif self.dimensions == 3:
             return "V₃ = (4/3)π × a × b × c"
         else:
-            dim_half = self.dimensions/2
-            return (
-                f"V_{self.dimensions} = (π^{dim_half} / "
-                f"Γ({dim_half} + 1)) × ∏aᵢ"
-            )
+            dim_half = self.dimensions / 2
+            return f"V_{self.dimensions} = (π^{dim_half} / " f"Γ({dim_half} + 1)) × ∏aᵢ"
 
     def get_surface_area_formula(self) -> str:
         if self.dimensions == 1:

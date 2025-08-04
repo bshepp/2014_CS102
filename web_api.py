@@ -31,34 +31,44 @@ from geometry_engine import (
     VoronoiTiling,
 )
 
+
 # Custom Exception Hierarchy for Proper Error Handling
 class GeometryError(Exception):
     """Base exception for geometry engine errors"""
+
     def __init__(self, message: str, error_code: str = "GEOMETRY_ERROR"):
         self.message = message
         self.error_code = error_code
         super().__init__(self.message)
 
+
 class GeometryValidationError(GeometryError):
     """Validation errors - user input issues (HTTP 400)"""
+
     def __init__(self, message: str):
         super().__init__(message, "VALIDATION_ERROR")
 
+
 class GeometryComputationError(GeometryError):
     """Computation errors - mathematical/processing issues (HTTP 500)"""
+
     def __init__(self, message: str):
         super().__init__(message, "COMPUTATION_ERROR")
 
+
 class GeometryNotSupportedError(GeometryError):
     """Feature not supported errors (HTTP 422)"""
+
     def __init__(self, message: str):
         super().__init__(message, "NOT_SUPPORTED_ERROR")
+
 
 # Error Response Model
 class ErrorResponse(BaseModel):
     error_code: str
     message: str
     details: Optional[str] = None
+
 
 # FastAPI app setup
 app = FastAPI(
@@ -91,40 +101,39 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
 
 app.add_middleware(SecurityHeadersMiddleware)
 
+
 # Custom Exception Handlers
 @app.exception_handler(GeometryValidationError)
 async def validation_error_handler(request: Request, exc: GeometryValidationError):
     return JSONResponse(
         status_code=400,
-        content=ErrorResponse(
-            error_code=exc.error_code,
-            message=exc.message
-        ).dict()
+        content=ErrorResponse(error_code=exc.error_code, message=exc.message).dict(),
     )
+
 
 @app.exception_handler(GeometryComputationError)
 async def computation_error_handler(request: Request, exc: GeometryComputationError):
     # Log detailed error server-side but return sanitized error to client
     import logging
+
     logging.error(f"Computation error on {request.url}: {exc.message}")
-    
+
     return JSONResponse(
         status_code=500,
         content=ErrorResponse(
             error_code=exc.error_code,
-            message="Internal computation error occurred. Please check your input parameters."
-        ).dict()
+            message="Internal computation error occurred. Please check your input parameters.",
+        ).dict(),
     )
+
 
 @app.exception_handler(GeometryNotSupportedError)
 async def not_supported_error_handler(request: Request, exc: GeometryNotSupportedError):
     return JSONResponse(
         status_code=422,
-        content=ErrorResponse(
-            error_code=exc.error_code,
-            message=exc.message
-        ).dict()
+        content=ErrorResponse(error_code=exc.error_code, message=exc.message).dict(),
     )
+
 
 # Load environment configuration
 
@@ -195,17 +204,23 @@ class SimplexRequest(BaseModel):
     )
     edge_length: Optional[float] = Field(None, gt=0, description="Simplex edge length")
     # Backward compatibility alias
-    side_length: Optional[float] = Field(None, gt=0, description="Deprecated: use edge_length")
+    side_length: Optional[float] = Field(
+        None, gt=0, description="Deprecated: use edge_length"
+    )
 
 
 class PyramidRequest(BaseModel):
     dimensions: int = Field(
         ..., ge=1, le=100, description="Number of dimensions (1-100)"
     )
-    base_edge_length: Optional[float] = Field(None, gt=0, description="Base edge length")
+    base_edge_length: Optional[float] = Field(
+        None, gt=0, description="Base edge length"
+    )
     height: float = Field(..., gt=0, description="Pyramid height")
     # Backward compatibility alias
-    base_side_length: Optional[float] = Field(None, gt=0, description="Deprecated: use base_edge_length")
+    base_side_length: Optional[float] = Field(
+        None, gt=0, description="Deprecated: use base_edge_length"
+    )
 
 
 class TilingRequest(BaseModel):
@@ -224,7 +239,9 @@ class TilingRequest(BaseModel):
         None, description="For regular tiling: 'cube', 'sphere', 'simplex'"
     )
     shape_size: Optional[float] = Field(
-        None, gt=0, description="Shape size (cube side_length, sphere radius, simplex edge_length)"
+        None,
+        gt=0,
+        description="Shape size (cube side_length, sphere radius, simplex edge_length)",
     )
     # Hexagonal tiling parameters
     hex_side_length: Optional[float] = Field(
@@ -566,7 +583,7 @@ async def create_simplex(request: SimplexRequest):
             edge_length = request.side_length
         elif edge_length is None:
             raise ValueError("edge_length is required")
-            
+
         simplex = Simplex(request.dimensions, edge_length)
 
         return ShapeResponse(
@@ -600,10 +617,8 @@ async def create_pyramid(request: PyramidRequest):
             base_edge_length = request.base_side_length
         elif base_edge_length is None:
             raise ValueError("base_edge_length is required")
-            
-        pyramid = HyperPyramid(
-            request.dimensions, base_edge_length, request.height
-        )
+
+        pyramid = HyperPyramid(request.dimensions, base_edge_length, request.height)
 
         return ShapeResponse(
             dimensions=request.dimensions,
@@ -943,8 +958,10 @@ async def create_tiling(request: TilingRequest):
             if shape_size is None and request.parameter is not None:
                 shape_size = request.parameter
             elif shape_size is None:
-                raise ValueError("Regular tiling requires 'shape_size' (or deprecated 'parameter')")
-                
+                raise ValueError(
+                    "Regular tiling requires 'shape_size' (or deprecated 'parameter')"
+                )
+
             if not request.shape_type:
                 raise ValueError("Regular tiling requires 'shape_type'")
 
@@ -963,13 +980,15 @@ async def create_tiling(request: TilingRequest):
         elif request.tiling_type == "hexagonal":
             if request.dimensions != 2:
                 raise ValueError("Hexagonal tiling is only supported in 2D")
-                
+
             # Handle backward compatibility for hexagonal side length
             hex_side_length = request.hex_side_length
             if hex_side_length is None and request.side_length is not None:
                 hex_side_length = request.side_length
             elif hex_side_length is None:
-                raise ValueError("Hexagonal tiling requires 'hex_side_length' (or deprecated 'side_length')")
+                raise ValueError(
+                    "Hexagonal tiling requires 'hex_side_length' (or deprecated 'side_length')"
+                )
 
             tiling = HexagonalTiling(hex_side_length)
 
