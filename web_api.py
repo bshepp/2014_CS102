@@ -15,7 +15,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel, Field
 from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.requests import Request
 
 # Import our geometry engine
 from geometry_engine import (
@@ -816,7 +815,10 @@ async def create_visualization(request: VisualizationRequest):
             fig.update_layout(
                 title=f"3D Sphere - Radius: {request.parameter}",
                 scene=dict(
-                    xaxis_title="X", yaxis_title="Y", zaxis_title="Z", aspectmode="cube"
+                    xaxis_title="X",
+                    yaxis_title="Y",
+                    zaxis_title="Z",
+                    aspectmode="cube",
                 ),
                 width=700,
                 height=700,

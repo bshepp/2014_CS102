@@ -638,7 +638,9 @@ class OriginalSphere(HyperSphere):
 
     def __str__(self) -> str:
         """Mirror the original toString method exactly"""
-        return f"a volume of {self.get_volume():.3f}, and an area of {self.get_area():.3f}."
+        vol = self.get_volume()
+        area = self.get_area()
+        return f"a volume of {vol:.3f}, and an area of {area:.3f}."
 
 
 class Simplex(NDShape):
@@ -780,7 +782,8 @@ class Simplex(NDShape):
         elif self.dimensions == 3:
             return "V₃ = (√2/12) × s³"
         else:
-            return f"V_{self.dimensions} = (√{self.dimensions+1} / (2^{self.dimensions} × {self.dimensions}!)) × s^{self.dimensions}"
+            dim = self.dimensions
+            return f"V_{dim} = (√{dim+1} / (2^{dim} × {dim}!)) × s^{dim}"
 
     def get_surface_area_formula(self) -> str:
         if self.dimensions == 0:
@@ -822,7 +825,13 @@ class Simplex(NDShape):
             return distance <= self.get_circumradius()
 
     def __str__(self) -> str:
-        return f"{self.get_shape_type()} (dim={self.dimensions}, side={self.side_length:.3f}): Volume={self.get_volume():.6f}, Surface Area={self.get_surface_area():.6f}, Vertices={self.get_vertex_count()}"
+        shape_type = self.get_shape_type()
+        dim = self.dimensions
+        side = self.side_length
+        vol = self.get_volume()
+        area = self.get_surface_area()
+        vertices = self.get_vertex_count()
+        return f"{shape_type} (dim={dim}, side={side:.3f}): Volume={vol:.6f}, Surface Area={area:.6f}, Vertices={vertices}"
 
 
 class HyperPyramid(NDShape):
