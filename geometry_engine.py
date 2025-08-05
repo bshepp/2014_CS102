@@ -1115,7 +1115,9 @@ class TilingPattern(ABC):
 class RegularTiling(TilingPattern):
     """Regular tiling patterns (same shape, same size, regular arrangement)"""
 
-    def __init__(self, dimensions: int, base_shape: NDShape, spacing: Optional[float] = None):
+    def __init__(
+        self, dimensions: int, base_shape: NDShape, spacing: Optional[float] = None
+    ):
         super().__init__(dimensions, base_shape, "regular")
         self.spacing = spacing or self._calculate_optimal_spacing()
 
@@ -1348,6 +1350,7 @@ class HexagonalTiling(TilingPattern):
     def __init__(self, side_length: float):
         # Create hexagonal shape using coordinates
         from typing import cast
+
         super().__init__(2, cast(NDShape, None), "hexagonal")
         self.side_length = side_length
         self.hexagon_height = side_length * math.sqrt(3)
@@ -1410,6 +1413,7 @@ class VoronoiTiling(TilingPattern):
 
     def __init__(self, dimensions: int, seed_points: List[List[float]]):
         from typing import cast
+
         super().__init__(dimensions, cast(NDShape, None), "voronoi")
         self.seed_points = seed_points
 

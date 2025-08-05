@@ -197,7 +197,7 @@ jobs:
 
       - name: ⚡ Run Performance Tests
         run: |
-          pytest tests/test_performance.py -v --benchmark-only
+          pytest tests/test_performance.py -v
 
   # Mathematical Accuracy Tests
   test-mathematics:
