@@ -61,15 +61,19 @@ WORKDIR /app
 COPY geometry_engine.py .
 COPY web_api.py .
 
-# Copy Java source files from their actual locations
+# Copy Java source files from their actual locations to both root and source directory
 COPY src/java/original/Sphere.java .
 COPY src/java/original/MultiSphere.java .
+COPY src/java/ src/java/
 
 # Copy MCP server components
 COPY mcp-server/ mcp-server/
 
-# Compile Java files
+# Compile Java files in root directory (for JavaBridge)
 RUN javac Sphere.java MultiSphere.java
+
+# Also compile Java files in source directory (backup)
+RUN cd src/java/original && javac Sphere.java MultiSphere.java
 
 # Change ownership to appuser
 RUN chown -R appuser:appuser /app

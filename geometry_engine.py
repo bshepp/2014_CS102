@@ -16,6 +16,7 @@ class JavaBridge:
 
     def __init__(self):
         self.java_dir = os.path.dirname(os.path.abspath(__file__))
+        self.java_execution_dir = "."  # Default execution directory
         self.java_available = self._check_java_availability()
         if self.java_available:
             self._compile_java_files()
@@ -31,18 +32,58 @@ class JavaBridge:
 
     def _compile_java_files(self):
         """Compile the original Java files"""
-        java_files = ["Sphere.java", "MultiSphere.java"]
-        existing_files = [f for f in java_files if os.path.exists(f)]
-
-        if existing_files:
-            try:
-                subprocess.run(
-                    ["javac"] + existing_files, check=True, capture_output=True
-                )
-                print("✅ Original Java files compiled successfully!")
-            except subprocess.CalledProcessError as e:
-                print(f"⚠️  Java compilation failed: {e}")
-                self.java_available = False
+        # Check multiple possible locations for Java files
+        possible_locations = [
+            # Current directory (for Docker and root execution)
+            (".", ["Sphere.java", "MultiSphere.java"]),
+            # Source directory (for development)
+            (os.path.join("src", "java", "original"), ["Sphere.java", "MultiSphere.java"])
+        ]
+        
+        compiled_successfully = False
+        
+        for location, java_files in possible_locations:
+            full_paths = [os.path.join(location, f) for f in java_files]
+            existing_files = [f for f in full_paths if os.path.exists(f)]
+            
+            if len(existing_files) >= 2:  # Need both Sphere.java and MultiSphere.java
+                try:
+                    # Change to the directory containing Java files for compilation
+                    original_cwd = os.getcwd()
+                    if location != ".":
+                        os.chdir(location)
+                    
+                    subprocess.run(
+                        ["javac"] + java_files, check=True, capture_output=True
+                    )
+                    
+                    # Store the successful compilation location
+                    self.java_execution_dir = os.path.abspath(location)
+                    compiled_successfully = True
+                    print(f"✅ Original Java files compiled successfully in {location}!")
+                    
+                    # Return to original directory
+                    os.chdir(original_cwd)
+                    break
+                    
+                except subprocess.CalledProcessError as e:
+                    if location != ".":
+                        os.chdir(original_cwd)
+                    print(f"⚠️  Java compilation failed in {location}: {e}")
+                    continue
+                except Exception as e:
+                    if location != ".":
+                        os.chdir(original_cwd)
+                    print(f"⚠️  Error during Java compilation in {location}: {e}")
+                    continue
+        
+        if not compiled_successfully:
+            print("⚠️  Java compilation failed in all locations")
+            self.java_available = False
+        else:
+            # Store the execution directory for later use
+            if not hasattr(self, 'java_execution_dir'):
+                self.java_execution_dir = "."
 
     def run_original_multisphere(self, diameter: float) -> str:
         """
@@ -53,13 +94,15 @@ class JavaBridge:
             return self._python_multisphere_equivalent(diameter)
 
         try:
-            # Create a temporary input for the Java program
-            # Updated path to account for new file organization
-            java_dir = os.path.join(
-                os.path.dirname(__file__), "src", "java", "original"
-            )
+            # Use the directory where Java files were successfully compiled
+            java_execution_dir = getattr(self, 'java_execution_dir', '.')
+            
+            # Change to the Java execution directory
+            original_cwd = os.getcwd()
+            os.chdir(java_execution_dir)
+            
             process = subprocess.Popen(
-                ["java", "-cp", java_dir, "MultiSphere"],
+                ["java", "MultiSphere"],
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
@@ -67,14 +110,24 @@ class JavaBridge:
             )
 
             stdout, stderr = process.communicate(input=str(diameter))
+            
+            # Return to original directory
+            os.chdir(original_cwd)
 
             if process.returncode == 0:
                 return f"🎯 ORIGINAL JAVA OUTPUT:\n{stdout}"
             else:
-                return f"Java execution failed: {stderr}"
+                print(f"Java execution failed: {stderr}")
+                return self._python_multisphere_equivalent(diameter)
 
         except Exception as e:
-            return f"Error running Java: {e}"
+            # Make sure to return to original directory even on error
+            try:
+                os.chdir(original_cwd)
+            except:
+                pass
+            print(f"Error running Java: {e}")
+            return self._python_multisphere_equivalent(diameter)
 
     def _python_multisphere_equivalent(self, diameter: float) -> str:
         """
