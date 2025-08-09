@@ -1,23 +1,45 @@
 """
 Database layer for GeometryOracle MCP Server
 Handles all data collection and logging functionality
+Supports both SQLite (local) and DynamoDB (AWS) backends
 """
 
 import sqlite3
 import json
 import asyncio
+import os
 from datetime import datetime
 from typing import Optional, Dict, Any, List
 from contextlib import asynccontextmanager
 import aiosqlite
 import psutil
 import time
+import boto3
+from botocore.exceptions import ClientError
 
 
 class DatabaseManager:
-    def __init__(self, db_path: str = "mcp_geometry_oracle.db"):
+    def __init__(self, db_path: str = "mcp_geometry_oracle.db", use_dynamodb: bool = None):
         self.db_path = db_path
-        self._init_db()
+        
+        # Auto-detect: use DynamoDB if AWS credentials available, otherwise SQLite
+        if use_dynamodb is None:
+            try:
+                # Test if we can access AWS
+                boto3.client('sts').get_caller_identity()
+                self.use_dynamodb = True
+                self.dynamodb_table = f"geometry-oracle-mcp-{os.environ.get('STAGE', 'prod')}-queries"
+                print(f"✅ Using DynamoDB: {self.dynamodb_table}")
+            except Exception:
+                self.use_dynamodb = False
+                print("ℹ️ Using SQLite (AWS not available)")
+        else:
+            self.use_dynamodb = use_dynamodb
+            if use_dynamodb:
+                self.dynamodb_table = f"geometry-oracle-mcp-{os.environ.get('STAGE', 'prod')}-queries"
+        
+        if not self.use_dynamodb:
+            self._init_db()
     
     def _init_db(self):
         """Initialize database with schema"""
@@ -202,6 +224,65 @@ class DatabaseManager:
     
     async def get_usage_stats(self, days: int = 30) -> Dict[str, Any]:
         """Get usage statistics for analysis"""
+        
+        if self.use_dynamodb:
+            return await self._get_usage_stats_dynamodb(days)
+        else:
+            return await self._get_usage_stats_sqlite(days)
+    
+    async def _get_usage_stats_dynamodb(self, days: int = 30) -> Dict[str, Any]:
+        """Get usage statistics from DynamoDB"""
+        try:
+            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            table = dynamodb.Table(self.dynamodb_table)
+            
+            # Get all items from the last N days
+            from datetime import datetime, timedelta
+            cutoff_date = (datetime.now() - timedelta(days=days)).isoformat()
+            
+            response = table.scan(
+                FilterExpression=boto3.dynamodb.conditions.Attr('timestamp').gte(cutoff_date)
+            )
+            
+            items = response.get('Items', [])
+            
+            # Process data similar to SQLite version
+            tool_usage = {}
+            dimension_popularity = {}
+            
+            for item in items:
+                tool_name = item.get('tool_name')
+                dimensions = item.get('dimensions')
+                
+                # Count tool usage
+                if tool_name:
+                    tool_usage[tool_name] = tool_usage.get(tool_name, 0) + 1
+                
+                # Count dimension popularity
+                if dimensions:
+                    dim_key = str(dimensions)
+                    dimension_popularity[dim_key] = dimension_popularity.get(dim_key, 0) + 1
+            
+            return {
+                "tool_usage": [{"tool_name": k, "calls": v} for k, v in tool_usage.items()],
+                "dimension_popularity": [{"dimensions": int(k), "calls": v} for k, v in dimension_popularity.items()],
+                "error_rates": [],
+                "total_queries": len(items),
+                "data_source": "dynamodb"
+            }
+            
+        except Exception as e:
+            print(f"Error reading from DynamoDB: {e}")
+            return {
+                "tool_usage": [],
+                "dimension_popularity": [],
+                "error_rates": [],
+                "total_queries": 0,
+                "data_source": "dynamodb_error"
+            }
+    
+    async def _get_usage_stats_sqlite(self, days: int = 30) -> Dict[str, Any]:
+        """Get usage statistics from SQLite"""
         async with self.get_connection() as conn:
             # Tool usage over time
             query = """

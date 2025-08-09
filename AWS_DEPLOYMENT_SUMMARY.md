@@ -21,7 +21,9 @@ The GeometryOracle MCP Server has been successfully deployed to AWS with compreh
 
 ## 🛠️ **Available Tools**
 
-### **1. calculate_hypersphere**
+### **Core Geometry Tools**
+
+#### **1. calculate_hypersphere**
 Calculate volume and surface area of N-dimensional hyperspheres
 ```json
 {
@@ -33,7 +35,7 @@ Calculate volume and surface area of N-dimensional hyperspheres
 }
 ```
 
-### **2. calculate_hypercube**  
+#### **2. calculate_hypercube**  
 Calculate volume and surface area of N-dimensional hypercubes
 ```json
 {
@@ -45,7 +47,7 @@ Calculate volume and surface area of N-dimensional hypercubes
 }
 ```
 
-### **3. compare_shapes**
+#### **3. compare_shapes**
 Compare multiple N-dimensional shapes
 ```json
 {
@@ -59,13 +61,44 @@ Compare multiple N-dimensional shapes
 }
 ```
 
-### **4. get_usage_statistics**
+#### **4. get_usage_statistics**
 Get server usage analytics and statistics
 ```json
 {
   "name": "get_usage_statistics",
   "arguments": {
     "days": 7
+  }
+}
+```
+
+### **🆕 NEW: AI Agent-Focused Tools**
+
+#### **5. batch_geometry_calculations**
+Process multiple shapes in one request - perfect for AI agents
+```json
+{
+  "name": "batch_geometry_calculations",
+  "arguments": {
+    "shapes": [
+      {"type": "hypersphere", "dimensions": 3, "parameter": 2.0},
+      {"type": "hypercube", "dimensions": 3, "parameter": 2.0}
+    ],
+    "operations": ["volume", "surface_area"]
+  }
+}
+```
+
+#### **6. analyze_dimension_scaling**
+Analyze how properties scale with dimensions - fascinating for AI research
+```json
+{
+  "name": "analyze_dimension_scaling",
+  "arguments": {
+    "shape_type": "hypersphere",
+    "property": "volume",
+    "dimension_range": {"start": 1, "end": 10},
+    "parameter_value": 1.0
   }
 }
 ```
@@ -137,6 +170,20 @@ curl -X POST "https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp" \
 5. **CloudWatch**: Comprehensive logging and monitoring
 
 ---
+
+## 📊 **Enhanced Data Collection**
+
+### **Usage Analytics Dashboard**
+- **Real-time Metrics**: Tool usage, dimension popularity, performance stats
+- **Research Data**: AI agent behavior patterns and preferences
+- **Public Dashboard**: Live insights into how AI explores N-dimensional geometry
+- **Data Export**: JSON/CSV formats for research purposes
+
+### **Comprehensive Tracking**
+- **Tool Usage Patterns**: Which tools do AI agents prefer?
+- **Dimension Analysis**: Popular dimensions and scaling behaviors
+- **Performance Monitoring**: Response times and computational complexity
+- **Batch Processing Insights**: How agents optimize their requests
 
 ## 🧪 **Verified Test Cases**
 

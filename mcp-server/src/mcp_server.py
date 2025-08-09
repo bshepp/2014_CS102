@@ -8,6 +8,7 @@ import uuid
 from typing import Dict, Any, List, Optional
 from datetime import datetime
 import traceback
+import math
 
 from mcp.server.fastmcp import FastMCP
 from mcp.server import NotificationOptions
@@ -326,6 +327,223 @@ class GeometryOracleMCP:
                     error_type=type(e).__name__,
                     error_message=error_msg,
                     input_parameters={"days": days}
+                )
+                raise
+
+        @self.app.tool()
+        async def batch_geometry_calculations(
+            shapes: List[Dict[str, Any]],
+            operations: List[str] = ["volume", "surface_area"],
+            session_id: str = None,
+            client_info: str = None
+        ) -> Dict[str, Any]:
+            """Calculate multiple shapes in one request - perfect for AI agents analyzing datasets"""
+            
+            monitor = PerformanceMonitor()
+            monitor.start_monitoring()
+            
+            input_params = {
+                "shapes": shapes,
+                "operations": operations,
+                "tool": "batch_geometry_calculations"
+            }
+            
+            try:
+                results = []
+                for shape_def in shapes:
+                    shape_type = shape_def.get("type")
+                    dimensions = shape_def.get("dimensions")
+                    parameter = shape_def.get("parameter")
+                    
+                    if shape_type == "hypersphere":
+                        shape = HyperSphere(dimensions, parameter)
+                        shape_result = {
+                            "shape_type": "hypersphere",
+                            "dimensions": dimensions,
+                            "radius": parameter
+                        }
+                    elif shape_type == "hypercube":
+                        shape = HyperCube(dimensions, parameter)
+                        shape_result = {
+                            "shape_type": "hypercube", 
+                            "dimensions": dimensions,
+                            "side_length": parameter
+                        }
+                    else:
+                        continue
+                        
+                    # Extract requested properties
+                    if "volume" in operations:
+                        shape_result["volume"] = shape.get_volume()
+                    if "surface_area" in operations:
+                        shape_result["surface_area"] = shape.get_surface_area()
+                    if "properties" in operations:
+                        shape_result["properties"] = {
+                            "formulas": {
+                                "volume": getattr(shape, 'get_volume_formula', lambda: "N/A")(),
+                                "surface_area": getattr(shape, 'get_surface_area_formula', lambda: "N/A")()
+                            }
+                        }
+                    
+                    results.append(shape_result)
+                
+                metrics = monitor.get_metrics()
+                batch_result = {
+                    "success": True,
+                    "total_shapes": len(results),
+                    "operations_performed": operations,
+                    "results": results
+                }
+                
+                # Log to database
+                await self.db.log_query(
+                    tool_name="batch_geometry_calculations",
+                    input_parameters=input_params,
+                    output_results=batch_result,
+                    success=True,
+                    session_id=session_id,
+                    client_info=client_info,
+                    **metrics
+                )
+                
+                return batch_result
+                
+            except Exception as e:
+                error_msg = str(e)
+                metrics = monitor.get_metrics()
+                
+                await self.db.log_query(
+                    tool_name="batch_geometry_calculations",
+                    input_parameters=input_params,
+                    success=False,
+                    error_message=error_msg,
+                    session_id=session_id,
+                    client_info=client_info,
+                    **metrics
+                )
+                
+                await self.db.log_error(
+                    tool_name="batch_geometry_calculations",
+                    error_type=type(e).__name__,
+                    error_message=error_msg,
+                    input_parameters=input_params,
+                    stack_trace=traceback.format_exc()
+                )
+                raise
+
+        @self.app.tool()
+        async def analyze_dimension_scaling(
+            shape_type: str,
+            property_name: str = "volume",
+            dimension_range: Dict[str, int] = {"start": 1, "end": 10},
+            parameter_value: float = 1.0,
+            session_id: str = None,
+            client_info: str = None
+        ) -> Dict[str, Any]:
+            """Show how properties change with dimensions - fascinating for AI analysis"""
+            
+            monitor = PerformanceMonitor()
+            monitor.start_monitoring()
+            
+            input_params = {
+                "shape_type": shape_type,
+                "property": property_name,
+                "dimension_range": dimension_range,
+                "parameter_value": parameter_value,
+                "tool": "analyze_dimension_scaling"
+            }
+            
+            try:
+                start_dim = dimension_range.get("start", 1)
+                end_dim = min(dimension_range.get("end", 10), 20)  # Limit to 20D max
+                
+                scaling_data = []
+                
+                for dim in range(start_dim, end_dim + 1):
+                    try:
+                        if shape_type == "hypersphere":
+                            shape = HyperSphere(dim, parameter_value)
+                        elif shape_type == "hypercube":
+                            shape = HyperCube(dim, parameter_value)
+                        else:
+                            continue
+                        
+                        if property_name == "volume":
+                            value = shape.get_volume()
+                        elif property_name == "surface_area":
+                            value = shape.get_surface_area()
+                        elif property_name == "diameter" and shape_type == "hypersphere":
+                            value = shape.get_diameter()
+                        else:
+                            continue
+                        
+                        scaling_data.append({
+                            "dimensions": dim,
+                            "value": value,
+                            "log_value": math.log10(max(value, 1e-10))
+                        })
+                        
+                    except Exception:
+                        continue
+                
+                # Find peak dimension
+                peak_dim = None
+                peak_value = 0
+                for data_point in scaling_data:
+                    if data_point["value"] > peak_value:
+                        peak_value = data_point["value"]
+                        peak_dim = data_point["dimensions"]
+                
+                results = {
+                    "success": True,
+                    "shape_type": shape_type,
+                    "property": property_name,
+                    "parameter_value": parameter_value,
+                    "dimension_range": f"{start_dim}D to {end_dim}D",
+                    "scaling_data": scaling_data,
+                    "insights": {
+                        "peak_dimension": peak_dim,
+                        "peak_value": peak_value,
+                        "total_data_points": len(scaling_data),
+                        "scaling_pattern": "Volume peaks around 5-7D for unit hyperspheres" if shape_type == "hypersphere" and property_name == "volume" else "Monotonic growth"
+                    }
+                }
+                
+                metrics = monitor.get_metrics()
+                
+                # Log to database
+                await self.db.log_query(
+                    tool_name="analyze_dimension_scaling",
+                    input_parameters=input_params,
+                    output_results=results,
+                    success=True,
+                    session_id=session_id,
+                    client_info=client_info,
+                    **metrics
+                )
+                
+                return results
+                
+            except Exception as e:
+                error_msg = str(e)
+                metrics = monitor.get_metrics()
+                
+                await self.db.log_query(
+                    tool_name="analyze_dimension_scaling",
+                    input_parameters=input_params,
+                    success=False,
+                    error_message=error_msg,
+                    session_id=session_id,
+                    client_info=client_info,
+                    **metrics
+                )
+                
+                await self.db.log_error(
+                    tool_name="analyze_dimension_scaling",
+                    error_type=type(e).__name__,
+                    error_message=error_msg,
+                    input_parameters=input_params,
+                    stack_trace=traceback.format_exc()
                 )
                 raise
     

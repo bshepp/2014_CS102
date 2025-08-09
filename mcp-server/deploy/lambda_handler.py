@@ -61,7 +61,9 @@ def mcp_handler(event, context):
                         'calculate_hypersphere',
                         'calculate_hypercube', 
                         'compare_shapes',
-                        'get_usage_statistics'
+                        'get_usage_statistics',
+                        'batch_geometry_calculations',
+                        'analyze_dimension_scaling'
                     ]
                 })
             }
