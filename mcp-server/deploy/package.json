@@ -1,0 +1,6 @@
+{
+  "name": "geometry-oracle-mcp-deploy",
+  "version": "1.0.0",
+  "description": "GeometryOracle MCP Server AWS Deployment"
+}
+EOF < /dev/null

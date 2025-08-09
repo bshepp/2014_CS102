@@ -1,0 +1,11 @@
+jsonrpc_base-2.2.0.dist-info/INSTALLER,sha256=zuuue4knoyJ-UwPPXg8fezS7VCrXJQrAP7zeNuwvFQg,4
+jsonrpc_base-2.2.0.dist-info/METADATA,sha256=7F_Yo1WKCO9bFk12dDfeIaqD7ZRHyiTNZE3LCrw3D3Y,3811
+jsonrpc_base-2.2.0.dist-info/RECORD,,
+jsonrpc_base-2.2.0.dist-info/REQUESTED,sha256=47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU,0
+jsonrpc_base-2.2.0.dist-info/WHEEL,sha256=_zCd3N1l69ArxyTb8rzEoP9TpbYXkqRFSNOD5OuxnTs,91
+jsonrpc_base-2.2.0.dist-info/licenses/LICENSE.txt,sha256=NOSBWsuB9lyLPhlvlTVEOzvkqVFXIL-xgqx0hOEyAKY,1463
+jsonrpc_base-2.2.0.dist-info/top_level.txt,sha256=MrIAeZTFBQp-HW7TSrBQRmVY3hZanav4Lg82sre6OK4,13
+jsonrpc_base/__init__.py,sha256=9z_4I3aNThetr95Ky2kbt5S3P-SPbiBduKFZQILn1Ck,133
+jsonrpc_base/__pycache__/__init__.cpython-312.pyc,,
+jsonrpc_base/__pycache__/jsonrpc.cpython-312.pyc,,
+jsonrpc_base/jsonrpc.py,sha256=mFiXMzjCYOf_cejIL3UlmyqcdVJ_1wnV9OIVN6bBUG0,9819

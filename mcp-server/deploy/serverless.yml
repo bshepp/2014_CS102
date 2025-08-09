@@ -1,0 +1,115 @@
+service: geometry-oracle-mcp
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.12
+  region: us-east-1
+  stage: ${opt:stage, 'dev'}
+  memorySize: 512
+  timeout: 30
+  
+  environment:
+    STAGE: ${self:provider.stage}
+    DB_PATH: /tmp/geometry_oracle.db
+    
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - logs:CreateLogGroup
+        - logs:CreateLogStream
+        - logs:PutLogEvents
+      Resource: "*"
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - "Fn::GetAtt": [ GeometryOracleTable, Arn ]
+
+functions:
+  mcp-server:
+    handler: lambda_handler.mcp_handler
+    events:
+      - http:
+          path: /mcp
+          method: post
+          cors: true
+      - http:
+          path: /mcp
+          method: get
+          cors: true
+      - http:
+          path: /mcp
+          method: options
+          cors: true
+  
+  dashboard-api:
+    handler: lambda_handler.dashboard_handler
+    events:
+      - http:
+          path: /api/{proxy+}
+          method: ANY
+          cors: true
+      - http:
+          path: /
+          method: get
+          cors: true
+
+  health-check:
+    handler: lambda_handler.health_handler
+    events:
+      - http:
+          path: /health
+          method: get
+          cors: true
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    dockerizePip: false
+    slim: true
+    strip: false
+
+resources:
+  Resources:
+    GeometryOracleTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-${self:provider.stage}-queries
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: timestamp
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+          - AttributeName: timestamp
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+        TimeToLiveSpecification:
+          AttributeName: ttl
+          Enabled: true
+
+  Outputs:
+    McpApiUrl:
+      Description: "API Gateway endpoint URL for MCP server"
+      Value:
+        Fn::Join:
+          - ''
+          - - 'https://'
+            - Ref: ApiGatewayRestApi
+            - '.execute-api.'
+            - ${self:provider.region}
+            - '.amazonaws.com/'
+            - ${self:provider.stage}
+      Export:
+        Name: ${self:service}-${self:provider.stage}-api-url

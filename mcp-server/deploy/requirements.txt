@@ -1,0 +1,16 @@
+# AWS Lambda deployment requirements
+# Streamlined for Lambda environment
+
+# Core dependencies
+fastapi>=0.108.0
+pydantic>=2.5.0
+numpy>=1.24.0
+
+# AWS SDK
+boto3>=1.34.0
+
+# Async support  
+aiofiles>=23.0.0
+
+# JSON-RPC support (minimal)
+jsonrpc-base>=2.2.0
