@@ -32,3 +32,4 @@ extend_skip_glob = [
     "mcp-server/deploy/*",
     ".archive/*"
 ]
+

@@ -129,7 +129,7 @@ class JavaBridge:
             # Make sure to return to original directory even on error
             try:
                 os.chdir(original_cwd)
-            except:
+            except OSError:
                 pass
             print(f"Error running Java: {e}")
             return self._python_multisphere_equivalent(diameter)
