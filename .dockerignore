@@ -141,3 +141,70 @@ security-reports/
 *.sarif
 bandit-report.json
 safety-report.json
+
+# MCP Server local database (SQLite)
+mcp-server/mcp_geometry_oracle.db
+mcp-server/*.db
+*.db
+
+# Claude Code configuration (local only)
+.claude/
+
+# Local development scripts and configs
+quickstart.sh
+run_local_*.sh
+local_*.py
+
+# Archived files (not needed in production)
+.archive/
+
+# Additional Python virtual environments
+.venv/
+venv*/
+ENV*/
+
+# Local development tools output
+.coverage.*
+coverage.*
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.black_cache/
+
+# Additional IDE configurations
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS-specific files
+*.DS_Store
+*.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Development dependency lockfiles not needed in container
+poetry.lock
+Pipfile.lock
+
+# Local configuration overrides
+local_settings.py
+settings_local.py
+config_local.py
+
+# Development database files
+dev.db
+test.db
+*.sqlite
+*.sqlite3
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# Additional test artifacts
+.benchmarks/
+benchmark-results/
+test-outputs/
+.prof
