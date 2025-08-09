@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeometryOracle MCP Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .charts-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .chart-container {
+            height: 400px;
+        }
+        
+        .data-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5a6fd8;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .error {
+            color: #e74c3c;
+            background: #ffeaea;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌌 GeometryOracle MCP Dashboard</h1>
+            <p>Real-time data from N-dimensional geometry calculations across AI systems</p>
+        </div>
+        
+        <div class="stats-grid" id="statsGrid">
+            <div class="loading">Loading statistics...</div>
+        </div>
+        
+        <div class="charts-section">
+            <h2>📊 Usage Analytics</h2>
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <div id="toolUsageChart" class="loading">Loading tool usage chart...</div>
+                </div>
+                <div class="chart-container">
+                    <div id="dimensionChart" class="loading">Loading dimension chart...</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="data-section">
+            <h2>🔬 Research Data</h2>
+            <p>This dataset contains anonymized usage patterns from AI systems using GeometryOracle for N-dimensional geometry calculations. Perfect for research on AI geometry query patterns and computational geometry usage.</p>
+            
+            <div class="export-buttons">
+                <button class="btn btn-primary" onclick="exportData('json')">📄 Export JSON</button>
+                <button class="btn btn-primary" onclick="exportData('csv')">📈 Export CSV</button>
+                <button class="btn btn-primary" onclick="viewLiveData()">🔴 Live Data Stream</button>
+            </div>
+            
+            <div id="dataPreview" style="margin-top: 20px;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Load dashboard data
+        async function loadDashboard() {
+            try {
+                // Load overview stats
+                const statsResponse = await fetch('/api/stats/overview');
+                const statsData = await statsResponse.json();
+                displayStats(statsData.overview);
+                
+                // Load charts
+                const chartsResponse = await fetch('/api/charts/usage');
+                const chartsData = await chartsResponse.json();
+                displayCharts(chartsData);
+                
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                document.getElementById('statsGrid').innerHTML = 
+                    '<div class="error">Error loading dashboard data. Please try again.</div>';
+            }
+        }
+        
+        function displayStats(stats) {
+            const statsGrid = document.getElementById('statsGrid');
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">${stats.total_queries.toLocaleString()}</div>
+                    <div class="stat-label">Total Queries</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${stats.unique_sessions}</div>
+                    <div class="stat-label">Unique Sessions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${stats.avg_execution_time_ms}ms</div>
+                    <div class="stat-label">Avg Response Time</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${stats.most_popular_dimension || 'N/A'}D</div>
+                    <div class="stat-label">Most Popular Dimension</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${stats.error_rate_percent}%</div>
+                    <div class="stat-label">Error Rate</div>
+                </div>
+            `;
+        }
+        
+        function displayCharts(chartsData) {
+            // Tool usage chart
+            if (chartsData.tool_usage_chart) {
+                const toolChart = JSON.parse(chartsData.tool_usage_chart);
+                Plotly.newPlot('toolUsageChart', toolChart.data, {
+                    ...toolChart.layout,
+                    title: 'Tool Usage Distribution',
+                    showlegend: true
+                });
+            }
+            
+            // Dimension popularity chart
+            if (chartsData.dimension_chart) {
+                const dimChart = JSON.parse(chartsData.dimension_chart);
+                Plotly.newPlot('dimensionChart', dimChart.data, {
+                    ...dimChart.layout,
+                    title: 'Dimension Popularity',
+                    xaxis: { title: 'Dimensions' },
+                    yaxis: { title: 'Query Count' }
+                });
+            }
+        }
+        
+        async function exportData(format) {
+            try {
+                const response = await fetch(`/api/data/export?format=${format}`);
+                const data = await response.json();
+                
+                if (format === 'json') {
+                    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                    downloadFile(blob, 'geometry_oracle_data.json');
+                } else if (format === 'csv') {
+                    // Convert to CSV (simplified)
+                    const csv = convertToCSV(data.data);
+                    const blob = new Blob([csv], { type: 'text/csv' });
+                    downloadFile(blob, 'geometry_oracle_data.csv');
+                }
+                
+                // Show preview
+                document.getElementById('dataPreview').innerHTML = `
+                    <h3>Data Preview (${data.data.length} records)</h3>
+                    <pre style="background: #f8f9fa; padding: 15px; border-radius: 5px; overflow-x: auto; max-height: 300px;">
+${JSON.stringify(data.data.slice(0, 5), null, 2)}
+                    </pre>
+                `;
+                
+            } catch (error) {
+                console.error('Error exporting data:', error);
+                alert('Error exporting data. Please try again.');
+            }
+        }
+        
+        function convertToCSV(data) {
+            if (!data.length) return '';
+            
+            const headers = Object.keys(data[0]);
+            const csvRows = [headers.join(',')];
+            
+            for (const row of data) {
+                const values = headers.map(header => {
+                    const val = row[header];
+                    return typeof val === 'string' ? `"${val}"` : val;
+                });
+                csvRows.push(values.join(','));
+            }
+            
+            return csvRows.join('\n');
+        }
+        
+        function downloadFile(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        function viewLiveData() {
+            // This would open a WebSocket connection for real-time data
+            alert('Live data streaming would be implemented here!');
+        }
+        
+        // Auto-refresh every 30 seconds
+        setInterval(loadDashboard, 30000);
+        
+        // Initial load
+        loadDashboard();
+    </script>
+</body>
+</html>
