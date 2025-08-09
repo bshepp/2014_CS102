@@ -55,8 +55,21 @@ class TestRunner:
         print("=" * 60)
 
         checks = [
-            (["black", "--check", "--diff", "."], "Code formatting (Black)"),
-            (["isort", "--check-only", "--diff", "."], "Import sorting (isort)"),
+            (
+                ["black", "--check", "--diff", "--config", "pyproject.toml", "."],
+                "Code formatting (Black)",
+            ),
+            (
+                [
+                    "isort",
+                    "--check-only",
+                    "--diff",
+                    "--settings-path",
+                    "pyproject.toml",
+                    ".",
+                ],
+                "Import sorting (isort)",
+            ),
             (["flake8", "--statistics", "."], "Linting (Flake8)"),
             (["mypy", "--ignore-missing-imports", "."], "Type checking (MyPy)"),
             (
