@@ -60,8 +60,10 @@ WORKDIR /app
 # Copy application code
 COPY geometry_engine.py .
 COPY web_api.py .
-COPY Sphere.java .
-COPY MultiSphere.java .
+
+# Copy Java source files from their actual locations
+COPY src/java/original/Sphere.java .
+COPY src/java/original/MultiSphere.java .
 
 # Copy MCP server components
 COPY mcp-server/ mcp-server/
