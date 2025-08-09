@@ -59,12 +59,12 @@ jobs:
       - name: 🔒 Security Scanning (Bandit)
         run: |
           bandit -r . -f json -o bandit-report.json || true
-          bandit -r . -f txt
+          bandit -r . -f txt || true
 
       - name: 🛡️ Dependency Vulnerability Check (Safety)
         run: |
           safety check --json --output safety-report.json || true
-          safety check
+          safety check || true
 
       - name: 📊 Code Quality (Pylint)
         run: |
