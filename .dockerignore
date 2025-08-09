@@ -147,6 +147,11 @@ mcp-server/mcp_geometry_oracle.db
 mcp-server/*.db
 *.db
 
+# AWS deployment files (auto-generated, not needed in Docker)
+mcp-server/deploy/boto3/
+mcp-server/deploy/botocore/
+mcp-server/deploy/bin/
+
 # Claude Code configuration (local only)
 .claude/
 
