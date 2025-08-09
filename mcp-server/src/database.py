@@ -4,17 +4,18 @@ Handles all data collection and logging functionality
 Supports both SQLite (local) and DynamoDB (AWS) backends
 """
 
-import sqlite3
-import json
 import asyncio
+import json
 import os
-from datetime import datetime
-from typing import Optional, Dict, Any, List
-from contextlib import asynccontextmanager
-import aiosqlite
-import psutil
+import sqlite3
 import time
+from contextlib import asynccontextmanager
+from datetime import datetime
+from typing import Any, Dict, List, Optional
+
+import aiosqlite
 import boto3
+import psutil
 from botocore.exceptions import ClientError
 
 

@@ -46,7 +46,7 @@ jobs:
 
       - name: 📐 Import Sorting (isort)
         run: |
-          isort --check-only --diff .
+          isort --check-only --diff --settings-path pyproject.toml .
 
       - name: 🔍 Linting (Flake8)
         run: |

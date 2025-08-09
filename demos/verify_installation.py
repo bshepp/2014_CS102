@@ -138,8 +138,8 @@ def check_geometry_engine():
     print_header("Geometry Engine Check")
 
     try:
-        import sys
         import os
+        import sys
 
         sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
         from geometry_engine import HyperCube, HyperSphere
@@ -166,8 +166,8 @@ def check_web_api():
     print_header("Web API Check")
 
     try:
-        import sys
         import os
+        import sys
 
         sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
         from web_api import app

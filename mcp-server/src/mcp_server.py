@@ -4,33 +4,32 @@ Model Context Protocol server for N-dimensional geometry calculations with data 
 """
 
 import json
-import uuid
-from typing import Dict, Any, List, Optional
-from datetime import datetime
-import traceback
 import math
-
-from mcp.server.fastmcp import FastMCP
-from mcp.server import NotificationOptions
-from mcp.types import (
-    Resource,
-    Tool,
-    TextContent,
-    ImageContent,
-    EmbeddedResource,
-)
+import os
+import sys
+import traceback
+import uuid
+from datetime import datetime
+from typing import Any, Dict, List, Optional
 
 from database import DatabaseManager, PerformanceMonitor
-import sys
-import os
+from mcp.server import NotificationOptions
+from mcp.server.fastmcp import FastMCP
+from mcp.types import (
+    EmbeddedResource,
+    ImageContent,
+    Resource,
+    TextContent,
+    Tool,
+)
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../"))
 from geometry_engine import (
-    HyperSphere,
     HyperCube,
     HyperEllipsoid,
-    Simplex,
     HyperPyramid,
+    HyperSphere,
+    Simplex,
 )
 
 

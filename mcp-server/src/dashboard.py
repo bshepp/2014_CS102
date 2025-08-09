@@ -3,15 +3,16 @@ GeometryOracle MCP Server Dashboard
 Web interface for viewing collected data and usage statistics
 """
 
+import json
+from datetime import datetime, timedelta
+
+import plotly.graph_objects as go
+import plotly.utils
+from database import DatabaseManager
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-import json
-from database import DatabaseManager
-from datetime import datetime, timedelta
-import plotly.graph_objects as go
-import plotly.utils
 
 dashboard_app = FastAPI(title="GeometryOracle MCP Dashboard")
 
