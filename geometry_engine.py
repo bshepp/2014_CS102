@@ -54,8 +54,10 @@ class JavaBridge:
 
         try:
             # Create a temporary input for the Java program
+            # Updated path to account for new file organization
+            java_dir = os.path.join(os.path.dirname(__file__), "src", "java", "original")
             process = subprocess.Popen(
-                ["java", "MultiSphere"],
+                ["java", "-cp", java_dir, "MultiSphere"],
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,

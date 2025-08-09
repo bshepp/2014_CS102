@@ -332,7 +332,8 @@ class VisualizationRequest(BaseModel):
 @app.get("/demo", response_class=HTMLResponse)
 async def demo():
     """Serve the interactive demo page"""
-    with open("demo.html", "r") as f:
+    demo_path = os.path.join(os.path.dirname(__file__), "demos", "demo.html")
+    with open(demo_path, "r") as f:
         return HTMLResponse(content=f.read())
 
 
@@ -340,7 +341,8 @@ async def demo():
 async def visualize():
     """Serve the visualization page"""
     # For now, redirect to demo page which has visualization capabilities
-    with open("demo.html", "r") as f:
+    demo_path = os.path.join(os.path.dirname(__file__), "demos", "demo.html")
+    with open(demo_path, "r") as f:
         return HTMLResponse(content=f.read())
 
 

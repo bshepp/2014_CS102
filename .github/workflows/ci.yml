@@ -144,6 +144,11 @@ jobs:
           pip install -r requirements.txt
           pip install pytest pytest-asyncio httpx requests
 
+      - name: ☕ Compile Java Classes
+        run: |
+          # Compile Java files in their new organized location
+          cd src/java/original && javac *.java
+
       - name: 🚀 Start API Server
         run: |
           # Start API server in background and wait for it to be ready
@@ -267,7 +272,7 @@ jobs:
 
       - name: 🐳 Build Docker Image
         run: |
-          docker build -f Dockerfile.test -t geometry-engine:test .
+          docker build -f docker/Dockerfile.test -t geometry-engine:test .
 
       - name: 🧪 Run Tests in Docker
         run: |
