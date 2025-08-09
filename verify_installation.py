@@ -144,11 +144,11 @@ def check_geometry_engine():
 
         # Test basic functionality
         sphere = HyperSphere(3, 1.0)
-        volume = sphere.volume()
+        volume = sphere.get_volume()
         print_success(f"Created 3D sphere with volume: {volume:.4f}")
 
         cube = HyperCube(3, 2.0)
-        cube_volume = cube.volume()
+        cube_volume = cube.get_volume()
         print_success(f"Created 3D cube with volume: {cube_volume:.4f}")
 
         return True
