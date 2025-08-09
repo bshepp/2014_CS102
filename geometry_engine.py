@@ -37,35 +37,40 @@ class JavaBridge:
             # Current directory (for Docker and root execution)
             (".", ["Sphere.java", "MultiSphere.java"]),
             # Source directory (for development)
-            (os.path.join("src", "java", "original"), ["Sphere.java", "MultiSphere.java"])
+            (
+                os.path.join("src", "java", "original"),
+                ["Sphere.java", "MultiSphere.java"],
+            ),
         ]
-        
+
         compiled_successfully = False
-        
+
         for location, java_files in possible_locations:
             full_paths = [os.path.join(location, f) for f in java_files]
             existing_files = [f for f in full_paths if os.path.exists(f)]
-            
+
             if len(existing_files) >= 2:  # Need both Sphere.java and MultiSphere.java
                 try:
                     # Change to the directory containing Java files for compilation
                     original_cwd = os.getcwd()
                     if location != ".":
                         os.chdir(location)
-                    
+
                     subprocess.run(
                         ["javac"] + java_files, check=True, capture_output=True
                     )
-                    
+
                     # Store the successful compilation location
                     self.java_execution_dir = os.path.abspath(location)
                     compiled_successfully = True
-                    print(f"✅ Original Java files compiled successfully in {location}!")
-                    
+                    print(
+                        f"✅ Original Java files compiled successfully in {location}!"
+                    )
+
                     # Return to original directory
                     os.chdir(original_cwd)
                     break
-                    
+
                 except subprocess.CalledProcessError as e:
                     if location != ".":
                         os.chdir(original_cwd)
@@ -76,13 +81,13 @@ class JavaBridge:
                         os.chdir(original_cwd)
                     print(f"⚠️  Error during Java compilation in {location}: {e}")
                     continue
-        
+
         if not compiled_successfully:
             print("⚠️  Java compilation failed in all locations")
             self.java_available = False
         else:
             # Store the execution directory for later use
-            if not hasattr(self, 'java_execution_dir'):
+            if not hasattr(self, "java_execution_dir"):
                 self.java_execution_dir = "."
 
     def run_original_multisphere(self, diameter: float) -> str:
@@ -95,12 +100,12 @@ class JavaBridge:
 
         try:
             # Use the directory where Java files were successfully compiled
-            java_execution_dir = getattr(self, 'java_execution_dir', '.')
-            
+            java_execution_dir = getattr(self, "java_execution_dir", ".")
+
             # Change to the Java execution directory
             original_cwd = os.getcwd()
             os.chdir(java_execution_dir)
-            
+
             process = subprocess.Popen(
                 ["java", "MultiSphere"],
                 stdin=subprocess.PIPE,
@@ -110,7 +115,7 @@ class JavaBridge:
             )
 
             stdout, stderr = process.communicate(input=str(diameter))
-            
+
             # Return to original directory
             os.chdir(original_cwd)
 

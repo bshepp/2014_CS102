@@ -15,8 +15,8 @@ extend-exclude = '''
     | buck-out
     | build
     | dist
-    | mcp-server/deploy/  # AWS Lambda deployment files (auto-generated)
-    | .archive/           # Archived files
+    | mcp-server/deploy   # AWS Lambda deployment files (auto-generated)
+    | \.archive           # Archived files
 )/
 '''
 

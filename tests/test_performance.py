@@ -563,13 +563,13 @@ class TestComputationalComplexity:
 
         for dim in dimensions:
             sphere = HyperSphere(dim, 1.0)
-            
+
             # Measure time manually
             start = time.time()
             for _ in range(1000):
                 sphere.get_volume()
             end = time.time()
-            
+
             avg_time = (end - start) / 1000
             times.append(avg_time)
 
@@ -595,7 +595,7 @@ class TestComputationalComplexity:
             for _ in range(10):
                 tiling.generate_pattern(bounds, density=1.0)
             end = time.time()
-            
+
             avg_time = (end - start) / 10
             times.append(avg_time)
 
