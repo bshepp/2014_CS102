@@ -119,7 +119,7 @@ def check_project_files():
         "geometry_engine.py",
         "requirements.txt",
         "CLAUDE.md",
-        "TROUBLESHOOTING.md",
+        "docs/TROUBLESHOOTING.md",
     ]
 
     all_good = True
@@ -138,6 +138,9 @@ def check_geometry_engine():
     print_header("Geometry Engine Check")
 
     try:
+        import sys
+        import os
+        sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
         from geometry_engine import HyperCube, HyperSphere
 
         print_success("Geometry engine imported successfully")
@@ -162,6 +165,9 @@ def check_web_api():
     print_header("Web API Check")
 
     try:
+        import sys
+        import os
+        sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
         from web_api import app
 
         print_success("Web API imported successfully")
@@ -218,7 +224,7 @@ def provide_recommendations():
     print("  # API Docs: http://localhost:8000/api/docs")
     print("")
     print("📚 For more help:")
-    print("  - Read TROUBLESHOOTING.md")
+    print("  - Read docs/TROUBLESHOOTING.md")
     print("  - Check CLAUDE.md for full documentation")
     print(
         "  - Review ai_cognitive_framework_geometry_engine.json for AI "

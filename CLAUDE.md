@@ -209,7 +209,7 @@ source ~/.sdkman/bin/sdkman-init.sh
 sdk install java 11.0.21-tem
 
 # Verify installation
-python verify_installation.py
+python demos/verify_installation.py
 ```
 
 ## 🚀 Common Development Commands
@@ -370,7 +370,7 @@ If you encounter "Internal Server Error" when accessing the interactive demo:
 Once the server starts, verify it's working:
 ```bash
 # Run comprehensive verification
-python verify_installation.py
+python demos/verify_installation.py
 
 # Check health endpoint
 curl http://localhost:8000/api/health
@@ -636,8 +636,8 @@ If calculations are slow:
 - **BRANCH_STRATEGY.md**: Complete CI/CD pipeline and branch workflow guide
 - **FUTURE_IMPROVEMENTS.md**: Roadmap and enhancement plans
 - **TROUBLESHOOTING.md**: Comprehensive troubleshooting guide for common issues
-- **ai_cognitive_framework_geometry_engine.json**: AI cognitive framework for GeometryOracle instance
-- **verify_installation.py**: Installation verification script with comprehensive system checks
+- **config/ai_cognitive_framework_geometry_engine.json**: AI cognitive framework for GeometryOracle instance
+- **demos/verify_installation.py**: Installation verification script with comprehensive system checks
 - **API Documentation**: Swagger UI and ReDoc interfaces
 
 ### **CI/CD Configuration Files**
@@ -645,7 +645,7 @@ If calculations are slow:
 - **.github/workflows/web-validate.yml**: Web standards validation pipeline
 - **.github/workflows/deploy-development.yml**: Development environment deployment
 - **.github/workflows/deploy-production.yml**: Production environment deployment
-- **amplify.yml**: AWS Amplify build configuration
+- **config/amplify.yml**: AWS Amplify build configuration
 - **amplify-branch-config.json**: Branch-specific Amplify settings
 - **.pa11yrc**: Accessibility testing configuration
 - **.lighthouserc.json**: Performance testing configuration

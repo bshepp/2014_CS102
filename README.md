@@ -137,7 +137,7 @@ See [.archive/README.md](.archive/README.md) for restoration instructions.
 ### Technical Documentation
 - [CLAUDE.md](CLAUDE.md) - Comprehensive project guide for AI assistant
 - [API Documentation](https://api.geometry-engine-api.com/api/docs) - Interactive API docs
-- [Cognitive Framework](ai_cognitive_framework_geometry_engine.json) - AI collaboration framework
+- [Cognitive Framework](config/ai_cognitive_framework_geometry_engine.json) - AI collaboration framework
 
 ## 🧪 Testing
 
