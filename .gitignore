@@ -214,3 +214,87 @@ pnpm-lock.yaml
 # Backup files
 *.backup
 *.bk
+
+# Recent migration artifacts (ECS → Amplify)
+backup/
+amplify-deploy/
+geometry-engine-*.zip
+*.deployment.zip
+
+# Local development directories
+amplify-web-app/amplify-deploy/
+amplify-web-app/geometry-engine-web.zip
+
+# AWS CLI temporary files
+aws-cli-temp/
+
+# Docker container backups
+geometry-engine-backup*.tar
+*.container.tar
+
+# MCP Server local database
+mcp-server/*.db
+mcp-server/mcp_geometry_oracle.db
+*.db
+*.sqlite*
+
+# Large cache directories (>50MB)
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.black_cache/
+
+# Tool configuration caches
+.pre-commit-cache/
+.tox/
+.nox/
+
+# Additional deployment artifacts
+amplify*.local.yml
+deployment-temp/
+build-temp/
+
+# IDE workspace files (updated)
+.vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
+.idea/workspace.xml
+.idea/misc.xml
+
+# Additional Python environments
+.python-version
+.pyenv/
+conda-meta/
+
+# Additional log patterns
+server*.log
+api*.log
+*.log.*
+logs/**/*.log
+
+# Performance and profiling
+.prof
+*.prof
+profile_*.txt
+
+# Jupyter extended
+.ipynb_checkpoints/
+*.ipynb
+notebook-*.html
+
+# Additional temporary patterns
+*.tmp.*
+*.temp.*
+.tmp-*/
+.temp-*/
+
+# OS extended
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# Package managers
+.pnpm-store/
+.yarn/
+.npm/

@@ -175,6 +175,21 @@ coverage.*
 .mypy_cache/
 .ruff_cache/
 .black_cache/
+.pre-commit-cache/
+.tox/
+.nox/
+
+# Recent migration artifacts (not needed in containers)
+backup/
+amplify-deploy/
+geometry-engine-*.zip
+*.deployment.zip
+amplify-web-app/
+
+# Local development databases
+*.db
+*.sqlite*
+mcp-server/*.db
 
 # Additional IDE configurations
 .idea/
