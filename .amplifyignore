@@ -1,0 +1,103 @@
+# Amplify build ignore file
+# Excludes files from AWS Amplify builds for better performance
+
+# Development and build artifacts
+backup/
+amplify-deploy/
+.archive/
+build/
+dist/
+node_modules/
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+venv/
+env/
+ENV/
+.venv/
+
+# Testing
+tests/
+test_*.py
+*_test.py
+.pytest_cache/
+.tox/
+.coverage
+htmlcov/
+test-reports/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+._*
+Thumbs.db
+ehthumbs.db
+
+# Logs and temporary files
+*.log
+logs/
+*.tmp
+*.temp
+.tmp*/
+.temp*/
+
+# Cache directories
+.mypy_cache/
+.ruff_cache/
+.black_cache/
+
+# Version control
+.git/
+.gitignore
+
+# Development configuration
+.env*
+*.local
+dev-*.sh
+dev-*.py
+local-*.sh
+local-*.py
+
+# Documentation (keep only essential)
+*.md
+!README.md
+docs/
+
+# Database files
+*.db
+*.sqlite*
+
+# Java compiled files (not needed for static site)
+*.class
+
+# Package manager files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Large ZIP files
+*.zip
+*.tar*
+*.backup
+
+# MCP server (backend - not needed for frontend)
+mcp-server/
+lambda_handler.py
+requirements-dev.txt
+
+# GitHub workflows (not needed in Amplify)
+.github/
+
+# Docker files (not needed for static hosting)
+Dockerfile*
+.dockerignore
+docker-compose*.yml
