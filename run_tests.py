@@ -71,7 +71,18 @@ class TestRunner:
                 "Import sorting (isort)",
             ),
             (["flake8", "--statistics", "."], "Linting (Flake8)"),
-            (["mypy", "--ignore-missing-imports", "--exclude", "mcp-server/deploy/.*", "--exclude", "\\.archive/.*", "."], "Type checking (MyPy)"),
+            (
+                [
+                    "mypy",
+                    "--ignore-missing-imports",
+                    "--exclude",
+                    "mcp-server/deploy/.*",
+                    "--exclude",
+                    "\\.archive/.*",
+                    ".",
+                ],
+                "Type checking (MyPy)",
+            ),
             (
                 ["bandit", "-r", ".", "-f", "json", "-o", "test-reports/bandit.json"],
                 "Security scanning (Bandit)",
