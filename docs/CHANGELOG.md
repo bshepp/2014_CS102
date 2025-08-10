@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Resolved benchmark fixture reuse in computational complexity tests by switching to manual timing
   - Increased tiling complexity tolerance from 5x to 15x to account for Python list operations overhead
   - Removed `--benchmark-only` flag from performance tests in CI pipeline
-- All 253 tests now pass across Python versions 3.9, 3.10, 3.11, and 3.12
+- All 247 tests now pass across Python versions 3.9, 3.10, 3.11, and 3.12
 
 ### Changed - 2025-08-04
 - Updated Flake8 configuration for better Black compatibility
@@ -54,7 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - RESTful Web API with FastAPI
 - Interactive web interface with 3D/4D visualizations
 - Java bridge for original CS102 code integration
-- Comprehensive test suite (253 tests, 65% coverage)
+- Comprehensive test suite (247 tests, 65% coverage)
 - Docker containerization
 - Complete documentation
 

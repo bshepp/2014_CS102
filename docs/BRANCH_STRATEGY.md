@@ -1,24 +1,24 @@
 # Branch Strategy & CI/CD Pipeline
 
-## 🌳 Git Branch Structure
+## 🌳 Current Git Branch Structure
 
 ```
-main (production)
-├── develop (development)
-│   ├── feature/new-shape-types
-│   ├── feature/ml-integration
-│   └── bugfix/api-timeout
-└── hotfix/critical-security-fix
+main (production & development)
+├── feature/new-shape-types (optional)
+├── feature/ml-integration (optional)  
+└── hotfix/critical-security-fix (when needed)
 ```
+
+**Note**: Currently using single-branch workflow. No separate develop branch exists.
 
 ## 🚀 Deployment Flow
 
-### 1. Development Workflow
+### 1. Current Development Workflow
 ```bash
-# Create feature branch from develop
-git checkout develop
-git pull origin develop
-git checkout -b feature/your-feature
+# Create feature branch from main (optional)
+git checkout main
+git pull origin main
+git checkout -b feature/your-feature  # Optional: can work directly on main
 
 # Make changes and commit
 git add .
@@ -27,30 +27,30 @@ git commit -m "feat: add new feature"
 # Push to GitHub
 git push origin feature/your-feature
 
-# Create PR to develop branch
-# - All tests run automatically
+# Create PR to main branch
+# - All 5 GitHub Actions workflows run automatically
+# - 247 tests execute across 6 modules
 # - Web validation runs
-# - On merge: auto-deploy to dev environment
+# - Manual merge after review
 ```
 
-### 2. Development → Production Flow
+### 2. Current Development Flow
 ```mermaid
 graph LR
-    A[Push to develop] --> B[CI Tests]
-    B --> C[Deploy to Dev]
-    C --> D[Auto-create PR to main]
-    D --> E[Manual Review]
-    E --> F[Merge to main]
-    F --> G[Deploy to Production]
+    A[Push to main/feature] --> B[5 CI Workflows]
+    B --> C[247 Tests]
+    C --> D[Code Quality Checks]
+    D --> E[Manual Review/Merge]
+    E --> F[AWS MCP Server Live]
 ```
 
-### 3. Environment URLs
+### 3. Current Environment URLs
 
-| Environment | Frontend URL | API URL | Branch |
-|------------|--------------|---------|---------|
-| Local | http://localhost:8000 | http://localhost:8000/api | any |
-| Development | https://dev.geometry-engine-api.com | https://api-dev.geometry-engine-api.com | develop |
-| Production | https://geometry-engine-api.com | https://api.geometry-engine-api.com | main |
+| Environment | URL | Type | Branch |
+|------------|-----|------|---------|
+| Local Web | http://localhost:8000 | Web Interface | any |
+| Local API | http://localhost:8000/api | REST API | any |
+| AWS MCP | https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp | MCP Server | main |
 
 ## 🔧 Initial Setup
 

@@ -2,18 +2,18 @@
 
 **Transform your CS102 sphere calculator into infinite dimensions with AI-powered natural language queries**
 
-[![CI/CD Pipeline](https://github.com/your-org/geometry-engine/workflows/CI/badge.svg)](https://github.com/your-org/geometry-engine/actions)
-[![Web Standards](https://github.com/your-org/geometry-engine/workflows/Web%20Standards%20Validation/badge.svg)](https://github.com/your-org/geometry-engine/actions)
-[![Production](https://img.shields.io/badge/Production-Live-brightgreen)](https://geometry-engine-api.com)
-[![Development](https://img.shields.io/badge/Development-Live-blue)](https://dev.geometry-engine-api.com)
+[![CI/CD Pipeline](https://github.com/bshepp/2014_CS102/workflows/CI/badge.svg)](https://github.com/bshepp/2014_CS102/actions)
+[![Web Standards](https://github.com/bshepp/2014_CS102/workflows/Web%20Standards%20Validation/badge.svg)](https://github.com/bshepp/2014_CS102/actions)
+[![AWS MCP Server](https://img.shields.io/badge/AWS%20MCP-Live-brightgreen)](https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp)
+[![Local Development](https://img.shields.io/badge/Local%20Dev-Ready-blue)](http://localhost:8000)
 
 ## 🚀 Quick Start
 
 ### Local Development
 ```bash
 # Clone and setup
-git clone https://github.com/your-org/geometry-engine.git
-cd geometry-engine
+git clone https://github.com/bshepp/2014_CS102.git
+cd 2014_CS102
 
 # Create virtual environment
 python -m venv venv
@@ -30,37 +30,37 @@ python web_api.py
 # API Documentation: http://localhost:8000/api/docs
 ```
 
-### Production URLs
-- **Frontend**: https://geometry-engine-api.com
-- **API**: https://api.geometry-engine-api.com
-- **Development**: https://dev.geometry-engine-api.com
+### Live Deployment
+- **AWS MCP Server**: https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp
+- **Local Web Interface**: http://localhost:8000
+- **Local API Docs**: http://localhost:8000/api/docs
 
-## 🌳 Branch Strategy & Deployment
+## 🌳 Development Workflow
 
-### Development Workflow
+### Single Branch Development
 ```bash
-# Create feature branch from develop
-git checkout develop
-git pull origin develop
-git checkout -b feature/your-feature
+# Work directly on main branch or create feature branches
+git checkout main
+git pull origin main
+git checkout -b feature/your-feature  # Optional: create feature branch
 
 # Make changes and commit
 git add .
 git commit -m "feat: add new feature"
 
 # Push to GitHub (triggers CI/CD)
-git push origin feature/your-feature
+git push origin feature/your-feature  # or main
 
-# Create PR to develop branch
-# → Automatic testing and deployment to dev environment
+# Create PR to main branch (triggers full CI/CD testing)
+# → Manual merge after review
 ```
 
-### Production Deployment
-1. **Push to `develop`** → Auto-deploy to https://dev.geometry-engine-api.com
-2. **Auto-PR created** to `main` branch after successful dev deployment
-3. **Review and merge PR** → Deploy to https://geometry-engine-api.com
+### Current Deployment
+- **Local Development**: Run `python web_api.py` → http://localhost:8000
+- **AWS MCP Server**: Live production deployment for AI agents
+- **GitHub Actions**: Automated testing on every push/PR
 
-See [BRANCH_STRATEGY.md](BRANCH_STRATEGY.md) for complete workflow details.
+See [BRANCH_STRATEGY.md](docs/BRANCH_STRATEGY.md) for complete workflow details.
 
 ## 🧮 Features
 
@@ -72,7 +72,7 @@ See [BRANCH_STRATEGY.md](BRANCH_STRATEGY.md) for complete workflow details.
 - **Original Java Integration**: Preserved and enhanced CS102 code
 
 ### Technical Excellence
-- **253 Tests**: Comprehensive unit, integration, and performance tests across 6 modules
+- **247 Tests**: Comprehensive unit, integration, and performance tests across 6 modules
 - **Test Coverage**: Core functionality thoroughly tested with pytest framework (65% coverage)
 - **75% CI Success**: GitHub Actions operationally ready - all functional tests passing ✅
 - **Web Standards**: WCAG 2.0 AA compliant, HTML5 validated, security headers
@@ -89,16 +89,16 @@ See [BRANCH_STRATEGY.md](BRANCH_STRATEGY.md) for complete workflow details.
 
 ### Backend
 - **FastAPI**: Production-ready Python API
-- **N-Dimensional Engine**: 79,216 lines of geometry calculations
+- **N-Dimensional Engine**: Core geometry engine (2,283 lines)
 - **Security**: Comprehensive headers and CORS configuration
-- **Deployment**: Supports both Lambda and ECS architectures
+- **AWS Deployment**: Live MCP server with Lambda architecture
 
 ### CI/CD Pipeline
-- **Branch-based**: `develop` → `main` promotion workflow
-- **Automated Testing**: All validation suites run on every push
-- **Environment Separation**: Isolated dev and production deployments
+- **Single-branch**: Direct main branch workflow with feature branch PRs
+- **Automated Testing**: 5 GitHub Actions workflows run on every push
+- **AWS Deployment**: Live MCP server with 4 geometry tools
 - **Web Validation**: HTML5, accessibility, performance, security checks
-- **Rollback Capability**: Automatic rollback on deployment failure
+- **Quality Gates**: Black, flake8, mypy, bandit security scanning
 
 ## 📁 Project Structure
 
@@ -107,7 +107,7 @@ The project has been organized for clarity and production readiness:
 ### Core Files
 - `geometry_engine.py` - N-dimensional geometry engine (2,221 lines)
 - `web_api.py` - FastAPI web application (1,180 lines)
-- `tests/` - Organized test suite (253 tests, 2,658 lines)
+- `tests/` - Organized test suite (247 tests, 3,635 lines)
 - `requirements.txt` - Production dependencies
 - `Dockerfile` - Production containerization
 
@@ -137,7 +137,7 @@ See [.archive/README.md](.archive/README.md) for restoration instructions.
 
 ### Technical Documentation
 - [CLAUDE.md](CLAUDE.md) - Comprehensive project guide for AI assistant
-- [API Documentation](https://api.geometry-engine-api.com/api/docs) - Interactive API docs
+- [API Documentation](http://localhost:8000/api/docs) - Interactive API docs (when running locally)
 - [Cognitive Framework](config/ai_cognitive_framework_geometry_engine.json) - AI collaboration framework
 
 ## 🧪 Testing
@@ -168,11 +168,11 @@ pa11y http://localhost:8000/demo.html
 
 ## 🚀 Deployment Environments
 
-| Environment | Frontend | API | Branch | Auto-Deploy |
-|-------------|----------|-----|---------|-------------|
-| Local | http://localhost:8000 | http://localhost:8000/api | any | Manual |
-| Development | https://dev.geometry-engine-api.com | https://api-dev.geometry-engine-api.com | develop | ✅ Yes |
-| Production | https://geometry-engine-api.com | https://api.geometry-engine-api.com | main | ✅ After review |
+| Environment | Endpoint | Type | Branch | Status |
+|-------------|----------|------|--------|---------|
+| Local | http://localhost:8000 | Web Interface | any | Manual |
+| Local API | http://localhost:8000/api | REST API | any | Manual |
+| AWS MCP | https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp | MCP Server | main | ✅ Live |
 
 ## 🎯 Key Achievements
 
@@ -184,7 +184,7 @@ pa11y http://localhost:8000/demo.html
 - **AI Integration**: Natural language geometry queries
 - **Production Deployment**: Live AWS infrastructure with monitoring
 - **Web Standards**: Full compliance with modern web standards
-- **Comprehensive Testing**: 253 tests with systematic coverage across all components
+- **Comprehensive Testing**: 247 tests with systematic coverage across all components
 
 ## 🔧 Development
 

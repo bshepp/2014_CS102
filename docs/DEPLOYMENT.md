@@ -13,7 +13,7 @@ This guide covers deployment of the N-Dimensional Geometry Engine to production 
 ### Local Development
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/geometry-engine.git
+git clone https://github.com/bshepp/2014_CS102.git
 cd geometry-engine
 
 # Create virtual environment
@@ -48,8 +48,8 @@ main (production)
 3. **Production Promotion**: Auto-PR from `develop` → `main` → Deploy to production
 
 ### Environment URLs
-- **Development**: https://dev.geometry-engine-api.com (auto-deploy from develop)
-- **Production**: https://geometry-engine-api.com (deploy from main after PR approval)
+- **Development**: https://dev.localhost:8000 (auto-deploy from develop)
+- **Production**: https://localhost:8000 (deploy from main after PR approval)
 
 ## 🌐 AWS Deployment Options
 
@@ -123,7 +123,7 @@ aws apigatewayv2 create-api \
 - **Cost**: ~$50-100/month minimum
 
 #### Current Production Setup
-The application is currently deployed at https://geometry-engine-api.com using:
+The application is currently deployed at https://localhost:8000 using:
 - ECS Fargate with auto-scaling
 - Application Load Balancer with SSL
 - Route 53 for DNS management
@@ -144,8 +144,8 @@ The API automatically adds these security headers:
 Production CORS settings in `web_api.py`:
 ```python
 ALLOWED_ORIGINS = [
-    "https://geometry-engine-api.com",
-    "https://www.geometry-engine-api.com",
+    "https://localhost:8000",
+    "https://www.localhost:8000",
     "http://localhost:8000",  # Development
 ]
 ```
@@ -186,10 +186,10 @@ Accessibility testing configuration:
 ### Performance Monitoring
 ```bash
 # Check API response times
-curl -w "@curl-format.txt" -o /dev/null -s https://geometry-engine-api.com/api/health
+curl -w "@curl-format.txt" -o /dev/null -s https://localhost:8000/api/health
 
 # Run Lighthouse audit
-lighthouse https://geometry-engine-api.com --output html --view
+lighthouse https://localhost:8000 --output html --view
 ```
 
 ### Log Analysis

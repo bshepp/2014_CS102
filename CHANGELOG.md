@@ -17,7 +17,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 - **CI/CD Success Rate**: Improved from 0% to 75% (3/4 core pipelines passing)
 - **Code Quality Tools**: All properly configured with third-party exclusions
-- **Test Infrastructure**: 253 tests now running successfully across all categories
+- **Test Infrastructure**: 247 tests now running successfully across all categories
 - **Pipeline Performance**: Main CI/CD completes in 4m7s with full validation
 
 ### Fixed
@@ -67,7 +67,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **AWS MCP Server**: Complete deployment with Lambda, API Gateway, and DynamoDB
 - **Analytics Dashboard**: Real-time usage statistics and AI behavior analysis
 - **Enhanced Geometry Engine**: Support for HyperEllipsoid, Simplex, and HyperPyramid shapes
-- **Comprehensive Testing**: 253 tests across 6 modules with performance benchmarking
+- **Comprehensive Testing**: 247 tests across 6 modules with performance benchmarking
 
 ### Changed  
 - **Project Structure**: Organized cleanup with .archive/ directory for legacy files
