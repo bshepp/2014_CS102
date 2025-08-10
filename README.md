@@ -35,30 +35,35 @@ python web_api.py
 - **Local Web Interface**: http://localhost:8000
 - **Local API Docs**: http://localhost:8000/api/docs
 
-## 🌳 Development Workflow
+## 🌳 GitFlow Development Pipeline
 
-### Single Branch Development
+### Complete Development Workflow
 ```bash
-# Work directly on main branch or create feature branches
-git checkout main
-git pull origin main
-git checkout -b feature/your-feature  # Optional: create feature branch
+# 1. Local Development
+git checkout develop
+git pull origin develop
+git checkout -b feature/your-feature
 
 # Make changes and commit
 git add .
 git commit -m "feat: add new feature"
 
-# Push to GitHub (triggers CI/CD)
-git push origin feature/your-feature  # or main
+# 2. Push to develop branch
+git push origin feature/your-feature
+# Create PR to develop → Triggers develop CI/CD
 
-# Create PR to main branch (triggers full CI/CD testing)
-# → Manual merge after review
+# 3. After merge to develop
+# → Auto-creates PR to main → Triggers full CI/CD suite
+
+# 4. After merge to main  
+# → Automatic AWS deployment → Health checks
 ```
 
-### Current Deployment
-- **Local Development**: Run `python web_api.py` → http://localhost:8000
-- **AWS MCP Server**: Live production deployment for AI agents
-- **GitHub Actions**: Automated testing on every push/PR
+### Pipeline Stages
+1. **Local Development**: `python web_api.py` → http://localhost:8000
+2. **Develop CI/CD**: Fast validation and testing
+3. **Main CI/CD**: Comprehensive testing suite (247 tests)
+4. **AWS Deployment**: Automated Lambda deployment with health checks
 
 See [BRANCH_STRATEGY.md](docs/BRANCH_STRATEGY.md) for complete workflow details.
 
