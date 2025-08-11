@@ -390,7 +390,6 @@ class TestRunner:
 
     def generate_html_summary(self, summary: Dict) -> str:
         """Generate HTML summary report."""
-        status_color = "green" if summary["failed_tests"] == 0 else "red"
 
         html = """
         <!DOCTYPE html>
@@ -430,14 +429,15 @@ class TestRunner:
         """
 
         for test_name, result in summary["results"].items():
-            status_class = "pass" if result["success"] else "fail"
+            status = "PASSED" if result["success"] else "FAILED"
             status_icon = "✅" if result["success"] else "❌"
-
-            html += """
-                <div class="test-result {status_class}">
+            error_section = f'<p><strong>Error:</strong> {result["stderr"]}</p>' if result["stderr"] else ''
+            
+            html += f"""
+                <div class="test-result">
                     <h3>{status_icon} {test_name}</h3>
-                    <p><strong>Status:</strong> {"PASSED" if result["success"] else "FAILED"}</p>
-                    {f'<p><strong>Error:</strong> {result["stderr"]}</p>' if result["stderr"] else ''}
+                    <p><strong>Status:</strong> {status}</p>
+                    {error_section}
                 </div>
             """
 

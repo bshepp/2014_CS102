@@ -748,7 +748,8 @@ class Simplex(NDShape):
             triangle_area = (math.sqrt(3) / 4) * self.side_length**2
             return 4 * triangle_area
         else:
-            # General formula: S_n = (n+1) * V_(n-1) where V_(n-1) is (n-1)-simplex volume
+            # General formula: S_n = (n+1) * V_(n-1) where V_(n-1) is (n-1)-simplex
+            # volume
             if self.dimensions == 1:
                 return 2
             face_simplex = Simplex(self.dimensions - 1, self.side_length)
@@ -893,7 +894,10 @@ class Simplex(NDShape):
         vol = self.get_volume()
         area = self.get_surface_area()
         vertices = self.get_vertex_count()
-        return f"{shape_type} (dim={dim}, side={side:.3f}): Volume={vol:.6f}, Surface Area={area:.6f}, Vertices={vertices}"
+        return (
+            f"{shape_type} (dim={dim}, side={side:.3f}): "
+            f"Volume={vol:.6f}, Surface Area={area:.6f}, Vertices={vertices}"
+        )
 
 
 class HyperPyramid(NDShape):
@@ -907,7 +911,8 @@ class HyperPyramid(NDShape):
     def validate_parameters(self):
         if len(self.parameters) != 2:
             raise ValueError(
-                "HyperPyramid requires exactly two parameters (base_side_length, height)"
+                "HyperPyramid requires exactly two parameters "
+                "(base_side_length, height)"
             )
         if self.parameters[0] < 0 or self.parameters[1] < 0:
             raise ValueError("Base side length and height cannot be negative")
@@ -1067,7 +1072,8 @@ class HyperPyramid(NDShape):
         elif self.dimensions == 3:
             return "V₃ = (1/3) × base² × height"
         else:
-            return f"V_{self.dimensions} = (1/{self.dimensions}) × base^{self.dimensions-1} × height"
+            return (f"V_{self.dimensions} = (1/{self.dimensions}) × "
+                    f"base^{self.dimensions-1} × height")
 
     def get_surface_area_formula(self) -> str:
         if self.dimensions == 1:
@@ -1132,7 +1138,17 @@ class HyperPyramid(NDShape):
         return scaled_side ** (self.dimensions - 1)
 
     def __str__(self) -> str:
-        return f"{self.get_shape_type()} (dim={self.dimensions}, base={self.base_side_length:.3f}, height={self.height:.3f}): Volume={self.get_volume():.6f}, Surface Area={self.get_surface_area():.6f}, Vertices={self.get_vertex_count()}"
+        shape_type = self.get_shape_type()
+        dim = self.dimensions
+        base = self.base_side_length
+        height = self.height
+        vol = self.get_volume()
+        area = self.get_surface_area()
+        vertices = self.get_vertex_count()
+        return (
+            f"{shape_type} (dim={dim}, base={base:.3f}, height={height:.3f}): "
+            f"Volume={vol:.6f}, Surface Area={area:.6f}, Vertices={vertices}"
+        )
 
 
 class TilingPattern(ABC):
@@ -1742,7 +1758,8 @@ class GeometryAgent:
             result = f"Created {shape.get_shape_type()} '{name}':\n"
             result += f"{shape}\n"
             result += f"Side length = {parameter}\n"
-            result += f"Formulas:\n• {shape.get_volume_formula()}\n• {shape.get_surface_area_formula()}\n"
+            result += (f"Formulas:\n• {shape.get_volume_formula()}\n"
+                      f"• {shape.get_surface_area_formula()}\n")
             result += f"Geometric Properties:\n• Vertices: {shape.get_vertex_count()}\n• Edges: {shape.get_edge_count()}\n• Circumradius: {shape.get_circumradius():.6f}\n• Inradius: {shape.get_inradius():.6f}\n• Height: {shape.get_height():.6f}"
 
             return result

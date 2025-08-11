@@ -7,11 +7,7 @@ Verifies mathematical formulas and calculations are correct
 import math
 import os
 import sys
-from typing import Dict, List, Tuple
-
-import numpy as np
 import pytest
-import scipy.special as sp
 
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -25,7 +21,6 @@ from geometry_engine import (
     RegularTiling,
     Simplex,
     TilingAnalyzer,
-    VoronoiTiling,
 )
 
 
