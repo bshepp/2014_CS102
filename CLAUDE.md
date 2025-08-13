@@ -88,18 +88,18 @@ This project represents the **complete transformation** of a simple CS102 (2014)
 
 ## 📋 Development Status
 
-### **Current Status** (August 11, 2025) ⭐
-- **Phase**: **MAJOR CI/CD RECOVERY SUCCESS** - Pipeline Restored to 100% Success Rate
-- **CI/CD Success Rate**: **100%** (12/12 test categories passing) - **BREAKTHROUGH ACHIEVEMENT**
-- **MCP Server**: 6 tools (4 core + 2 AI-focused) with comprehensive data collection
-- **Dashboard**: Real-time analytics dashboard with DynamoDB integration
-- **Testing**: 247 tests across 6 test modules with comprehensive coverage
-- **Code Base**: 4,966 lines Python + 931 lines Java + enhanced CI/CD infrastructure
-- **Web API**: FastAPI framework with comprehensive endpoints
-- **Local Development**: Fully functional with complete test suite operational
+### **Current Status** (August 13, 2025) ⭐
+- **Phase**: Hybrid AWS setup configured; documentation and CI aligned to new domains
+- **CI/CD Status**: Mixed (several develop and scheduled main runs failing since Aug 11–13). Stabilization pending after DNS/SSL cutover and minor workflow fixes.
+- **MCP Server**: Lambda/API Gateway configuration present; custom domain pending DNS. Use execute-api endpoint for testing where available.
+- **Dashboard**: DynamoDB pipeline configured; public dashboard domain pending.
+- **Testing**: 247 tests across 6 modules (per docs); verify in CI after dependency alignment.
+- **Web API**: FastAPI endpoints available locally; production health checks against custom domains are deferred until DNS is live.
 
 ### **What Works** 🚀
-- ✅ **Enhanced AWS MCP Server**: https://mcp.gengine.darkforestlabs.com
+- ✅ Local development: `python web_api.py` → http://localhost:8000
+- ✅ CI workflows present (quality, tests, docker, web validation)
+- ⚠️ **AWS MCP custom domain**: https://mcp.gengine.darkforestlabs.com (DNS pending; use API Gateway execute-api URL if needed)
 - ✅ **6 MCP Tools**: Core geometry + AI-focused batch processing & scaling analysis
 - ✅ **Live Data Collection**: DynamoDB pipeline tracking AI usage patterns
 - ✅ **Analytics Dashboard**: Real-time insights into AI geometry behavior
@@ -110,8 +110,8 @@ This project represents the **complete transformation** of a simple CS102 (2014)
 - ✅ Comprehensive tiling systems
 - ✅ Java integration with original CS102 code
 
-### **Recent Major Achievements (August 2025)**
-- 🎯 **MAJOR CI/CD PIPELINE RECOVERY** (Aug 11): 75% → 100% success rate restoration
+### **Recent Major Updates (August 2025)**
+- 🎯 CI/CD pipeline recovery work continued Aug 11–13; several runs still failing pending domain and minor workflow fixes
 - 🔧 **Critical Test Failure Remediation**: Resolved 3 primary CI/CD blockers (Bandit, Flake8, MyPy)
 - 📊 **Code Quality Restoration**: 55% reduction in Flake8 violations (186→83 violations)
 - 🧹 **Technical Debt Elimination**: Removed 39+ unused imports, 15+ unused variables
@@ -622,9 +622,9 @@ If calculations are slow:
 - **Future**: Containerized deployment options
 
 #### **Production Environment**
-- **Status**: Development phase
-- **Target**: Cloud deployment (AWS/Azure/GCP)
-- **Requirements**: Enhanced testing and security validation
+- **Status**: Domains pending (Route 53/ACM/CloudFront setup not finalized)
+- **Target**: AWS CloudFront/S3 (frontend), API Gateway + Lambda or ECS (backend)
+- **Notes**: Do not change infrastructure; documentation will reflect current pending state.
 
 ### **Infrastructure Planning**
 - **Frontend Hosting**: S3 + CloudFront with custom domains

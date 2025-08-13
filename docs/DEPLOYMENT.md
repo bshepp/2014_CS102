@@ -47,16 +47,16 @@ main (production)
 2. **Development Testing**: Push to `develop` → Auto-deploy to dev environment
 3. **Production Promotion**: Auto-PR from `develop` → `main` → Deploy to production
 
-### Environment URLs
-- **Development**: https://dev.localhost:8000 (auto-deploy from develop)
-- **Production**: https://localhost:8000 (deploy from main after PR approval)
+### Environment URLs (Current Status: Aug 13, 2025)
+- Development: local only (http://localhost:8000)
+- Production: custom domains are being standardized to `*.gengine.darkforestlabs.com` but are not yet resolving. Use local endpoints or AWS-native URLs (e.g., API Gateway execute-api) until DNS/SSL completes.
 
 ## 🌐 AWS Deployment Options
 
-### Option 1: Static Web + Lambda API (Recommended for Cost)
+### Option 1: Static Web + Lambda API (Configured; domains pending)
 
 #### Architecture
-- **Frontend**: AWS Amplify (static hosting)
+- **Frontend**: S3 + CloudFront (Amplify build config present but not active in CI)
 - **API**: AWS Lambda + API Gateway
 - **Benefits**: Pay-per-request, automatic scaling, minimal maintenance
 - **Cost**: ~$0.20 per million requests + data transfer
@@ -113,7 +113,7 @@ aws apigatewayv2 create-api \
   --target arn:aws:lambda:REGION:ACCOUNT:function:geometry-engine-api
 ```
 
-### Option 2: Full AWS ECS Deployment (Current Production)
+### Option 2: Full AWS ECS Deployment (Optional Path)
 
 #### Architecture
 - **Frontend**: CloudFront + S3
@@ -123,11 +123,7 @@ aws apigatewayv2 create-api \
 - **Cost**: ~$50-100/month minimum
 
 #### Current Production Setup
-The application is currently deployed at https://localhost:8000 using:
-- ECS Fargate with auto-scaling
-- Application Load Balancer with SSL
-- Route 53 for DNS management
-- CloudWatch for monitoring
+Production custom domains are pending DNS/SSL cutover. ECS/ECR workflows exist, but backend deployment target is selected via `BACKEND_TYPE` variable (lambda or ecs). No public endpoints are live at `*.gengine.darkforestlabs.com` yet.
 
 ## 📋 Web Standards Compliance
 
@@ -180,8 +176,8 @@ Accessibility testing configuration:
 ## 📊 Monitoring & Maintenance
 
 ### Health Checks
-- API Health: `GET /api/health`
-- Returns system status and version info
+- API Health (local): `GET /api/health` → 200
+- Production health checks against custom domains are deferred until DNS is live.
 
 ### Performance Monitoring
 ```bash

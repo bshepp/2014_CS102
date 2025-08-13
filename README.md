@@ -31,11 +31,14 @@ python web_api.py
 ```
 
 ### 🚀 Live Production Deployment
-- **🌐 Web Interface**: https://gengine.darkforestlabs.com (AWS Amplify)
-- **⚡ MCP Server**: https://mcp.gengine.darkforestlabs.com (AWS Lambda)
-- **💾 Analytics**: DynamoDB usage tracking with real-time statistics
-- **💰 Cost**: ~$1.50/month total infrastructure (99.2% reduction from $171-231/month)
-- **📊 Performance**: Global CDN, instant loading, serverless auto-scaling
+- **Current status (Aug 13, 2025)**: Hybrid AWS deployment configured; custom domains pending DNS/SSL cutover. Public hostnames `gengine.darkforestlabs.com`, `api.gengine.darkforestlabs.com`, and `mcp.gengine.darkforestlabs.com` do not resolve yet. Use local development until domains propagate.
+
+- Target endpoints (pending):
+  - **🌐 Web Interface**: https://gengine.darkforestlabs.com (CloudFront/S3 target; Amplify config present but not active)
+  - **⚡ MCP Server**: https://mcp.gengine.darkforestlabs.com (API Gateway + Lambda)
+  - **💾 Analytics**: DynamoDB usage tracking with real-time statistics
+  - **💰 Cost**: ~$1.50/month total infrastructure (target)
+  - **📊 Performance**: Global CDN, serverless auto-scaling (post-DNS)
 
 ### 🏠 Local Development  
 - **Local Web Interface**: http://localhost:8000 (when running `python web_api.py`)
@@ -69,7 +72,7 @@ git push origin feature/your-feature
 1. **Local Development**: `python web_api.py` → http://localhost:8000
 2. **Develop CI/CD**: Fast validation and testing
 3. **Main CI/CD**: Comprehensive testing suite (247 tests)
-4. **AWS Deployment**: Automated Lambda deployment with health checks
+4. **AWS Deployment**: Configured (S3/CloudFront frontend; Lambda or ECS backend optional). Health checks against custom domains are pending until DNS/SSL is completed.
 
 See [BRANCH_STRATEGY.md](docs/BRANCH_STRATEGY.md) for complete workflow details.
 
@@ -207,6 +210,8 @@ pa11y http://localhost:8000/demo.html
 - Node.js 18+ (for web validation tools)
 - AWS CLI (for deployment)
 - Git
+
+Note: CI matrices include Python 3.9–3.12; ensure dependency versions align. Local environment currently uses NumPy 2.x; `requirements.txt` pins `<2.0.0` and may be updated in a follow-up.
 
 ### Environment Setup
 ```bash
