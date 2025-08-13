@@ -99,7 +99,7 @@ This project represents the **complete transformation** of a simple CS102 (2014)
 - **Local Development**: Fully functional with complete test suite operational
 
 ### **What Works** 🚀
-- ✅ **Enhanced AWS MCP Server**: https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp
+- ✅ **Enhanced AWS MCP Server**: https://mcp.gengine.darkforestlabs.com
 - ✅ **6 MCP Tools**: Core geometry + AI-focused batch processing & scaling analysis
 - ✅ **Live Data Collection**: DynamoDB pipeline tracking AI usage patterns
 - ✅ **Analytics Dashboard**: Real-time insights into AI geometry behavior
@@ -124,8 +124,7 @@ This project represents the **complete transformation** of a simple CS102 (2014)
 - ✅ **100% CI/CD Success**: All GitHub Actions pipelines restored to full functionality
 - 🔒 **Security Scanning**: Bandit and Safety integrated with comprehensive reporting
 
-### **Current Infrastructure Status**
-- 🎉 **AWS Amplify**: Static web hosting (App: d2vt3koij47dy3) - **LIVE**
+- 🎉 **AWS Amplify**: Static web hosting (App: d2vt3koij47dy3, custom domain: gengine.darkforestlabs.com)
 - 🚀 **Lambda MCP Server**: Production backend with 4 tools - **LIVE**  
 - 💾 **DynamoDB**: Usage analytics pipeline - **OPERATIONAL**
 - 🔄 **GitHub Actions CI/CD**: **100% SUCCESS RATE** (Restored from 75% failure)
@@ -503,8 +502,7 @@ If calculations are slow:
 
 ## 🌐 Web Interface and API
 
-### **Interactive Web Interface** 🆕
-- **Production URL**: https://d2vt3koij47dy3.amplifyapp.com (AWS Amplify hosting)
+- **Production URL**: https://gengine.darkforestlabs.com (AWS Amplify hosting)
 - **Local Development**: http://localhost:8000 (when running locally)
 - **Architecture**: Static HTML/CSS/JS → JSON-RPC → AWS Lambda MCP Server
 - **Features**: MCP tool integration, real-time usage statistics, geometry calculations
