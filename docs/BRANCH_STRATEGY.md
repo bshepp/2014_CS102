@@ -54,7 +54,7 @@ graph LR
 | 1 | Local Dev | http://localhost:8000 | feature/* | Manual |
 | 2 | Develop CI | CI/CD Testing | develop | ✅ Auto |
 | 3 | Main CI | Full Validation | main | ✅ Auto |
-| 4 | AWS Prod | https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp | main | ✅ Auto |
+| 4 | AWS Prod | https://mcp.gengine.darkforestlabs.com | main | ✅ Auto |
 
 ## 🔧 Initial Setup
 
@@ -204,10 +204,10 @@ aws ecs update-service --cluster geometry-engine-prod \
 ## 📊 Monitoring
 
 ### Health Checks
-- Dev Frontend: https://dev.geometry-engine-api.com
-- Dev API: https://api-dev.geometry-engine-api.com/api/health
-- Prod Frontend: https://geometry-engine-api.com  
-- Prod API: https://api.geometry-engine-api.com/api/health
+- Dev Frontend: https://dev.gengine.darkforestlabs.com
+- Dev API: https://api-dev.gengine.darkforestlabs.com/api/health
+- Prod Frontend: https://gengine.darkforestlabs.com  
+- Prod API: https://api.gengine.darkforestlabs.com/api/health
 
 ### CloudWatch Dashboards
 - Lambda metrics: Invocations, errors, duration

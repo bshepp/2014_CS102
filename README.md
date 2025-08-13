@@ -4,7 +4,7 @@
 
 [![CI/CD Pipeline](https://github.com/bshepp/2014_CS102/workflows/CI/badge.svg)](https://github.com/bshepp/2014_CS102/actions)
 [![Web Standards](https://github.com/bshepp/2014_CS102/workflows/Web%20Standards%20Validation/badge.svg)](https://github.com/bshepp/2014_CS102/actions)
-[![AWS MCP Server](https://img.shields.io/badge/AWS%20MCP-Live-brightgreen)](https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp)
+[![AWS MCP Server](https://img.shields.io/badge/AWS%20MCP-Live-brightgreen)](https://mcp.gengine.darkforestlabs.com)
 [![Local Development](https://img.shields.io/badge/Local%20Dev-Ready-blue)](http://localhost:8000)
 
 ## 🚀 Quick Start
@@ -31,8 +31,8 @@ python web_api.py
 ```
 
 ### 🚀 Live Production Deployment
-- **🌐 Web Interface**: https://d2vt3koij47dy3.amplifyapp.com (AWS Amplify - **LIVE**)
-- **⚡ MCP Server**: https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp (AWS Lambda)
+- **🌐 Web Interface**: https://gengine.darkforestlabs.com (AWS Amplify)
+- **⚡ MCP Server**: https://mcp.gengine.darkforestlabs.com (AWS Lambda)
 - **💾 Analytics**: DynamoDB usage tracking with real-time statistics
 - **💰 Cost**: ~$1.50/month total infrastructure (99.2% reduction from $171-231/month)
 - **📊 Performance**: Global CDN, instant loading, serverless auto-scaling
@@ -181,8 +181,8 @@ pa11y http://localhost:8000/demo.html
 
 | Environment | Endpoint | Type | Branch | Cost | Status |
 |-------------|----------|------|--------|------|---------|
-| **Production Web** | https://d2vt3koij47dy3.amplifyapp.com | Amplify Static | main | $1/mo | 🟢 **LIVE** |
-| **Production API** | https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp | Lambda MCP | main | $0.50/mo | 🟢 **LIVE** |
+| **Production Web** | https://gengine.darkforestlabs.com | Amplify Static | main | $1/mo | target |
+| **Production API (MCP)** | https://mcp.gengine.darkforestlabs.com | Lambda MCP | main | $0.50/mo | target |
 | **Analytics** | DynamoDB | Usage Tracking | main | Free tier | 🟢 **LIVE** |
 | Local Dev | http://localhost:8000 | Web Interface | any | $0 | Manual |
 
