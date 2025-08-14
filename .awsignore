@@ -1,0 +1,134 @@
+# AWS deployment ignore file
+# Excludes files from AWS Lambda packages, Amplify builds, and other AWS services
+
+# Development environment
+venv/
+env/
+ENV/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Local development files
+.env*
+.local
+*.local
+dev-*
+local-*
+*-local.*
+
+# Testing files (not needed in production)
+tests/
+test_*.py
+*_test.py
+*test*.py
+.pytest_cache/
+.tox/
+.coverage
+htmlcov/
+test-reports/
+
+# Documentation (save bandwidth)
+docs/
+*.md
+!README.md
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+._*
+Thumbs.db
+
+# Cache and temp directories
+.mypy_cache/
+.ruff_cache/
+.black_cache/
+.cache/
+*.tmp
+*.temp
+.tmp*/
+.temp*/
+
+# Logs
+*.log
+logs/
+
+# Large backup files
+backup/
+*.backup
+*.bk
+*.zip
+*.tar*
+
+# Git and version control
+.git/
+.gitignore
+.gitattributes
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+node_modules/
+
+# Java compiled (for Lambda Python runtime)
+*.class
+
+# Database files (local development)
+*.db
+*.sqlite*
+
+# AWS specific excludes
+.aws/
+aws-cli-temp/
+cloudformation-local/
+sam-local/
+
+# Docker files (not needed in managed services)
+Dockerfile*
+.dockerignore
+docker-compose*.yml
+
+# CI/CD files (managed by AWS services)
+.github/
+.circleci/
+.travis.yml
+jenkins/
+
+# Local configuration overrides
+*-local.json
+*-dev.json
+*-test.json
+local-*.yml
+dev-*.yml
+
+# Package manager lock files (can be regenerated)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Large datasets or media (should be in S3)
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.pdf
+*.docx
+*.pptx
+data/
+datasets/
+media/
+
+# Archive directory
+.archive/
+
+# Recent migration artifacts
+amplify-deploy/
+geometry-engine-*.zip
+migration-temp/

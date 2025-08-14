@@ -2,7 +2,7 @@
 # Multi-stage build optimized for AWS deployment with MCP server support
 
 # Build stage
-FROM python:3.11-slim as builder
+FROM python:3.11-slim AS builder
 
 # Set build environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -28,7 +28,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r mcp-requirements.txt
 
 # Production stage
-FROM python:3.11-slim as production
+FROM python:3.11-slim AS production
 
 # Set production environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -37,15 +37,14 @@ ENV PYTHONPATH=/app
 ENV PORT=8000
 ENV STAGE=prod
 
-# Install runtime dependencies
+# Install runtime dependencies (use Debian default JDK for current release)
 RUN apt-get update && apt-get install -y \
-    openjdk-17-jdk-headless \
+    default-jdk-headless \
     curl \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
-# Set JAVA_HOME for Java bridge functionality
-ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+# Java tools (javac/java) are on PATH via alternatives; JAVA_HOME not required
 
 # Copy Python dependencies from builder stage
 COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages

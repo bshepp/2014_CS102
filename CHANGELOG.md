@@ -5,6 +5,11 @@ All notable changes to the GeometryOracle N-Dimensional Geometry Engine project 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [1.2.1] - 2025-08-10
+### Infrastructure (Aug 14, 2025)
+- **Amplify Custom Domain**: `gengine.darkforestlabs.com` — LIVE (Amplify-managed cert validated). Route 53 A/ALIAS + validation CNAME in place
+- **MCP Cert**: `mcp.gengine.darkforestlabs.com` ACM ISSUED; custom domain mapping next
+- **Docs**: Added `docs/DNS_CUTOVER_CHECKLIST.md`; updated README, DEPLOYMENT, CLAUDE with live status and next steps
+
 
 ### 🎉 MAJOR ACHIEVEMENT - CI/CD Pipeline Complete Success
 

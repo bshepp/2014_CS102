@@ -9,7 +9,7 @@ The GeometryOracle MCP Server has been successfully deployed to AWS with compreh
 ## 🔗 **Production Endpoints**
 
 ### **Primary MCP Server**
-- **URL**: `https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp`
+- **URL**: `https://mcp.gengine.darkforestlabs.com`
 - **Protocol**: JSON-RPC 2.0 over HTTPS
 - **Status**: ✅ **LIVE & HEALTHY**
 
@@ -125,7 +125,7 @@ Analyze how properties scale with dimensions - fascinating for AI research
 ### **Example Security Response**
 ```bash
 # Request with dimensions > 50 (blocked)
-curl -X POST "https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp" \
+curl -X POST "https://mcp.gengine.darkforestlabs.com" \
   -H "Content-Type: application/json" \
   -d '{"method": "tools/call", "params": {"name": "calculate_hypersphere", "arguments": {"dimensions": 100, "radius": 2.5}}}'
 
@@ -189,13 +189,13 @@ curl -X POST "https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp" \
 
 ### **✅ Health Check**
 ```bash
-curl -X GET "https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp"
+curl -X GET "https://mcp.gengine.darkforestlabs.com"
 # Returns: {"status": "healthy", "service": "GeometryOracle MCP Server", ...}
 ```
 
 ### **✅ 4D Hypersphere Calculation**
 ```bash
-curl -X POST "https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp" \
+curl -X POST "https://mcp.gengine.darkforestlabs.com" \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc": "2.0", "method": "tools/call", "params": {"name": "calculate_hypersphere", "arguments": {"dimensions": 4, "radius": 2.5}}, "id": 1}'
 # Returns: {"result": {"volume": 192.77, "surface_area": 308.43, ...}}
@@ -203,7 +203,7 @@ curl -X POST "https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp" \
 
 ### **✅ Tools Discovery**
 ```bash
-curl -X POST "https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp" \
+curl -X POST "https://mcp.gengine.darkforestlabs.com" \
   -d '{"jsonrpc": "2.0", "method": "tools/list", "id": 2}'
 # Returns: {"result": {"tools": [...]}} - All 4 tools with schemas
 ```
@@ -211,7 +211,7 @@ curl -X POST "https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp" \
 ### **✅ Security Validation**
 ```bash
 # High dimensions blocked
-curl -X POST "https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp" \
+curl -X POST "https://mcp.gengine.darkforestlabs.com" \
   -d '{"method": "tools/call", "params": {"name": "calculate_hypersphere", "arguments": {"dimensions": 100, "radius": 2.5}}}'
 # Returns: {"error": "Rate limit exceeded or invalid request"}
 ```

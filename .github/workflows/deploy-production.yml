@@ -85,7 +85,7 @@ jobs:
         # Wait for CloudFront invalidation
         sleep 30
         # Test production URL (replace with actual domain)
-        curl -f https://geometry-engine-api.com || echo "Frontend check failed"
+        curl -f https://gengine.darkforestlabs.com || echo "Frontend check failed"
 
   deploy-backend-lambda-production:
     needs: pre-deployment-checks
@@ -153,7 +153,7 @@ jobs:
       run: |
         sleep 10
         # Test production API endpoint
-        curl -f https://api.geometry-engine-api.com/api/health || echo "API health check failed"
+        curl -f https://api.gengine.darkforestlabs.com/api/health || echo "API health check failed"
 
   deploy-backend-ecs-production:
     needs: pre-deployment-checks
@@ -227,7 +227,7 @@ jobs:
     - name: Health check
       run: |
         # Test production API endpoint
-        curl -f https://api.geometry-engine-api.com/api/health || echo "API health check failed"
+        curl -f https://api.gengine.darkforestlabs.com/api/health || echo "API health check failed"
 
   post-deployment-verification:
     needs: [deploy-frontend-production, deploy-backend-lambda-production, deploy-backend-ecs-production]
@@ -239,13 +239,13 @@ jobs:
         echo "Running production verification..."
         
         # Test frontend
-        curl -f https://geometry-engine-api.com || echo "Frontend check failed"
+        curl -f https://gengine.darkforestlabs.com || echo "Frontend check failed"
         
         # Test API health
-        curl -f https://api.geometry-engine-api.com/api/health || echo "API health check failed"
+        curl -f https://api.gengine.darkforestlabs.com/api/health || echo "API health check failed"
         
         # Test API functionality
-        curl -X POST https://api.geometry-engine-api.com/api/sphere \
+        curl -X POST https://api.gengine.darkforestlabs.com/api/sphere \
           -H "Content-Type: application/json" \
           -d '{"dimensions": 3, "radius": 1}' || echo "API functionality check failed"
     

@@ -38,18 +38,24 @@
   "production": {
     "name": "Production",
     "api": {
-      "endpoint": "https://api.geometry-engine-api.com",
+      "endpoint": "https://api.gengine.darkforestlabs.com",
       "timeout": 15000,
       "retries": 5
     },
     "frontend": {
-      "url": "https://geometry-engine-api.com",
-      "cdn": "https://d0987654321.cloudfront.net"
+      "url": "https://gengine.darkforestlabs.com",
+      "cdn": null
+    },
+    "mcp": {
+      "endpoint": "https://mcp.gengine.darkforestlabs.com"
+    },
+    "dashboard": {
+      "url": "https://dashboard.gengine.darkforestlabs.com"
     },
     "cors": {
       "origins": [
-        "https://geometry-engine-api.com",
-        "https://www.geometry-engine-api.com"
+        "https://gengine.darkforestlabs.com",
+        "https://www.gengine.darkforestlabs.com"
       ],
       "credentials": true,
       "methods": ["GET", "POST", "OPTIONS"],

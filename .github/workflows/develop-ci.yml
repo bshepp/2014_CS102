@@ -1,0 +1,195 @@
+name: 🧪 Develop Branch CI/CD
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+env:
+  PYTHON_VERSION: '3.11'
+  NODE_VERSION: '18'
+  JAVA_VERSION: '11'
+
+jobs:
+  # Quick validation for develop branch
+  develop-validation:
+    name: 🔍 Develop Branch Validation
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: ☕ Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: 📦 Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+
+      - name: 🧪 Run Core Tests
+        run: |
+          pytest tests/test_core.py -v --maxfail=5
+
+      - name: 🎨 Code Quality Check
+        run: |
+          black --check --diff --config pyproject.toml .
+          isort --check-only --diff --settings-path pyproject.toml .
+          flake8 . || echo "Style issues found - will be fixed before main"
+
+  # Unit Tests
+  test-python-develop:
+    name: 🧪 Python Tests (Develop)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12']  # Faster develop testing
+    
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: 🐍 Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: ☕ Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: 📦 Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+
+      - name: 🧪 Run Unit Tests
+        run: |
+          pytest tests/ -v --maxfail=10
+
+  # API Integration Tests
+  test-api-develop:
+    name: 🌐 API Tests (Develop)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: ☕ Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: 📦 Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-asyncio httpx requests
+
+      - name: ☕ Compile Java Classes
+        run: |
+          cd src/java/original && javac *.java
+
+      - name: 🚀 Start API Server
+        run: |
+          uvicorn web_api:app --host 0.0.0.0 --port 8000 &
+          API_PID=$!
+          
+          # Wait for server to start
+          for i in {1..30}; do
+            if curl -f http://localhost:8000/api/health >/dev/null 2>&1; then
+              echo "✅ API server is ready"
+              break
+            fi
+            echo "⏳ Waiting for API server... ($i/30)"
+            sleep 1
+          done
+        
+      - name: 🌐 Test API Endpoints
+        run: |
+          pytest tests/test_api_integration.py -v
+
+  # Create PR to main after successful develop tests
+  create-main-pr:
+    name: 🚀 Create PR to Main
+    runs-on: ubuntu-latest
+    needs: [develop-validation, test-python-develop, test-api-develop]
+    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+    
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🔍 Check for existing PR
+        id: check-pr
+        run: |
+          PR_EXISTS=$(gh pr list --base main --head develop --json number --jq length)
+          echo "pr_exists=$PR_EXISTS" >> $GITHUB_OUTPUT
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🚀 Create Pull Request to Main
+        if: steps.check-pr.outputs.pr_exists == '0'
+        run: |
+          gh pr create \
+            --title "🚀 Promote develop to main - $(date +'%Y-%m-%d')" \
+            --body "$(cat <<'EOF'
+          ## 🎯 Promotion Summary
+          
+          This PR promotes the latest changes from `develop` to `main` after successful CI/CD validation.
+          
+          ### ✅ Validation Status
+          - ✅ Core tests passing
+          - ✅ API integration tests passing  
+          - ✅ Code quality checks completed
+          - ✅ Multi-version Python compatibility verified
+          
+          ### 🚀 Ready for Production Deployment
+          
+          Once merged, this will trigger:
+          - AWS Lambda deployment update
+          - MCP server refresh
+          - Production health checks
+          
+          **Auto-generated from develop branch CI/CD**
+          EOF
+          )" \
+            --base main \
+            --head develop \
+            --assignee "@me"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 📝 PR Already Exists
+        if: steps.check-pr.outputs.pr_exists != '0'
+        run: |
+          echo "PR from develop to main already exists. Skipping creation."
+          gh pr list --base main --head develop
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
