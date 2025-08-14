@@ -31,11 +31,11 @@ python web_api.py
 ```
 
 ### 🚀 Live Production Deployment
-- **Current status (Aug 14, 2025)**: Frontend custom domain associated in Amplify. DNS/SSL validation in progress.
+- **Current status (Aug 14, 2025)**: Frontend custom domain LIVE via Amplify; MCP custom domain certificate ISSUED (mapping pending).
 
 - Endpoints
-  - **🌐 Web Interface**: https://gengine.darkforestlabs.com (Amplify; pending validation/propagation)
-  - **⚡ MCP Server**: https://mcp.gengine.darkforestlabs.com (API Gateway + Lambda; DNS/SSL pending)
+  - **🌐 Web Interface**: https://gengine.darkforestlabs.com (Amplify) — LIVE
+  - **⚡ MCP Server**: https://mcp.gengine.darkforestlabs.com (API Gateway + Lambda; cert issued, custom domain mapping next)
   - **💾 Analytics**: DynamoDB usage tracking with real-time statistics
   - **💰 Cost**: ~$1.50/month total infrastructure (target)
   - **📊 Performance**: Global CDN, serverless auto-scaling (post-DNS)
@@ -184,7 +184,7 @@ pa11y http://localhost:8000/demo.html
 
 | Environment | Endpoint | Type | Branch | Cost | Status |
 |-------------|----------|------|--------|------|---------|
-| **Production Web** | https://gengine.darkforestlabs.com | Amplify Static | main | $1/mo | target |
+| **Production Web** | https://gengine.darkforestlabs.com | Amplify Static | main | $1/mo | 🟢 LIVE |
 | **Production API (MCP)** | https://mcp.gengine.darkforestlabs.com | Lambda MCP | main | $0.50/mo | target |
 | **Analytics** | DynamoDB | Usage Tracking | main | Free tier | 🟢 **LIVE** |
 | Local Dev | http://localhost:8000 | Web Interface | any | $0 | Manual |

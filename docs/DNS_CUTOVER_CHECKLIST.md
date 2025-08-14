@@ -2,11 +2,11 @@
 
 Date: 2025-08-13/14 (PST)
 
-## Frontend: Amplify Custom Domain
+## Frontend: Amplify Custom Domain (LIVE)
 
 - App: geometry-engine-web (`appId: d2vt3koij47dy3`)
 - Custom domain: `gengine.darkforestlabs.com`
-- Status: Pending deployment (Amplify-managed cert in progress)
+- Status: LIVE (Amplify-managed cert validated)
 
 Required DNS (Route 53 zone `darkforestlabs.com`):
 - A/ALIAS

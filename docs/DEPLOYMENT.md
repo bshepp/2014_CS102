@@ -49,7 +49,8 @@ main (production)
 
 ### Environment URLs (Current Status: Aug 14, 2025)
 - Development: local only (http://localhost:8000)
-- Production: `gengine.darkforestlabs.com` associated in Amplify; DNS/SSL validation in progress. MCP/API custom domains pending.
+- Production: `https://gengine.darkforestlabs.com` (Amplify) — LIVE
+- MCP/API custom domains pending (MCP cert issued; create API GW custom domain + Route 53 alias next)
 
 ## 🌐 AWS Deployment Options
 
