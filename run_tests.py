@@ -431,8 +431,12 @@ class TestRunner:
         for test_name, result in summary["results"].items():
             status = "PASSED" if result["success"] else "FAILED"
             status_icon = "✅" if result["success"] else "❌"
-            error_section = f'<p><strong>Error:</strong> {result["stderr"]}</p>' if result["stderr"] else ''
-            
+            error_section = (
+                f'<p><strong>Error:</strong> {result["stderr"]}</p>'
+                if result["stderr"]
+                else ""
+            )
+
             html += f"""
                 <div class="test-result">
                     <h3>{status_icon} {test_name}</h3>

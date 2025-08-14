@@ -1072,8 +1072,10 @@ class HyperPyramid(NDShape):
         elif self.dimensions == 3:
             return "V₃ = (1/3) × base² × height"
         else:
-            return (f"V_{self.dimensions} = (1/{self.dimensions}) × "
-                    f"base^{self.dimensions-1} × height")
+            return (
+                f"V_{self.dimensions} = (1/{self.dimensions}) × "
+                f"base^{self.dimensions-1} × height"
+            )
 
     def get_surface_area_formula(self) -> str:
         if self.dimensions == 1:
@@ -1758,8 +1760,10 @@ class GeometryAgent:
             result = f"Created {shape.get_shape_type()} '{name}':\n"
             result += f"{shape}\n"
             result += f"Side length = {parameter}\n"
-            result += (f"Formulas:\n• {shape.get_volume_formula()}\n"
-                      f"• {shape.get_surface_area_formula()}\n")
+            result += (
+                f"Formulas:\n• {shape.get_volume_formula()}\n"
+                f"• {shape.get_surface_area_formula()}\n"
+            )
             result += f"Geometric Properties:\n• Vertices: {shape.get_vertex_count()}\n• Edges: {shape.get_edge_count()}\n• Circumradius: {shape.get_circumradius():.6f}\n• Inradius: {shape.get_inradius():.6f}\n• Height: {shape.get_height():.6f}"
 
             return result
