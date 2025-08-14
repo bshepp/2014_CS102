@@ -47,16 +47,16 @@ main (production)
 2. **Development Testing**: Push to `develop` → Auto-deploy to dev environment
 3. **Production Promotion**: Auto-PR from `develop` → `main` → Deploy to production
 
-### Environment URLs (Current Status: Aug 13, 2025)
+### Environment URLs (Current Status: Aug 14, 2025)
 - Development: local only (http://localhost:8000)
-- Production: custom domains are being standardized to `*.gengine.darkforestlabs.com` but are not yet resolving. Use local endpoints or AWS-native URLs (e.g., API Gateway execute-api) until DNS/SSL completes.
+- Production: `gengine.darkforestlabs.com` associated in Amplify; DNS/SSL validation in progress. MCP/API custom domains pending.
 
 ## 🌐 AWS Deployment Options
 
-### Option 1: Static Web + Lambda API (Configured; domains pending)
+### Option 1: Static Web + Lambda API (Frontend domain associated)
 
 #### Architecture
-- **Frontend**: S3 + CloudFront (Amplify build config present but not active in CI)
+- **Frontend**: Amplify static hosting (CloudFront) — custom domain associated; awaiting validation.
 - **API**: AWS Lambda + API Gateway
 - **Benefits**: Pay-per-request, automatic scaling, minimal maintenance
 - **Cost**: ~$0.20 per million requests + data transfer

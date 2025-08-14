@@ -31,11 +31,11 @@ python web_api.py
 ```
 
 ### 🚀 Live Production Deployment
-- **Current status (Aug 13, 2025)**: Hybrid AWS deployment configured; custom domains pending DNS/SSL cutover. Public hostnames `gengine.darkforestlabs.com`, `api.gengine.darkforestlabs.com`, and `mcp.gengine.darkforestlabs.com` do not resolve yet. Use local development until domains propagate.
+- **Current status (Aug 14, 2025)**: Frontend custom domain associated in Amplify. DNS/SSL validation in progress.
 
-- Target endpoints (pending):
-  - **🌐 Web Interface**: https://gengine.darkforestlabs.com (CloudFront/S3 target; Amplify config present but not active)
-  - **⚡ MCP Server**: https://mcp.gengine.darkforestlabs.com (API Gateway + Lambda)
+- Endpoints
+  - **🌐 Web Interface**: https://gengine.darkforestlabs.com (Amplify; pending validation/propagation)
+  - **⚡ MCP Server**: https://mcp.gengine.darkforestlabs.com (API Gateway + Lambda; DNS/SSL pending)
   - **💾 Analytics**: DynamoDB usage tracking with real-time statistics
   - **💰 Cost**: ~$1.50/month total infrastructure (target)
   - **📊 Performance**: Global CDN, serverless auto-scaling (post-DNS)

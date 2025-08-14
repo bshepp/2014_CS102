@@ -88,13 +88,14 @@ This project represents the **complete transformation** of a simple CS102 (2014)
 
 ## 📋 Development Status
 
-### **Current Status** (August 13, 2025) ⭐
-- **Phase**: Hybrid AWS setup configured; documentation and CI aligned to new domains
-- **CI/CD Status**: Mixed (several develop and scheduled main runs failing since Aug 11–13). Stabilization pending after DNS/SSL cutover and minor workflow fixes.
-- **MCP Server**: Lambda/API Gateway configuration present; custom domain pending DNS. Use execute-api endpoint for testing where available.
-- **Dashboard**: DynamoDB pipeline configured; public dashboard domain pending.
-- **Testing**: 247 tests across 6 modules (per docs); verify in CI after dependency alignment.
-- **Web API**: FastAPI endpoints available locally; production health checks against custom domains are deferred until DNS is live.
+### **Current Status** (August 14, 2025) ⭐
+- **Phase**: Hybrid AWS setup configured; frontend custom domain associated in Amplify
+- **CI/CD Status**: Mixed; stabilization pending after DNS/SSL validation and minor workflow fixes
+- **Frontend**: `gengine.darkforestlabs.com` added to Amplify; Route 53 records created; waiting for SSL validation
+- **MCP Server**: Lambda/API Gateway present; `mcp.gengine.darkforestlabs.com` ACM validation CNAME published; cert pending
+- **Dashboard**: DynamoDB pipeline configured; public dashboard domain pending
+- **Testing**: 247 tests across 6 modules (per docs); verify in CI after dependency alignment
+- **Web API**: FastAPI endpoints available locally; production API domain setup deferred
 
 ### **What Works** 🚀
 - ✅ Local development: `python web_api.py` → http://localhost:8000
