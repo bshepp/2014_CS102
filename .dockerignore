@@ -55,7 +55,7 @@ docs/
 
 # Development and CI files
 .github/
-Dockerfile*
+# Keep Dockerfiles available for CI Docker builds
 docker-compose*.yml
 .dockerignore
 

@@ -273,6 +273,8 @@ jobs:
       - name: 🐳 Build Docker Image
         run: |
           docker build -f docker/Dockerfile.test -t geometry-engine:test .
+        env:
+          DOCKER_BUILDKIT: 1
 
       - name: 🧪 Run Tests in Docker
         run: |
