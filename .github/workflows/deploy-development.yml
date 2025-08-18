@@ -166,6 +166,7 @@ jobs:
         ECR_REPOSITORY: geometry-engine-api
         IMAGE_TAG: dev-${{ github.sha }}
       run: |
+        sudo apt-get update && sudo apt-get install -y jq >/dev/null 2>&1 || true
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
@@ -177,6 +178,7 @@ jobs:
         ECR_REPOSITORY: geometry-engine-api
         IMAGE_TAG: dev-${{ github.sha }}
       run: |
+        sudo apt-get update && sudo apt-get install -y jq >/dev/null 2>&1 || true
         # Update task definition with new image
         aws ecs describe-task-definition \
           --task-definition geometry-engine-api-dev \

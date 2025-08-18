@@ -80,11 +80,11 @@ jobs:
           --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_PROD }} \
           --paths "/*"
     
-    - name: Verify deployment
+    - name: Verify deployment (Amplify frontend)
       run: |
         # Wait for CloudFront invalidation
         sleep 30
-        # Test production URL (replace with actual domain)
+        # Test production URL
         curl -f https://gengine.darkforestlabs.com || echo "Frontend check failed"
 
   deploy-backend-lambda-production:
@@ -149,11 +149,11 @@ jobs:
           --name LIVE \
           --function-version $NEW_VERSION
     
-    - name: Health check
+    - name: Health check (MCP custom domain)
       run: |
         sleep 10
-        # Test production API endpoint
-        curl -f https://api.gengine.darkforestlabs.com/api/health || echo "API health check failed"
+        # MCP is exposed under /mcp on custom domain
+        curl -f https://mcp.gengine.darkforestlabs.com/mcp || echo "API health check failed"
 
   deploy-backend-ecs-production:
     needs: pre-deployment-checks
