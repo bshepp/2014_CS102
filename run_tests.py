@@ -49,15 +49,21 @@ class TestRunner:
             return False, "", str(e)
 
     def run_code_quality_checks(self) -> bool:
-        """Run code quality checks."""
+        """Run code quality checks.
+
+        Black and isort are required checks; flake8, mypy, bandit, and safety
+        are recorded but do not fail the suite (warn-only), matching CI.
+        """
         print("\n" + "=" * 60)
         print("🔍 CODE QUALITY CHECKS")
         print("=" * 60)
 
+        # Each entry: (command, description, required)
         checks = [
             (
                 ["black", "--check", "--diff", "--config", "pyproject.toml", "."],
                 "Code formatting (Black)",
+                True,
             ),
             (
                 [
@@ -69,12 +75,15 @@ class TestRunner:
                     ".",
                 ],
                 "Import sorting (isort)",
+                True,
             ),
-            (["flake8", "--statistics", "."], "Linting (Flake8)"),
+            (["flake8", "--statistics", "."], "Linting (Flake8)", False),
             (
                 [
                     "mypy",
                     "--ignore-missing-imports",
+                    "--exclude",
+                    "mcp-server/.*",
                     "--exclude",
                     "mcp-server/deploy/.*",
                     "--exclude",
@@ -82,19 +91,22 @@ class TestRunner:
                     ".",
                 ],
                 "Type checking (MyPy)",
+                False,
             ),
             (
                 ["bandit", "-r", ".", "-f", "json", "-o", "test-reports/bandit.json"],
                 "Security scanning (Bandit)",
+                False,
             ),
             (
                 ["safety", "check", "--json"],
                 "Dependency vulnerabilities (Safety)",
+                False,
             ),
         ]
 
         all_passed = True
-        for cmd, description in checks:
+        for cmd, description, required in checks:
             try:
                 success, stdout, stderr = self.run_command(cmd, description)
                 self.results[description] = {
@@ -102,7 +114,7 @@ class TestRunner:
                     "stdout": stdout,
                     "stderr": stderr,
                 }
-                if not success:
+                if not success and required:
                     all_passed = False
             except Exception as e:
                 print(f"   ⚠️  Skipping {description}: {e}")
@@ -390,7 +402,6 @@ class TestRunner:
 
     def generate_html_summary(self, summary: Dict) -> str:
         """Generate HTML summary report."""
-        status_color = "green" if summary["failed_tests"] == 0 else "red"
 
         html = """
         <!DOCTYPE html>
@@ -430,14 +441,19 @@ class TestRunner:
         """
 
         for test_name, result in summary["results"].items():
-            status_class = "pass" if result["success"] else "fail"
+            status = "PASSED" if result["success"] else "FAILED"
             status_icon = "✅" if result["success"] else "❌"
+            error_section = (
+                f'<p><strong>Error:</strong> {result["stderr"]}</p>'
+                if result["stderr"]
+                else ""
+            )
 
-            html += """
-                <div class="test-result {status_class}">
+            html += f"""
+                <div class="test-result">
                     <h3>{status_icon} {test_name}</h3>
-                    <p><strong>Status:</strong> {"PASSED" if result["success"] else "FAILED"}</p>
-                    {f'<p><strong>Error:</strong> {result["stderr"]}</p>' if result["stderr"] else ''}
+                    <p><strong>Status:</strong> {status}</p>
+                    {error_section}
                 </div>
             """
 

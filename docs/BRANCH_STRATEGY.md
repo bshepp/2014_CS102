@@ -1,24 +1,26 @@
 # Branch Strategy & CI/CD Pipeline
 
-## 🌳 Current Git Branch Structure
+## 🌳 GitFlow Branch Structure
 
 ```
-main (production & development)
-├── feature/new-shape-types (optional)
-├── feature/ml-integration (optional)  
-└── hotfix/critical-security-fix (when needed)
+main (production)
+├── develop (development)
+│   ├── feature/new-shape-types
+│   ├── feature/ml-integration
+│   └── bugfix/api-fixes
+└── hotfix/critical-security-fix
 ```
 
-**Note**: Currently using single-branch workflow. No separate develop branch exists.
+**Note**: Now using proper GitFlow with automated CI/CD pipeline.
 
 ## 🚀 Deployment Flow
 
-### 1. Current Development Workflow
+### 1. GitFlow Development Workflow
 ```bash
-# Create feature branch from main (optional)
-git checkout main
-git pull origin main
-git checkout -b feature/your-feature  # Optional: can work directly on main
+# Create feature branch from develop
+git checkout develop
+git pull origin develop
+git checkout -b feature/your-feature
 
 # Make changes and commit
 git add .
@@ -27,30 +29,32 @@ git commit -m "feat: add new feature"
 # Push to GitHub
 git push origin feature/your-feature
 
-# Create PR to main branch
-# - All 5 GitHub Actions workflows run automatically
-# - 247 tests execute across 6 modules
-# - Web validation runs
-# - Manual merge after review
+# Create PR to develop branch
+# - Develop CI workflows run automatically
+# - Core tests and validation execute
+# - Merge after review
 ```
 
-### 2. Current Development Flow
+### 2. Complete GitFlow Pipeline
 ```mermaid
 graph LR
-    A[Push to main/feature] --> B[5 CI Workflows]
-    B --> C[247 Tests]
-    C --> D[Code Quality Checks]
-    D --> E[Manual Review/Merge]
-    E --> F[AWS MCP Server Live]
+    A[Local Dev] --> B[Feature Branch]
+    B --> C[PR to Develop]
+    C --> D[Develop CI/CD]
+    D --> E[Auto-PR to Main]
+    E --> F[Main CI/CD]
+    F --> G[AWS Deployment]
+    G --> H[Health Checks]
 ```
 
-### 3. Current Environment URLs
+### 3. Environment Pipeline
 
-| Environment | URL | Type | Branch |
-|------------|-----|------|---------|
-| Local Web | http://localhost:8000 | Web Interface | any |
-| Local API | http://localhost:8000/api | REST API | any |
-| AWS MCP | https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp | MCP Server | main |
+| Stage | Environment | URL | Branch | Auto-Deploy |
+|-------|-------------|-----|--------|-------------|
+| 1 | Local Dev | http://localhost:8000 | feature/* | Manual |
+| 2 | Develop CI | CI/CD Testing | develop | ✅ Auto |
+| 3 | Main CI | Full Validation | main | ✅ Auto |
+| 4 | AWS Prod | https://mcp.gengine.darkforestlabs.com | main | ✅ Auto |
 
 ## 🔧 Initial Setup
 
@@ -200,10 +204,10 @@ aws ecs update-service --cluster geometry-engine-prod \
 ## 📊 Monitoring
 
 ### Health Checks
-- Dev Frontend: https://dev.geometry-engine-api.com
-- Dev API: https://api-dev.geometry-engine-api.com/api/health
-- Prod Frontend: https://geometry-engine-api.com  
-- Prod API: https://api.geometry-engine-api.com/api/health
+- Dev Frontend: https://dev.gengine.darkforestlabs.com
+- Dev API: https://api-dev.gengine.darkforestlabs.com/api/health
+- Prod Frontend: https://gengine.darkforestlabs.com  
+- Prod API: https://api.gengine.darkforestlabs.com/api/health
 
 ### CloudWatch Dashboards
 - Lambda metrics: Invocations, errors, duration

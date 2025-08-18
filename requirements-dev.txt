@@ -35,7 +35,7 @@ hypothesis>=6.98.0          # Property-based testing
 
 # Web Testing
 httpx>=0.26.0               # HTTP client for testing
-starlette[full]>=0.36.0     # For TestClient
+# Starlette is pulled in via FastAPI dependency; avoid pinning
 
 # Scientific Computing (for mathematical tests)
 numpy>=1.24.0,<2.0.0       # Latest 1.x compatible with Python 3.9+
@@ -55,8 +55,8 @@ pip-tools>=7.1.0            # Dependency management
 # pytest-postgresql>=5.0.0    # PostgreSQL testing (removed - not needed)
 sqlalchemy>=2.0.0           # Database ORM for testing
 
-# Async Testing
-pytest-asyncio>=0.21.0
+# Async Testing (already specified above)
+# Removed duplicate/conflicting pytest-asyncio pin
 aiohttp>=3.8.0
 
 # Container Testing

@@ -3,7 +3,7 @@
 # Python 3.9+ compatible for CI/CD - using 2024-2025 versions
 
 # Core scientific computing (latest compatible with Python 3.9+)
-numpy>=1.24.0,<2.0.0  # Latest 1.x series (NumPy 2.x requires Python 3.10+)
+numpy>=1.24.0  # Allow 1.x and 2.x; CI matrix covers 3.9–3.12
 
 # Utility libraries
 packaging>=24.0
@@ -13,9 +13,9 @@ packaging>=24.0
 
 # Optional dependencies for enhanced functionality
 # (required for web interface)
-scipy>=1.11.0,<2.0.0
+scipy>=1.11.0
 matplotlib>=3.8.0,<4.0.0
-plotly>=5.18.0,<6.0.0
+plotly>=5.18.0
 pandas>=2.1.0,<3.0.0
 
 # Development dependencies

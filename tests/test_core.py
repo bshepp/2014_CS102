@@ -7,7 +7,6 @@ Tests all fundamental geometry classes and their methods
 import math
 import os
 import sys
-from typing import Dict, List
 
 import numpy as np
 import pytest
@@ -16,7 +15,6 @@ import pytest
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from geometry_engine import (
-    GeometryAgent,
     HyperCube,
     HyperEllipsoid,
     HyperPyramid,

@@ -2,9 +2,9 @@ name: 🚀 N-Dimensional Geometry Engine CI/CD
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ main, master, develop ]
+    branches: [ main, master ]
   schedule:
     # Run tests daily at 2 AM UTC
     - cron: '0 2 * * *'
@@ -273,6 +273,8 @@ jobs:
       - name: 🐳 Build Docker Image
         run: |
           docker build -f docker/Dockerfile.test -t geometry-engine:test .
+        env:
+          DOCKER_BUILDKIT: 1
 
       - name: 🧪 Run Tests in Docker
         run: |

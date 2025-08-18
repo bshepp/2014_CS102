@@ -21,3 +21,26 @@ architectural-insights/geometry-breakthroughs/
 **/draft-*
 **/ideas-*
 **/experiments-*
+
+# Recent infrastructure changes (private analysis)
+backup/ecs-geometry-engine/
+amplify-deploy/
+cost-analysis-private/
+migration-notes-private/
+
+# Sensitive deployment information
+aws-credentials/
+deployment-secrets/
+**/private-keys/
+**/secret-*
+
+# Personal development areas
+personal-notes/
+dev-experiments/
+prototype-*/
+sandbox/
+
+# Agent collaboration boundaries
+other-agent-workspaces/
+shared-temp/
+collaboration-temp/
