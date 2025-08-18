@@ -47,10 +47,10 @@ main (production)
 2. **Development Testing**: Push to `develop` → Auto-deploy to dev environment
 3. **Production Promotion**: Auto-PR from `develop` → `main` → Deploy to production
 
-### Environment URLs (Current Status: Aug 14, 2025)
+### Environment URLs (Current Status: Aug 18, 2025)
 - Development: local only (http://localhost:8000)
-- Production: `https://gengine.darkforestlabs.com` (Amplify) — LIVE
-- MCP/API custom domains pending (MCP cert issued; create API GW custom domain + Route 53 alias next)
+- Production Web: `https://gengine.darkforestlabs.com` (Amplify) — LIVE
+- MCP/API: `https://mcp.gengine.darkforestlabs.com/mcp` (API Gateway custom domain) — LIVE
 
 ## 🌐 AWS Deployment Options
 
@@ -178,7 +178,7 @@ Accessibility testing configuration:
 
 ### Health Checks
 - API Health (local): `GET /api/health` → 200
-- Production health checks against custom domains are deferred until DNS is live.
+- MCP Health (prod): `GET https://mcp.gengine.darkforestlabs.com/mcp` → 200
 
 ### Performance Monitoring
 ```bash
