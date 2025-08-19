@@ -88,17 +88,19 @@ This project represents the **complete transformation** of a simple CS102 (2014)
 
 ## 📋 Development Status
 
-### **Current Status** (August 14, 2025) ⭐
-- **Phase**: Hybrid AWS setup configured; frontend custom domain associated in Amplify
+### **Current Status** (August 18, 2025) ⭐
+- **Phase**: MCP Integration Complete - Claude Desktop connectivity achieved
 - **CI/CD Status**: Mixed; stabilization pending after DNS/SSL validation and minor workflow fixes
 - **Frontend**: `gengine.darkforestlabs.com` LIVE via Amplify (SSL/DNS validated)
 - **MCP Server**: Lambda/API Gateway present; `mcp.gengine.darkforestlabs.com` ACM validation CNAME published; cert pending
+- **MCP Integration**: NEW! Local MCP server bridges Claude Desktop to AWS infrastructure
 - **Dashboard**: DynamoDB pipeline configured; public dashboard domain pending
 - **Testing**: 247 tests across 6 modules (per docs); verify in CI after dependency alignment
 - **Web API**: FastAPI endpoints available locally; production API domain setup deferred
 
 - ✅ Production frontend: https://gengine.darkforestlabs.com
 - ✅ Local development: `python web_api.py` → http://localhost:8000
+- ✅ MCP Integration: `python geometry_oracle_mcp_server.py` → Claude Desktop connectivity
 - ✅ CI workflows present (quality, tests, docker, web validation)
 - ⚠️ **AWS MCP custom domain**: https://mcp.gengine.darkforestlabs.com (DNS pending; use API Gateway execute-api URL if needed)
 - ✅ **6 MCP Tools**: Core geometry + AI-focused batch processing & scaling analysis

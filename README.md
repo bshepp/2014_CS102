@@ -30,6 +30,22 @@ python web_api.py
 # API Documentation: http://localhost:8000/api/docs
 ```
 
+### 🔌 MCP Integration (NEW!)
+**Connect Claude Desktop to GeometryOracle AWS infrastructure:**
+
+```bash
+# MCP Server (bridges Claude Desktop to AWS)
+python geometry_oracle_mcp_server.py
+
+# Add to Claude Desktop config:
+# See MCP_SETUP.md for complete instructions
+```
+
+**Enable natural language geometry in Claude Desktop:**
+- *"What's the volume of a 7-dimensional sphere with radius 2?"*
+- *"Compare a 4D cube and 4D sphere with the same 'size'"*
+- *"Show me usage statistics for the last week"*
+
 ### 🚀 Live Production Deployment
 - **Current status (Aug 14, 2025)**: Frontend custom domain LIVE via Amplify; MCP custom domain certificate ISSUED (mapping pending).
 
@@ -81,6 +97,7 @@ See [BRANCH_STRATEGY.md](docs/BRANCH_STRATEGY.md) for complete workflow details.
 ### Core Capabilities
 - **N-Dimensional Shapes**: Spheres, cubes, ellipsoids, simplices, pyramids (1D to 100D+)
 - **AI-Powered Queries**: Natural language geometry interface
+- **MCP Integration**: Direct Claude Desktop connectivity via Model Context Protocol
 - **Interactive Visualizations**: Real-time 3D/4D rendering with Plotly
 - **Mathematical Precision**: All formulas verified to machine precision
 - **Original Java Integration**: Preserved and enhanced CS102 code
@@ -104,6 +121,7 @@ See [BRANCH_STRATEGY.md](docs/BRANCH_STRATEGY.md) for complete workflow details.
 ### Backend
 - **FastAPI**: Production-ready Python API
 - **N-Dimensional Engine**: Core geometry engine (2,283 lines)
+- **MCP Server**: Model Context Protocol bridge to AWS infrastructure
 - **Security**: Comprehensive headers and CORS configuration
 - **AWS Deployment**: Live MCP server with Lambda architecture
 

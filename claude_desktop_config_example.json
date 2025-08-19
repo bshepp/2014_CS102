@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "geometry-oracle": {
+      "command": "python",
+      "args": ["/mnt/f/ensemble_project/2014_CS102/geometry_oracle_mcp_server.py"],
+      "env": {
+        "AWS_ENDPOINT": "https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp"
+      }
+    }
+  }
+}

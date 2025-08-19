@@ -1,0 +1,237 @@
+﻿2025-08-18T02:46:22.3483689Z Current runner version: '2.327.1'
+2025-08-18T02:46:22.3517750Z ##[group]Runner Image Provisioner
+2025-08-18T02:46:22.3518893Z Hosted Compute Agent
+2025-08-18T02:46:22.3519727Z Version: 20250812.370
+2025-08-18T02:46:22.3520964Z Commit: 4a2b2bf7520004e3e907c2150c8cabe342a3da32
+2025-08-18T02:46:22.3522082Z Build Date: 2025-08-12T16:08:14Z
+2025-08-18T02:46:22.3522991Z ##[endgroup]
+2025-08-18T02:46:22.3523863Z ##[group]Operating System
+2025-08-18T02:46:22.3524828Z Ubuntu
+2025-08-18T02:46:22.3525516Z 24.04.2
+2025-08-18T02:46:22.3526285Z LTS
+2025-08-18T02:46:22.3526987Z ##[endgroup]
+2025-08-18T02:46:22.3527808Z ##[group]Runner Image
+2025-08-18T02:46:22.3528806Z Image: ubuntu-24.04
+2025-08-18T02:46:22.3529549Z Version: 20250810.1.0
+2025-08-18T02:46:22.3531411Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20250810.1/images/ubuntu/Ubuntu2404-Readme.md
+2025-08-18T02:46:22.3534050Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20250810.1
+2025-08-18T02:46:22.3535627Z ##[endgroup]
+2025-08-18T02:46:22.3540082Z ##[group]GITHUB_TOKEN Permissions
+2025-08-18T02:46:22.3542941Z Actions: write
+2025-08-18T02:46:22.3543938Z Attestations: write
+2025-08-18T02:46:22.3544752Z Checks: write
+2025-08-18T02:46:22.3545449Z Contents: write
+2025-08-18T02:46:22.3546368Z Deployments: write
+2025-08-18T02:46:22.3547191Z Discussions: write
+2025-08-18T02:46:22.3547981Z Issues: write
+2025-08-18T02:46:22.3548781Z Metadata: read
+2025-08-18T02:46:22.3549582Z Models: read
+2025-08-18T02:46:22.3550347Z Packages: write
+2025-08-18T02:46:22.3551496Z Pages: write
+2025-08-18T02:46:22.3552203Z PullRequests: write
+2025-08-18T02:46:22.3553071Z RepositoryProjects: write
+2025-08-18T02:46:22.3554097Z SecurityEvents: write
+2025-08-18T02:46:22.3555000Z Statuses: write
+2025-08-18T02:46:22.3555768Z ##[endgroup]
+2025-08-18T02:46:22.3558690Z Secret source: Actions
+2025-08-18T02:46:22.3559792Z Prepare workflow directory
+2025-08-18T02:46:22.4101725Z Prepare all required actions
+2025-08-18T02:46:22.4156664Z Getting action download info
+2025-08-18T02:46:22.6449611Z Download action repository 'actions/checkout@v4' (SHA:08eba0b27e820071cde6df949e0beb9ba4906955)
+2025-08-18T02:46:23.0016617Z Complete job name: 🐳 Docker Tests
+2025-08-18T02:46:23.0760815Z ##[group]Run actions/checkout@v4
+2025-08-18T02:46:23.0761673Z with:
+2025-08-18T02:46:23.0762071Z   repository: bshepp/2014_CS102
+2025-08-18T02:46:23.0762737Z   token: ***
+2025-08-18T02:46:23.0763160Z   ssh-strict: true
+2025-08-18T02:46:23.0763570Z   ssh-user: git
+2025-08-18T02:46:23.0763962Z   persist-credentials: true
+2025-08-18T02:46:23.0764408Z   clean: true
+2025-08-18T02:46:23.0764807Z   sparse-checkout-cone-mode: true
+2025-08-18T02:46:23.0765272Z   fetch-depth: 1
+2025-08-18T02:46:23.0765664Z   fetch-tags: false
+2025-08-18T02:46:23.0766057Z   show-progress: true
+2025-08-18T02:46:23.0766451Z   lfs: false
+2025-08-18T02:46:23.0766809Z   submodules: false
+2025-08-18T02:46:23.0767212Z   set-safe-directory: true
+2025-08-18T02:46:23.0767831Z env:
+2025-08-18T02:46:23.0768195Z   PYTHON_VERSION: 3.11
+2025-08-18T02:46:23.0768617Z   NODE_VERSION: 18
+2025-08-18T02:46:23.0769002Z   JAVA_VERSION: 11
+2025-08-18T02:46:23.0769377Z ##[endgroup]
+2025-08-18T02:46:23.1876000Z Syncing repository: bshepp/2014_CS102
+2025-08-18T02:46:23.1879055Z ##[group]Getting Git version info
+2025-08-18T02:46:23.1879784Z Working directory is '/home/runner/work/2014_CS102/2014_CS102'
+2025-08-18T02:46:23.1881024Z [command]/usr/bin/git version
+2025-08-18T02:46:23.1900239Z git version 2.50.1
+2025-08-18T02:46:23.1926798Z ##[endgroup]
+2025-08-18T02:46:23.1942148Z Temporarily overriding HOME='/home/runner/work/_temp/997d4ba8-310a-43f6-9c86-2271e884dc4a' before making global git config changes
+2025-08-18T02:46:23.1944499Z Adding repository directory to the temporary git global config as a safe directory
+2025-08-18T02:46:23.1955833Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/2014_CS102/2014_CS102
+2025-08-18T02:46:23.1990013Z Deleting the contents of '/home/runner/work/2014_CS102/2014_CS102'
+2025-08-18T02:46:23.1994107Z ##[group]Initializing the repository
+2025-08-18T02:46:23.1998569Z [command]/usr/bin/git init /home/runner/work/2014_CS102/2014_CS102
+2025-08-18T02:46:23.2062501Z hint: Using 'master' as the name for the initial branch. This default branch name
+2025-08-18T02:46:23.2064096Z hint: is subject to change. To configure the initial branch name to use in all
+2025-08-18T02:46:23.2065488Z hint: of your new repositories, which will suppress this warning, call:
+2025-08-18T02:46:23.2066373Z hint:
+2025-08-18T02:46:23.2066991Z hint: 	git config --global init.defaultBranch <name>
+2025-08-18T02:46:23.2067788Z hint:
+2025-08-18T02:46:23.2068322Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2025-08-18T02:46:23.2069183Z hint: 'development'. The just-created branch can be renamed via this command:
+2025-08-18T02:46:23.2070094Z hint:
+2025-08-18T02:46:23.2070852Z hint: 	git branch -m <name>
+2025-08-18T02:46:23.2071315Z hint:
+2025-08-18T02:46:23.2071968Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2025-08-18T02:46:23.2072957Z Initialized empty Git repository in /home/runner/work/2014_CS102/2014_CS102/.git/
+2025-08-18T02:46:23.2075910Z [command]/usr/bin/git remote add origin https://github.com/bshepp/2014_CS102
+2025-08-18T02:46:23.2108716Z ##[endgroup]
+2025-08-18T02:46:23.2109431Z ##[group]Disabling automatic garbage collection
+2025-08-18T02:46:23.2112751Z [command]/usr/bin/git config --local gc.auto 0
+2025-08-18T02:46:23.2140049Z ##[endgroup]
+2025-08-18T02:46:23.2140922Z ##[group]Setting up auth
+2025-08-18T02:46:23.2146443Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-08-18T02:46:23.2175539Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-08-18T02:46:23.2429194Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-08-18T02:46:23.2458806Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-08-18T02:46:23.2676856Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-08-18T02:46:23.2718810Z ##[endgroup]
+2025-08-18T02:46:23.2726945Z ##[group]Fetching the repository
+2025-08-18T02:46:23.2728287Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +074272d7871ac2ca88451fd86ba7a6790aa9a79f:refs/remotes/origin/main
+2025-08-18T02:46:25.8491174Z From https://github.com/bshepp/2014_CS102
+2025-08-18T02:46:25.8493070Z  * [new ref]         074272d7871ac2ca88451fd86ba7a6790aa9a79f -> origin/main
+2025-08-18T02:46:25.8517709Z ##[endgroup]
+2025-08-18T02:46:25.8518993Z ##[group]Determining the checkout info
+2025-08-18T02:46:25.8520547Z ##[endgroup]
+2025-08-18T02:46:25.8526326Z [command]/usr/bin/git sparse-checkout disable
+2025-08-18T02:46:25.8566682Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-08-18T02:46:25.8597507Z ##[group]Checking out the ref
+2025-08-18T02:46:25.8600431Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-08-18T02:46:26.6161791Z Switched to a new branch 'main'
+2025-08-18T02:46:26.6163113Z branch 'main' set up to track 'origin/main'.
+2025-08-18T02:46:26.6217411Z ##[endgroup]
+2025-08-18T02:46:26.6254292Z [command]/usr/bin/git log -1 --format=%H
+2025-08-18T02:46:26.6276905Z 074272d7871ac2ca88451fd86ba7a6790aa9a79f
+2025-08-18T02:46:26.6473059Z ##[group]Run docker build -f docker/Dockerfile.test -t geometry-engine:test .
+2025-08-18T02:46:26.6475369Z [36;1mdocker build -f docker/Dockerfile.test -t geometry-engine:test .[0m
+2025-08-18T02:46:26.6545956Z shell: /usr/bin/bash -e {0}
+2025-08-18T02:46:26.6547094Z env:
+2025-08-18T02:46:26.6548008Z   PYTHON_VERSION: 3.11
+2025-08-18T02:46:26.6549294Z   NODE_VERSION: 18
+2025-08-18T02:46:26.6550285Z   JAVA_VERSION: 11
+2025-08-18T02:46:26.6551420Z ##[endgroup]
+2025-08-18T02:46:27.1486175Z #0 building with "default" instance using docker driver
+2025-08-18T02:46:27.1487479Z 
+2025-08-18T02:46:27.1487706Z #1 [internal] load build definition from Dockerfile.test
+2025-08-18T02:46:27.1488165Z #1 transferring dockerfile: 2.96kB done
+2025-08-18T02:46:27.1488513Z #1 DONE 0.0s
+2025-08-18T02:46:27.1488672Z 
+2025-08-18T02:46:27.1488913Z #2 [internal] load metadata for docker.io/library/python:3.11-slim
+2025-08-18T02:46:27.4015090Z #2 ...
+2025-08-18T02:46:27.4015426Z 
+2025-08-18T02:46:27.4015783Z #3 [auth] library/python:pull token for registry-1.docker.io
+2025-08-18T02:46:27.4016240Z #3 DONE 0.0s
+2025-08-18T02:46:27.5517541Z 
+2025-08-18T02:46:27.5518128Z #2 [internal] load metadata for docker.io/library/python:3.11-slim
+2025-08-18T02:46:27.6491993Z #2 DONE 0.7s
+2025-08-18T02:46:27.7729238Z 
+2025-08-18T02:46:27.7731135Z #4 [internal] load .dockerignore
+2025-08-18T02:46:27.7731794Z #4 transferring context: 2.98kB done
+2025-08-18T02:46:27.7732203Z #4 DONE 0.0s
+2025-08-18T02:46:27.7732404Z 
+2025-08-18T02:46:27.7733053Z #5 [builder 1/6] FROM docker.io/library/python:3.11-slim@sha256:1d6131b5d479888b43200645e03a78443c7157efbdb730e6b48129740727c312
+2025-08-18T02:46:27.7736374Z #5 resolve docker.io/library/python:3.11-slim@sha256:1d6131b5d479888b43200645e03a78443c7157efbdb730e6b48129740727c312 done
+2025-08-18T02:46:27.7750822Z #5 sha256:a27cb4be70170df84ec3045fb7d33b3eb7018cb39fc029037429d9f06362737f 0B / 14.64MB 0.1s
+2025-08-18T02:46:27.7752012Z #5 sha256:1961ca026b04e3e3720545ee5a8e05e60692056663c685c5d2437bf3ad9e6e08 0B / 249B 0.1s
+2025-08-18T02:46:27.7753104Z #5 sha256:1d6131b5d479888b43200645e03a78443c7157efbdb730e6b48129740727c312 10.37kB / 10.37kB done
+2025-08-18T02:46:27.7754240Z #5 sha256:8df0e8faf75b3c17ac33dc90d76787bbbcae142679e11da8c6f16afae5605ea7 1.75kB / 1.75kB done
+2025-08-18T02:46:27.7755379Z #5 sha256:2ba2e944f9cd164e42cf5e50da9ddeff526b43886a47738a75ab424624cdc427 5.38kB / 5.38kB done
+2025-08-18T02:46:27.7756547Z #5 sha256:396b1da7636e2dcd10565cb4f2f952cbb4a8a38b58d3b86a2cacb172fb70117c 0B / 29.77MB 0.1s
+2025-08-18T02:46:27.7757789Z #5 sha256:fcec5a125fd8f69ba9d5c3fd9ecf3810f95775d4d5694ed731adcdeae1cff909 1.29MB / 1.29MB 0.1s done
+2025-08-18T02:46:27.8751523Z #5 sha256:a27cb4be70170df84ec3045fb7d33b3eb7018cb39fc029037429d9f06362737f 14.64MB / 14.64MB 0.2s
+2025-08-18T02:46:27.8753280Z #5 sha256:1961ca026b04e3e3720545ee5a8e05e60692056663c685c5d2437bf3ad9e6e08 249B / 249B 0.1s done
+2025-08-18T02:46:27.8754434Z #5 sha256:396b1da7636e2dcd10565cb4f2f952cbb4a8a38b58d3b86a2cacb172fb70117c 17.83MB / 29.77MB 0.2s
+2025-08-18T02:46:27.9755167Z #5 sha256:a27cb4be70170df84ec3045fb7d33b3eb7018cb39fc029037429d9f06362737f 14.64MB / 14.64MB 0.2s done
+2025-08-18T02:46:27.9756396Z #5 sha256:396b1da7636e2dcd10565cb4f2f952cbb4a8a38b58d3b86a2cacb172fb70117c 23.07MB / 29.77MB 0.3s
+2025-08-18T02:46:28.0764869Z #5 sha256:396b1da7636e2dcd10565cb4f2f952cbb4a8a38b58d3b86a2cacb172fb70117c 29.77MB / 29.77MB 0.4s done
+2025-08-18T02:46:28.1952541Z #5 extracting sha256:396b1da7636e2dcd10565cb4f2f952cbb4a8a38b58d3b86a2cacb172fb70117c 0.1s
+2025-08-18T02:46:29.1785163Z #5 ...
+2025-08-18T02:46:29.1785414Z 
+2025-08-18T02:46:29.1785723Z #6 [internal] load build context
+2025-08-18T02:46:29.1786494Z #6 transferring context: 181.27MB 1.3s done
+2025-08-18T02:46:29.1787455Z #6 DONE 1.4s
+2025-08-18T02:46:29.1848170Z 
+2025-08-18T02:46:29.1849089Z #5 [builder 1/6] FROM docker.io/library/python:3.11-slim@sha256:1d6131b5d479888b43200645e03a78443c7157efbdb730e6b48129740727c312
+2025-08-18T02:46:29.6785277Z #5 extracting sha256:396b1da7636e2dcd10565cb4f2f952cbb4a8a38b58d3b86a2cacb172fb70117c 1.6s done
+2025-08-18T02:46:29.8088340Z #5 extracting sha256:fcec5a125fd8f69ba9d5c3fd9ecf3810f95775d4d5694ed731adcdeae1cff909 0.1s
+2025-08-18T02:46:29.9641798Z #5 extracting sha256:fcec5a125fd8f69ba9d5c3fd9ecf3810f95775d4d5694ed731adcdeae1cff909 0.1s done
+2025-08-18T02:46:31.0622766Z #5 extracting sha256:a27cb4be70170df84ec3045fb7d33b3eb7018cb39fc029037429d9f06362737f
+2025-08-18T02:46:31.6861739Z #5 extracting sha256:a27cb4be70170df84ec3045fb7d33b3eb7018cb39fc029037429d9f06362737f 0.6s done
+2025-08-18T02:46:31.9186772Z #5 extracting sha256:1961ca026b04e3e3720545ee5a8e05e60692056663c685c5d2437bf3ad9e6e08 done
+2025-08-18T02:46:31.9187480Z #5 DONE 4.1s
+2025-08-18T02:46:31.9187634Z 
+2025-08-18T02:46:31.9188172Z #7 [builder 2/6] RUN apt-get update && apt-get install -y     build-essential     git     curl     && rm -rf /var/lib/apt/lists/*
+2025-08-18T02:46:31.9724074Z #7 0.205 Hit:1 http://deb.debian.org/debian trixie InRelease
+2025-08-18T02:46:31.9724666Z #7 0.205 Get:2 http://deb.debian.org/debian trixie-updates InRelease [47.1 kB]
+2025-08-18T02:46:32.0779640Z #7 0.213 Get:3 http://deb.debian.org/debian-security trixie-security InRelease [43.4 kB]
+2025-08-18T02:46:32.0780523Z #7 0.225 Get:4 http://deb.debian.org/debian trixie/main amd64 Packages [9668 kB]
+2025-08-18T02:46:32.0785984Z #7 0.289 Get:5 http://deb.debian.org/debian trixie-updates/main amd64 Packages [2432 B]
+2025-08-18T02:46:32.0786983Z #7 0.290 Get:6 http://deb.debian.org/debian-security trixie-security/main amd64 Packages [8780 B]
+2025-08-18T02:46:32.6841251Z #7 0.916 Fetched 9769 kB in 1s (13.3 MB/s)
+2025-08-18T02:46:33.1510193Z #7 0.916 Reading package lists...
+2025-08-18T02:46:33.6393206Z #7 1.401 Reading package lists...
+2025-08-18T02:46:33.7892481Z #7 1.880 Building dependency tree...
+2025-08-18T02:46:33.9030257Z #7 2.021 Reading state information...
+2025-08-18T02:46:33.9033206Z #7 CANCELED
+2025-08-18T02:46:33.9033454Z 
+2025-08-18T02:46:33.9034000Z #8 [test 2/9] RUN apt-get update && apt-get install -y     openjdk-17-jdk     curl     && rm -rf /var/lib/apt/lists/*
+2025-08-18T02:46:33.9035774Z #8 0.218 Hit:1 http://deb.debian.org/debian trixie InRelease
+2025-08-18T02:46:33.9036665Z #8 0.218 Get:2 http://deb.debian.org/debian trixie-updates InRelease [47.1 kB]
+2025-08-18T02:46:33.9037642Z #8 0.225 Get:3 http://deb.debian.org/debian-security trixie-security InRelease [43.4 kB]
+2025-08-18T02:46:33.9038643Z #8 0.239 Get:4 http://deb.debian.org/debian trixie/main amd64 Packages [9668 kB]
+2025-08-18T02:46:33.9039627Z #8 0.310 Get:5 http://deb.debian.org/debian trixie-updates/main amd64 Packages [2432 B]
+2025-08-18T02:46:33.9041107Z #8 0.311 Get:6 http://deb.debian.org/debian-security trixie-security/main amd64 Packages [8780 B]
+2025-08-18T02:46:33.9041814Z #8 0.939 Fetched 9769 kB in 1s (12.9 MB/s)
+2025-08-18T02:46:33.9042225Z #8 0.939 Reading package lists...
+2025-08-18T02:46:33.9042722Z #8 1.419 Reading package lists...
+2025-08-18T02:46:33.9043134Z #8 1.901 Building dependency tree...
+2025-08-18T02:46:33.9043558Z #8 2.024 Reading state information...
+2025-08-18T02:46:33.9044023Z #8 2.044 E: Unable to locate package openjdk-17-jdk
+2025-08-18T02:46:33.9045074Z #8 ERROR: process "/bin/sh -c apt-get update && apt-get install -y     openjdk-17-jdk     curl     && rm -rf /var/lib/apt/lists/*" did not complete successfully: exit code: 100
+2025-08-18T02:46:33.9245786Z ------
+2025-08-18T02:46:33.9247989Z  > [test 2/9] RUN apt-get update && apt-get install -y     openjdk-17-jdk     curl     && rm -rf /var/lib/apt/lists/*:
+2025-08-18T02:46:33.9248836Z 0.225 Get:3 http://deb.debian.org/debian-security trixie-security InRelease [43.4 kB]
+2025-08-18T02:46:33.9249756Z 0.239 Get:4 http://deb.debian.org/debian trixie/main amd64 Packages [9668 kB]
+2025-08-18T02:46:33.9250845Z 0.310 Get:5 http://deb.debian.org/debian trixie-updates/main amd64 Packages [2432 B]
+2025-08-18T02:46:33.9251913Z 0.311 Get:6 http://deb.debian.org/debian-security trixie-security/main amd64 Packages [8780 B]
+2025-08-18T02:46:33.9253114Z 0.939 Fetched 9769 kB in 1s (12.9 MB/s)
+2025-08-18T02:46:33.9253589Z 0.939 Reading package lists...
+2025-08-18T02:46:33.9254037Z 1.419 Reading package lists...
+2025-08-18T02:46:33.9254435Z 1.901 Building dependency tree...
+2025-08-18T02:46:33.9254733Z 2.024 Reading state information...
+2025-08-18T02:46:33.9255066Z 2.044 E: Unable to locate package openjdk-17-jdk
+2025-08-18T02:46:33.9255589Z ------
+2025-08-18T02:46:33.9295057Z Dockerfile.test:48
+2025-08-18T02:46:33.9295405Z --------------------
+2025-08-18T02:46:33.9295638Z   47 |     # Install runtime dependencies
+2025-08-18T02:46:33.9295924Z   48 | >>> RUN apt-get update && apt-get install -y \
+2025-08-18T02:46:33.9296213Z   49 | >>>     openjdk-17-jdk \
+2025-08-18T02:46:33.9296415Z   50 | >>>     curl \
+2025-08-18T02:46:33.9296614Z   51 | >>>     && rm -rf /var/lib/apt/lists/*
+2025-08-18T02:46:33.9296833Z   52 |     
+2025-08-18T02:46:33.9296990Z --------------------
+2025-08-18T02:46:33.9297686Z ERROR: failed to build: failed to solve: process "/bin/sh -c apt-get update && apt-get install -y     openjdk-17-jdk     curl     && rm -rf /var/lib/apt/lists/*" did not complete successfully: exit code: 100
+2025-08-18T02:46:33.9349958Z ##[error]Process completed with exit code 1.
+2025-08-18T02:46:33.9450549Z Post job cleanup.
+2025-08-18T02:46:34.0380758Z [command]/usr/bin/git version
+2025-08-18T02:46:34.0416730Z git version 2.50.1
+2025-08-18T02:46:34.0461671Z Temporarily overriding HOME='/home/runner/work/_temp/969d4e94-08a8-4961-999d-58f41220df34' before making global git config changes
+2025-08-18T02:46:34.0462958Z Adding repository directory to the temporary git global config as a safe directory
+2025-08-18T02:46:34.0468254Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/2014_CS102/2014_CS102
+2025-08-18T02:46:34.0503501Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-08-18T02:46:34.0543180Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-08-18T02:46:34.0781320Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-08-18T02:46:34.0802944Z http.https://github.com/.extraheader
+2025-08-18T02:46:34.0815805Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-08-18T02:46:34.0846373Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-08-18T02:46:34.1184609Z Cleaning up orphan processes

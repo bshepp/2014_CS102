@@ -8,6 +8,10 @@ Desktop.ini
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
+# MCP Server runtime files
+mcp_geometry_oracle.db
+*.mcp.log
+
 # Windows Installer files
 *.cab
 *.msi

@@ -4,6 +4,35 @@ All notable changes to the GeometryOracle N-Dimensional Geometry Engine project 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2025-08-18
+### 🔌 MAJOR FEATURE - Model Context Protocol (MCP) Integration
+
+### Added
+- **MCP Server Implementation**: Complete bridge between Claude Desktop and AWS GeometryOracle infrastructure
+- **Natural Language Interface**: Direct geometry calculations through Claude Desktop conversation
+- **4 MCP Tools**: calculate_hypersphere, calculate_hypercube, compare_shapes, get_usage_statistics
+- **AWS Proxy Architecture**: Local MCP server proxies all calls to live AWS Lambda functions
+- **Comprehensive Documentation**: MCP_SETUP.md with complete Claude Desktop integration instructions
+- **Configuration Templates**: claude_desktop_config_example.json for easy setup
+
+### Changed
+- **requirements.txt**: Added MCP Python SDK (`mcp[cli]>=1.13.0`) and dependencies
+- **README.md**: Enhanced with MCP integration section and natural language examples
+- **Project Architecture**: Now supports both direct API access and MCP protocol communication
+
+### Technical Details
+- **MCP Server**: `geometry_oracle_mcp_server.py` - Full stdio protocol implementation
+- **AWS Integration**: Maintains existing AWS Lambda/API Gateway/DynamoDB infrastructure
+- **Error Handling**: Proper MCP error responses with AWS connectivity verification
+- **Logging**: stderr-based logging compliant with MCP server requirements
+
+### User Experience
+```
+User: "What's the volume of a 7-dimensional sphere with radius 2?"
+Claude Desktop: [Calculates via MCP] "The volume is 16.77 cubic units"
+Backend: AWS Lambda → DynamoDB logging → Analytics dashboard
+```
+
 ## [1.2.1] - 2025-08-10
 ### Infrastructure (Aug 14, 2025)
 - **Amplify Custom Domain**: `gengine.darkforestlabs.com` — LIVE (Amplify-managed cert validated). Route 53 A/ALIAS + validation CNAME in place
