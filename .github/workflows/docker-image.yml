@@ -61,6 +61,7 @@ jobs:
         context: .
         file: ./docker/Dockerfile.test
         push: false
+        load: true
         tags: geometry-engine:test
         cache-from: type=gha
         cache-to: type=gha,mode=max
