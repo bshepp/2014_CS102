@@ -4,6 +4,32 @@ All notable changes to the GeometryOracle N-Dimensional Geometry Engine project 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.1] - 2025-08-24
+
+### 🔧 Advanced Ignore File System - Comprehensive Project Hygiene
+
+**Complete overhaul of ignore file system with specialized tool configurations:**
+
+#### **📁 Enhanced Ignore File Architecture**
+- **Updated `.gitignore`** (323 → 338 lines) with Claude Code config exclusions and HTML reports
+- **Enhanced `.dockerignore`** (230 → 238 lines) with deployment artifacts and test outputs
+- **Created 3 new specialized ignore files** for tool-specific exclusions:
+  - **`.pytestignore`** (67 lines) - Test discovery and collection exclusions
+  - **`.coveragerc`** (80 lines) - Coverage analysis configuration with comprehensive omit patterns
+  - **`.blackignore`** (60 lines) - Code formatting exclusions for third-party and generated code
+
+#### **🎯 Advanced Pattern Coverage**
+- **Total Ignore Coverage**: **15 files, 1,565+ lines** across all development scenarios
+- **Added 15 new patterns**: Claude Code settings, HTML reports, deployment artifacts, JUnit XML
+- **Tool-Specific Exclusions**: Pytest, Coverage, Black, MyPy, Docker, Git, MCP, AWS, Node.js
+- **Repository Hygiene**: Ensures clean builds, optimal performance, and proper file tracking
+
+#### **📊 Identified and Fixed Tracking Issues**
+- **Claude Code Configuration**: `.claude/settings.local.json` properly excluded
+- **HTML Test Reports**: `test-reports/*.html` and coverage directories excluded
+- **Deployment Artifacts**: `amplify-frontend.zip`, `docker_job_logs.zip` excluded
+- **Generated Reports**: JUnit XML and temporary test files excluded
+
 ## [1.4.0] - 2025-08-24
 
 ### 🔧 Repository Cleanup & CI/CD Fixes - Build System Restored
