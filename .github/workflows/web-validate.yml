@@ -13,10 +13,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Set up Python 3.11
+    - name: Set up Python 3.12
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
+        python-version: '3.12'
     
     - name: Set up Node.js 18
       uses: actions/setup-node@v4
@@ -43,7 +43,7 @@ jobs:
     
     - name: Accessibility Testing (Pa11y)
       run: |
-        pa11y http://localhost:8000/demo --config .pa11yrc --reporter json > pa11y-results.json || true
+        pa11y http://localhost:8000 --config .pa11yrc --reporter json > pa11y-results.json || true
         if [ -s pa11y-results.json ]; then
           echo "Accessibility issues found:"
           cat pa11y-results.json
@@ -51,7 +51,7 @@ jobs:
     
     - name: Performance Testing (Lighthouse CI)
       run: |
-        lhci autorun --upload.target=temporary-public-storage --collect.url=http://localhost:8000/demo || echo "Lighthouse CI failed but continuing"
+        lhci autorun --upload.target=temporary-public-storage --collect.url=http://localhost:8000 || echo "Lighthouse CI failed but continuing"
     
     - name: Security Headers Check
       run: |

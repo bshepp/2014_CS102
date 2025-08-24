@@ -13,10 +13,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Set up Python 3.11
+    - name: Set up Python 3.12
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
+        python-version: '3.12'
     
     - name: Install dependencies
       run: |
@@ -57,7 +57,7 @@ jobs:
     - uses: actions/checkout@v4
     
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
@@ -71,8 +71,8 @@ jobs:
     - name: Deploy static files to S3
       run: |
         # Deploy new files
-        aws s3 sync demo.html s3://geometry-engine-frontend-prod/
-        aws s3 cp demo.html s3://geometry-engine-frontend-prod/index.html
+        aws s3 cp demos/demo.html s3://geometry-engine-frontend-prod/index.html
+        aws s3 sync demos/ s3://geometry-engine-frontend-prod/demos/ --exclude "*.py"
     
     - name: Invalidate CloudFront cache
       run: |
@@ -96,16 +96,16 @@ jobs:
     - uses: actions/checkout@v4
     
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
         aws-region: ${{ env.AWS_REGION }}
     
-    - name: Set up Python 3.11
+    - name: Set up Python 3.12
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
+        python-version: '3.12'
     
     - name: Create production deployment package
       run: |
@@ -164,7 +164,7 @@ jobs:
     - uses: actions/checkout@v4
     
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
@@ -264,7 +264,7 @@ jobs:
     - uses: actions/checkout@v4
     
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
