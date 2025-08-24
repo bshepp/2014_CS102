@@ -400,7 +400,7 @@ class TestRunner:
 
         return summary
 
-    def generate_html_summary(self, summary: Dict) -> str:
+    def generate_html_summary(self, summary: dict) -> str:
         """Generate HTML summary report."""
 
         html = """
