@@ -2,8 +2,8 @@
 # Updated: 2025-08-18
 # Python 3.11+ compatible for CI/CD - using 2024-2025 versions
 
-# Core scientific computing (latest compatible with Python 3.11+)
-numpy>=1.24.0  # Allow 1.x and 2.x; CI matrix covers 3.11–3.12
+# Core scientific computing (NumPy 2.x for performance - Python 3.11+ compatible)
+numpy>=2.0.0,<3.0.0  # NumPy 2.x stable since June 2024, 20-60% performance gains
 
 # Utility libraries
 packaging>=24.0
@@ -12,11 +12,11 @@ packaging>=24.0
 # All packages tested and working as of 2025-08-18
 
 # Optional dependencies for enhanced functionality
-# (required for web interface)
-scipy>=1.11.0
-matplotlib>=3.8.0,<4.0.0
-plotly>=5.18.0
-pandas>=2.1.0,<3.0.0
+# (required for web interface) - 2024-2025 stable versions
+scipy>=1.14.0,<2.0.0         # Latest stable with NumPy 2.x compatibility
+matplotlib>=3.9.0,<4.0.0     # 2024 stable release with performance improvements
+plotly>=5.24.0,<6.0.0        # Latest 2024 version with enhanced features
+pandas>=2.2.0,<3.0.0         # 2024 stable with NumPy 2.x support
 
 # Development dependencies
 # (commented out - will be added for CI/CD)
@@ -25,15 +25,15 @@ pandas>=2.1.0,<3.0.0
 # flake8>=7.0.0,<8.0.0
 # mypy>=1.8.0,<2.0.0
 
-# Web framework dependencies (for web deployment - 2024 versions)
-fastapi>=0.108.0,<1.0.0
-uvicorn>=0.25.0,<1.0.0
-pydantic>=2.5.0,<3.0.0  # Pydantic 2.x works with Python 3.11+
-python-multipart>=0.0.6  # Required for FastAPI file uploads
+# Web framework dependencies (for web deployment - 2024-2025 versions)
+fastapi>=0.115.0,<0.116.0    # Latest stable with security patches (Nov 2024)
+uvicorn>=0.32.0,<0.33.0      # Latest stable ASGI server (Dec 2024)  
+pydantic>=2.10.0,<3.0.0      # Pydantic 2.x latest stable (Python 3.11+)
+python-multipart>=0.0.12     # Latest for FastAPI file uploads (security fixes)
 
-# MCP (Model Context Protocol) dependencies - Added 2025-08-18
-mcp[cli]>=1.13.0  # Official MCP Python SDK with CLI tools
-httpx>=0.27.1  # HTTP client for AWS API calls (already included via MCP)
+# MCP (Model Context Protocol) dependencies - Added 2025-08-18  
+mcp[cli]>=1.13.0,<2.0.0      # Official MCP Python SDK with CLI tools
+httpx>=0.28.0,<1.0.0         # HTTP client for AWS API calls with security updates
 
 # Note: Java dependencies managed separately via SDKMAN
 # - OpenJDK 11.0.21 (LTS)

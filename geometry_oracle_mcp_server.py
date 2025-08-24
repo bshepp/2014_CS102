@@ -20,7 +20,7 @@ import json
 import logging
 import os
 import sys
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 import httpx
 from mcp.server.fastmcp import FastMCP
@@ -50,8 +50,8 @@ class AWSMCPProxy:
         self.client = httpx.AsyncClient(timeout=30.0)
 
     async def call_aws_tool(
-        self, tool_name: str, arguments: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, tool_name: str, arguments: dict[str, Any]
+    ) -> dict[str, Any]:
         """Call AWS MCP server and return result"""
         request_data = {
             "jsonrpc": "2.0",
@@ -95,7 +95,7 @@ async def calculate_hypersphere(
     radius: float,
     session_id: Optional[str] = None,
     client_info: Optional[str] = None,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Calculate volume and surface area of N-dimensional hypersphere.
 
@@ -124,7 +124,7 @@ async def calculate_hypercube(
     side_length: float,
     session_id: Optional[str] = None,
     client_info: Optional[str] = None,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Calculate volume and surface area of N-dimensional hypercube.
 
@@ -149,10 +149,10 @@ async def calculate_hypercube(
 
 @mcp.tool()
 async def compare_shapes(
-    shapes: List[Dict[str, Any]],
+    shapes: list[dict[str, Any]],
     session_id: Optional[str] = None,
     client_info: Optional[str] = None,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Compare volumes and properties of multiple N-dimensional shapes.
 
@@ -181,7 +181,7 @@ async def compare_shapes(
 
 
 @mcp.tool()
-async def get_usage_statistics(days: int = 7) -> Dict[str, Any]:
+async def get_usage_statistics(days: int = 7) -> dict[str, Any]:
     """
     Get usage statistics for the GeometryOracle MCP server.
 

@@ -38,7 +38,7 @@ httpx>=0.26.0               # HTTP client for testing
 # Starlette is pulled in via FastAPI dependency; avoid pinning
 
 # Scientific Computing (for mathematical tests)
-numpy>=1.24.0,<2.0.0       # Latest 1.x compatible with Python 3.11+
+numpy>=2.0.0,<3.0.0        # NumPy 2.x for performance gains (Python 3.11+ compatible)
 scipy>=1.11.0,<2.0.0
 
 # Visualization Testing

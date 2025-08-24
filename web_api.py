@@ -6,7 +6,7 @@ Exposes the geometry engine capabilities through REST endpoints
 
 import json
 import os
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 import numpy as np
 import plotly.graph_objects as go
@@ -192,7 +192,7 @@ class EllipsoidRequest(BaseModel):
     dimensions: int = Field(
         ..., ge=1, le=100, description="Number of dimensions (1-100)"
     )
-    semi_axes: List[float] = Field(
+    semi_axes: list[float] = Field(
         ..., description="Semi-axes lengths (must match dimensions)"
     )
 
@@ -229,7 +229,7 @@ class TilingRequest(BaseModel):
     dimensions: int = Field(
         ..., ge=1, le=100, description="Number of dimensions (1-100)"
     )
-    bounds: List[List[float]] = Field(
+    bounds: list[list[float]] = Field(
         ..., description="Bounds for each dimension [[min, max], ...]"
     )
     density: float = Field(1.0, gt=0, description="Tiling density (default: 1.0)")
@@ -254,7 +254,7 @@ class TilingRequest(BaseModel):
         None, gt=0, description="Deprecated: use hex_side_length"
     )
     # Voronoi tiling parameters
-    seed_points: Optional[List[List[float]]] = Field(
+    seed_points: Optional[list[list[float]]] = Field(
         None, description="For voronoi: seed points"
     )
     num_random_seeds: Optional[int] = Field(
@@ -267,9 +267,9 @@ class TilingResponse(BaseModel):
     dimensions: int
     tile_count: int
     coverage_efficiency: float
-    pattern_properties: Dict[str, Any]
-    tiles: List[Dict[str, Any]]
-    analysis: Optional[Dict[str, Any]] = None
+    pattern_properties: dict[str, Any]
+    tiles: list[dict[str, Any]]
+    analysis: Optional[dict[str, Any]] = None
 
 
 class ShapeResponse(BaseModel):
@@ -281,7 +281,7 @@ class ShapeResponse(BaseModel):
     volume_formula: str
     surface_area_formula: str
     shape_type: str
-    additional_properties: Optional[Dict[str, Any]] = None
+    additional_properties: Optional[dict[str, Any]] = None
 
 
 # Keep backwards compatibility
@@ -308,7 +308,7 @@ class ComparisonResponse(BaseModel):
     parameter: float
     sphere_volume: float
     sphere_surface: float
-    comparison_data: Dict[str, Any]
+    comparison_data: dict[str, Any]
 
 
 class VisualizationRequest(BaseModel):

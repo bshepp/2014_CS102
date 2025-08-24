@@ -3,7 +3,7 @@ import os
 import re
 import subprocess
 from abc import ABC, abstractmethod
-from typing import Dict, List, Optional
+from typing import Optional
 
 import numpy as np
 
@@ -239,7 +239,7 @@ class JavaBridge:
 
         return output
 
-    def get_original_sphere_properties(self, diameter: float) -> Dict[str, float]:
+    def get_original_sphere_properties(self, diameter: float) -> dict[str, float]:
         """
         Get sphere properties using the original Java logic
         Returns dict with volume and surface area
@@ -401,7 +401,7 @@ class HyperSphere(NDShape):
 
         return f"S_{self.dimensions} = {self.dimensions} × V_{self.dimensions} / r"
 
-    def contains_point(self, point: List[float]) -> bool:
+    def contains_point(self, point: list[float]) -> bool:
         """Check if a point is inside the hypersphere"""
         if len(point) != self.dimensions:
             raise ValueError("Point dimension mismatch")
@@ -470,7 +470,7 @@ class HyperCube(NDShape):
         """Calculate diagonal length through the hypercube"""
         return self.side_length * math.sqrt(self.dimensions)
 
-    def contains_point(self, point: List[float]) -> bool:
+    def contains_point(self, point: list[float]) -> bool:
         """Check if a point is inside the hypercube"""
         if len(point) != self.dimensions:
             raise ValueError("Point dimension mismatch")
@@ -628,7 +628,7 @@ class HyperEllipsoid(NDShape):
         else:
             return f"S_{self.dimensions} ≈ n × Volume / (geometric mean of semi-axes)"
 
-    def contains_point(self, point: List[float]) -> bool:
+    def contains_point(self, point: list[float]) -> bool:
         """Check if a point is inside the ellipsoid"""
         if len(point) != self.dimensions:
             raise ValueError("Point dimension mismatch")
@@ -862,7 +862,7 @@ class Simplex(NDShape):
                 f"S_{self.dimensions} = ({self.dimensions+1}) × V_{self.dimensions-1}"
             )
 
-    def contains_point(self, point: List[float]) -> bool:
+    def contains_point(self, point: list[float]) -> bool:
         """Check if a point is inside the simplex (simplified check)"""
         if len(point) != self.dimensions:
             raise ValueError("Point dimension mismatch")
@@ -1088,7 +1088,7 @@ class HyperPyramid(NDShape):
             faces = 2 * (self.dimensions - 1)
             return f"S_{self.dimensions} = base^{self.dimensions - 1} + {faces} x lateral_face_area"
 
-    def contains_point(self, point: List[float]) -> bool:
+    def contains_point(self, point: list[float]) -> bool:
         """Check if a point is inside the pyramid (simplified check)"""
         if len(point) != self.dimensions:
             raise ValueError("Point dimension mismatch")
@@ -1161,11 +1161,11 @@ class TilingPattern(ABC):
         self.dimensions = dimensions
         self.base_shape = base_shape
         self.pattern_type = pattern_type
-        self.tiles: List[Dict] = []
+        self.tiles: list[dict] = []
         self.bounds = None
 
     @abstractmethod
-    def generate_pattern(self, bounds: List[tuple], density: float = 1.0) -> List[Dict]:
+    def generate_pattern(self, bounds: list[tuple], density: float = 1.0) -> list[dict]:
         """Generate tiling pattern within given bounds"""
         pass
 
@@ -1178,7 +1178,7 @@ class TilingPattern(ABC):
         """Calculate space coverage efficiency (0-1)"""
         pass
 
-    def get_pattern_properties(self) -> Dict:
+    def get_pattern_properties(self) -> dict:
         """Get properties of the tiling pattern"""
         return {
             "dimensions": self.dimensions,
@@ -1213,10 +1213,10 @@ class RegularTiling(TilingPattern):
         else:
             return 1.0
 
-    def generate_pattern(self, bounds: List[tuple], density: float = 1.0) -> List[Dict]:
+    def generate_pattern(self, bounds: list[tuple], density: float = 1.0) -> list[dict]:
         """Generate regular tiling pattern"""
         self.bounds = bounds
-        self.tiles: List[Dict] = []
+        self.tiles: list[dict] = []
 
         if self.dimensions == 2:
             return self._generate_2d_regular_tiling(bounds, density)
@@ -1226,8 +1226,8 @@ class RegularTiling(TilingPattern):
             return self._generate_nd_regular_tiling(bounds, density)
 
     def _generate_2d_regular_tiling(
-        self, bounds: List[tuple], density: float
-    ) -> List[Dict]:
+        self, bounds: list[tuple], density: float
+    ) -> list[dict]:
         """Generate 2D regular tiling"""
         spacing = self.spacing / density
         tiles = []
@@ -1302,8 +1302,8 @@ class RegularTiling(TilingPattern):
         return tiles
 
     def _generate_3d_regular_tiling(
-        self, bounds: List[tuple], density: float
-    ) -> List[Dict]:
+        self, bounds: list[tuple], density: float
+    ) -> list[dict]:
         """Generate 3D regular tiling"""
         spacing = self.spacing / density
         tiles = []
@@ -1378,14 +1378,14 @@ class RegularTiling(TilingPattern):
         return tiles
 
     def _generate_nd_regular_tiling(
-        self, bounds: List[tuple], density: float
-    ) -> List[Dict]:
+        self, bounds: list[tuple], density: float
+    ) -> list[dict]:
         """Generate n-dimensional regular tiling"""
         spacing = self.spacing / density
         tiles = []
 
         # Generate n-dimensional grid
-        def generate_grid_points(dim_index: int, current_position: List[float]) -> None:
+        def generate_grid_points(dim_index: int, current_position: list[float]) -> None:
             if dim_index >= self.dimensions:
                 tiles.append(
                     {
@@ -1437,10 +1437,10 @@ class HexagonalTiling(TilingPattern):
         self.hexagon_height = side_length * math.sqrt(3)
         self.hexagon_width = side_length * 2
 
-    def generate_pattern(self, bounds: List[tuple], density: float = 1.0) -> List[Dict]:
+    def generate_pattern(self, bounds: list[tuple], density: float = 1.0) -> list[dict]:
         """Generate hexagonal tiling pattern"""
         self.bounds = bounds
-        self.tiles: List[Dict] = []
+        self.tiles: list[dict] = []
 
         x_min, x_max = bounds[0]
         y_min, y_max = bounds[1]
@@ -1474,7 +1474,7 @@ class HexagonalTiling(TilingPattern):
 
     def _get_hexagon_vertices(
         self, center_x: float, center_y: float, side_length: float
-    ) -> List[List[float]]:
+    ) -> list[list[float]]:
         """Generate vertices of a hexagon centered at given position"""
         vertices = []
         for i in range(6):
@@ -1492,16 +1492,16 @@ class HexagonalTiling(TilingPattern):
 class VoronoiTiling(TilingPattern):
     """Voronoi diagram tiling pattern"""
 
-    def __init__(self, dimensions: int, seed_points: List[List[float]]):
+    def __init__(self, dimensions: int, seed_points: list[list[float]]):
         from typing import cast
 
         super().__init__(dimensions, cast(NDShape, None), "voronoi")
         self.seed_points = seed_points
 
-    def generate_pattern(self, bounds: List[tuple], density: float = 1.0) -> List[Dict]:
+    def generate_pattern(self, bounds: list[tuple], density: float = 1.0) -> list[dict]:
         """Generate Voronoi diagram"""
         self.bounds = bounds
-        self.tiles: List[Dict] = []
+        self.tiles: list[dict] = []
 
         # For each seed point, create a Voronoi cell
         for i, seed in enumerate(self.seed_points):
@@ -1517,8 +1517,8 @@ class VoronoiTiling(TilingPattern):
         return self.tiles
 
     def _calculate_voronoi_vertices(
-        self, seed: List[float], bounds: List[tuple]
-    ) -> List[List[float]]:
+        self, seed: list[float], bounds: list[tuple]
+    ) -> list[list[float]]:
         """Calculate vertices of Voronoi cell (simplified for 2D)"""
         if self.dimensions != 2:
             return []  # Complex calculation for higher dimensions
@@ -1552,7 +1552,7 @@ class TilingAnalyzer:
     def __init__(self, tiling_pattern: TilingPattern):
         self.pattern = tiling_pattern
 
-    def analyze_pattern(self) -> Dict:
+    def analyze_pattern(self) -> dict:
         """Comprehensive analysis of tiling pattern"""
         return {
             "basic_properties": self.pattern.get_pattern_properties(),
@@ -1573,7 +1573,7 @@ class TilingAnalyzer:
 
         return len(self.pattern.tiles) / total_space if total_space > 0 else 0.0
 
-    def _analyze_symmetry(self) -> Dict:
+    def _analyze_symmetry(self) -> dict:
         """Analyze symmetry properties of the tiling"""
         return {
             "translation_symmetry": True,  # Regular tilings have translation symmetry
@@ -1598,7 +1598,7 @@ class TilingAnalyzer:
         """Check if pattern has point symmetry"""
         return self.pattern.pattern_type in ["regular", "hexagonal"]
 
-    def _analyze_mathematical_properties(self) -> Dict:
+    def _analyze_mathematical_properties(self) -> dict:
         """Analyze mathematical properties"""
         return {
             "is_periodic": True,
@@ -1945,7 +1945,7 @@ class GeometryAgent:
             return float(match.group(1) or match.group(2))
         return -1
 
-    def _extract_multiple_parameters(self, query: str) -> List[float]:
+    def _extract_multiple_parameters(self, query: str) -> list[float]:
         """Extract multiple parameters (for ellipsoid axes) from query"""
         # Look for patterns like "axes 1.5 2.0 3.0" or "semi-axes 1,2,3"
         pattern = r"(?:axes|semi-axes)\s*(?:of|=|is)?\s*([\d.,\s]+)"
@@ -2218,7 +2218,7 @@ class GeometryAgent:
         except Exception as e:
             return f"Error generating tiling pattern: {str(e)}"
 
-    def _extract_bounds(self, query: str) -> List[tuple]:
+    def _extract_bounds(self, query: str) -> list[tuple]:
         """Extract bounds from query"""
         # Look for patterns like "bounds 0 10" or "area 5x5"
         pattern = r"bounds?\s+(\d+(?:\.\d+)?)\s+(\d+(?:\.\d+)?)"

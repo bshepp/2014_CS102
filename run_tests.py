@@ -10,7 +10,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Tuple
 
 
 class TestRunner:
@@ -22,7 +22,7 @@ class TestRunner:
         self.reports_dir = Path("test-reports")
         self.reports_dir.mkdir(exist_ok=True)
 
-    def run_command(self, cmd: List[str], description: str) -> Tuple[bool, str, str]:
+    def run_command(self, cmd: list[str], description: str) -> Tuple[bool, str, str]:
         """Run a command and return success status, stdout, stderr."""
         print(f"🔄 Running: {description}")
         print(f"   Command: {' '.join(cmd)}")
