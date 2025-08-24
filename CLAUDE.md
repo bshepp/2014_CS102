@@ -91,7 +91,7 @@ This project represents the **complete transformation** of a simple CS102 (2014)
 ### **Current Status** (August 24, 2025) ⭐
 - **Phase**: CI/CD Pipeline Fully Recovered - Production Ready
 - **CI/CD Status**: ✅ **OPERATIONAL** - All syntax errors and code quality issues resolved
-- **Python Support**: Modernized to 3.10+ (dropped 3.9 due to October 2025 EOL)
+- **Python Support**: Modernized to 3.11+ (dropped 3.9/3.10 for performance and modern features)
 - **Frontend**: `gengine.darkforestlabs.com` LIVE via Amplify (SSL/DNS validated)
 - **MCP Server**: Lambda/API Gateway present; `mcp.gengine.darkforestlabs.com` ACM validation CNAME published; cert pending
 - **MCP Integration**: ✅ **COMPLETE** - Local MCP server bridges Claude Desktop to AWS infrastructure
@@ -222,7 +222,7 @@ Preserved and enhanced original CS102 code:
 ## 🛠️ Dependencies and Environment
 
 ### **Python Environment**
-- **Python Version**: 3.10+ (tested on 3.10, 3.11, 3.12) - **3.9 dropped due to October 2025 EOL**
+- **Python Version**: 3.11+ (tested on 3.11, 3.12) - **3.9/3.10 dropped for performance and modern features**
 - **Local Development**: Python 3.12.3 (current)
 - **Virtual Environment**: Required (`venv/` directory)
 - **Package Manager**: pip (latest)

@@ -1,6 +1,6 @@
 # Development and Testing Dependencies
 # For the N-Dimensional Geometry Engine
-# Python 3.9+ compatible - 2024-2025 versions
+# Python 3.11+ compatible - 2024-2025 versions
 
 # Testing Framework (latest 2024-2025 versions)
 pytest>=7.4.0                # Latest stable version
@@ -38,7 +38,7 @@ httpx>=0.26.0               # HTTP client for testing
 # Starlette is pulled in via FastAPI dependency; avoid pinning
 
 # Scientific Computing (for mathematical tests)
-numpy>=1.24.0,<2.0.0       # Latest 1.x compatible with Python 3.9+
+numpy>=1.24.0,<2.0.0       # Latest 1.x compatible with Python 3.11+
 scipy>=1.11.0,<2.0.0
 
 # Visualization Testing

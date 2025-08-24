@@ -1,9 +1,9 @@
 # N-Dimensional Geometry Engine - Dependencies
 # Updated: 2025-08-18
-# Python 3.9+ compatible for CI/CD - using 2024-2025 versions
+# Python 3.11+ compatible for CI/CD - using 2024-2025 versions
 
-# Core scientific computing (latest compatible with Python 3.9+)
-numpy>=1.24.0  # Allow 1.x and 2.x; CI matrix covers 3.9–3.12
+# Core scientific computing (latest compatible with Python 3.11+)
+numpy>=1.24.0  # Allow 1.x and 2.x; CI matrix covers 3.11–3.12
 
 # Utility libraries
 packaging>=24.0
@@ -28,7 +28,7 @@ pandas>=2.1.0,<3.0.0
 # Web framework dependencies (for web deployment - 2024 versions)
 fastapi>=0.108.0,<1.0.0
 uvicorn>=0.25.0,<1.0.0
-pydantic>=2.5.0,<3.0.0  # Pydantic 2.x works with Python 3.9+
+pydantic>=2.5.0,<3.0.0  # Pydantic 2.x works with Python 3.11+
 python-multipart>=0.0.6  # Required for FastAPI file uploads
 
 # MCP (Model Context Protocol) dependencies - Added 2025-08-18

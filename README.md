@@ -224,12 +224,12 @@ pa11y http://localhost:8000/demo.html
 ## 🔧 Development
 
 ### Prerequisites
-- Python 3.10+ (recommended: 3.11 or 3.12)
+- Python 3.11+ (recommended: 3.12 for best performance)
 - Node.js 18+ (for web validation tools)
 - AWS CLI (for deployment)
 - Git
 
-Note: Python 3.9 dropped due to EOL in October 2025. CI matrices test Python 3.10–3.12. Local environment uses Python 3.12.3 with NumPy 2.x; `requirements.txt` pins `<2.0.0` for broader compatibility.
+Note: Python 3.9/3.10 dropped for performance and modern features. CI matrices test Python 3.11–3.12. Local environment uses Python 3.12.3 with NumPy 2.x; `requirements.txt` pins `<2.0.0` for broader compatibility.
 
 ### Environment Setup
 ```bash

@@ -9,16 +9,15 @@
 ## 🎯 **Current Strategy**
 
 ### **Supported Python Versions**
-- **Minimum**: Python 3.10 (EOL: October 2026)
-- **Primary**: Python 3.11 (EOL: October 2027) 
+- **Minimum/Primary**: Python 3.11 (EOL: October 2027) 
 - **Latest**: Python 3.12 (EOL: October 2028)
-- **Dropped**: Python 3.9 (EOL: October 2025 - 2 months away)
+- **Dropped**: Python 3.9 (EOL: October 2025 - 2 months away) and Python 3.10 (performance/features decision)
 
 ### **Development Environment**
 - **Local**: Python 3.12.3 (current development)
 - **CI Primary**: Python 3.11 (workflow default)
 - **AWS Lambda**: Python 3.12 (production runtime)
-- **Testing Matrix**: 3.10, 3.11, 3.12 (comprehensive coverage)
+- **Testing Matrix**: 3.11, 3.12 (streamlined coverage)
 
 ---
 
@@ -34,9 +33,9 @@
 | 3.13 | 2024-10-07 | 2029-10 | ✅ 4+ years remaining | **FUTURE** |
 
 ### **Decision Rationale**
-1. **Python 3.9**: Dropping due to imminent EOL (October 2025)
-2. **Python 3.10**: Minimum for reasonable backward compatibility
-3. **Python 3.11**: Primary version with excellent stability and performance
+1. **Python 3.9**: Dropped due to imminent EOL (October 2025)
+2. **Python 3.10**: Dropped to focus on modern features and performance (3.11+ benefits)
+3. **Python 3.11**: **New minimum** - excellent stability and 10-60% performance gains
 4. **Python 3.12**: Latest stable with best performance improvements
 5. **Python 3.13**: Available but not yet adopted (monitoring for future)
 
@@ -49,15 +48,20 @@
 # Before (causing 3.9 failures):
 python-version: ['3.9', '3.10', '3.11', '3.12']
 
-# After (optimized and modern):
+# After Phase 1 (dropped 3.9):
 python-version: ['3.10', '3.11', '3.12']
+
+# After Phase 2 (3.11+ only - CURRENT):
+python-version: ['3.11', '3.12']
 ```
 
 ### **Benefits Achieved**
 - ✅ **Eliminated Python 3.9 CI failures** (root cause of pipeline issues)
-- ✅ **Reduced CI build time** (25% fewer matrix combinations)
-- ✅ **Future-proofed support** (minimum 1+ year runway on all versions)
-- ✅ **Aligned with industry standards** (most projects dropping 3.9)
+- ✅ **Eliminated Python 3.10 compatibility burden** (focus on modern features)
+- ✅ **Reduced CI build time** (50% fewer matrix combinations: 4→2 versions)
+- ✅ **Performance gains** (Python 3.11+ optimizations)
+- ✅ **Future-proofed support** (minimum 2+ year runway on all versions)
+- ✅ **Aligned with industry standards** (modern Python adoption)
 
 ---
 
@@ -70,22 +74,22 @@ python-version: ['3.10', '3.11', '3.12']
 - **Docker Images**: Python 3.11 base ✅ (stable production choice)
 
 ### **Dependency Compatibility**
-- **NumPy**: Pinned to `<2.0.0` for broad compatibility (3.10+ supported)
+- **NumPy**: Pinned to `<2.0.0` for broad compatibility (3.11+ supported)
 - **FastAPI**: Latest versions support 3.8+ (well within our range)
 - **AsyncIO**: Enhanced performance in 3.11+ (perfect alignment)
-- **Type System**: Modern annotations available in 3.10+ (optimal)
+- **Type System**: Modern annotations available in 3.11+ (optimal)
 
 ---
 
 ## 📋 **Migration Impact**
 
 ### **Breaking Changes**
-- **None**: All current code compatible with Python 3.10+
-- **Dependencies**: All requirements already support 3.10+
-- **Features**: No Python 3.10+ exclusive features currently used
+- **None**: All current code compatible with Python 3.11+
+- **Dependencies**: All requirements already support 3.11+
+- **Features**: Can now leverage Python 3.11+ exclusive features
 
 ### **Documentation Updates**
-- ✅ **README.md**: Updated to reflect 3.10+ requirement
+- ✅ **README.md**: Updated to reflect 3.11+ requirement
 - ✅ **CLAUDE.md**: Updated Python environment section  
 - ✅ **CI Workflows**: Updated matrix configuration
 - ✅ **Installation Docs**: Clarified version requirements
@@ -141,7 +145,7 @@ python-version: ['3.10', '3.11', '3.12']
 - **Net Effect**: ~15-70% performance improvement over old 3.9
 
 ### **CI/CD Performance** 
-- **Matrix Reduction**: 25% fewer combinations (4→3 versions)
+- **Matrix Reduction**: 50% fewer combinations (4→2 versions)
 - **Build Time**: Reduced due to fewer failing jobs
 - **Resource Usage**: Lower GitHub Actions minutes consumption
 - **Reliability**: Higher success rate, fewer random failures
