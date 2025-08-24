@@ -846,7 +846,7 @@ class Simplex(NDShape):
             return "V₃ = (√2/12) × s³"
         else:
             dim = self.dimensions
-            return f"V_{dim} = (√{dim+1} / (2^{dim} × {dim}!)) × s^{dim}"
+            return f"V_{dim} = (√{dim + 1} / (2^{dim} × {dim}!)) × s^{dim}"
 
     def get_surface_area_formula(self) -> str:
         if self.dimensions == 0:
@@ -1074,7 +1074,7 @@ class HyperPyramid(NDShape):
         else:
             return (
                 f"V_{self.dimensions} = (1/{self.dimensions}) × "
-                f"base^{self.dimensions-1} × height"
+                f"base^{self.dimensions - 1} × height"
             )
 
     def get_surface_area_formula(self) -> str:
@@ -1085,7 +1085,8 @@ class HyperPyramid(NDShape):
         elif self.dimensions == 3:
             return "S₃ = base² + 4 × (1/2) × base × √(h² + (base/2)²)"
         else:
-            return f"S_{self.dimensions} = base^{self.dimensions-1} + {2*(self.dimensions-1)} × lateral_face_area"
+            faces = 2 * (self.dimensions - 1)
+            return f"S_{self.dimensions} = base^{self.dimensions - 1} + {faces} x lateral_face_area"
 
     def contains_point(self, point: List[float]) -> bool:
         """Check if a point is inside the pyramid (simplified check)"""
@@ -1720,8 +1721,15 @@ class GeometryAgent:
             result = f"Created {cube_shape.get_shape_type()} '{name}':\n"
             result += f"{cube_shape}\n"
             result += f"Side length = {parameter}\n"
-            result += f"Formulas:\n• {cube_shape.get_volume_formula()}\n• {cube_shape.get_surface_area_formula()}\n"
-            result += f"Geometric Properties:\n• Vertices: {cube_shape.get_vertex_count()}\n• Edges: {cube_shape.get_edge_count()}\n• Diagonal: {cube_shape.get_diagonal_length():.6f}"
+            result += (
+                f"Formulas:\n• {cube_shape.get_volume_formula()}\n"
+                f"• {cube_shape.get_surface_area_formula()}\n"
+            )
+            result += (
+                f"Geometric Properties:\n• Vertices: {cube_shape.get_vertex_count()}\n"
+                f"• Edges: {cube_shape.get_edge_count()}\n"
+                f"• Diagonal: {cube_shape.get_diagonal_length():.6f}"
+            )
 
             return result
         elif "ellipse" in query or "ellipsoid" in query or "oval" in query:

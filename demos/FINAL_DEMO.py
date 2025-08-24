@@ -277,7 +277,7 @@ def demo_performance_metrics():
 
             print(
                 f"• {dim:3d}D: {elapsed:.4f}s for 1000 shapes "
-                f"({elapsed*1000:.2f}ms per shape)"
+                f"({elapsed * 1000:.2f}ms per shape)"
             )
 
         print("\n🚀 Performance Summary:")
@@ -426,9 +426,9 @@ def final_summary():
     print("  📊 Add data export capabilities")
     print("  🤝 Build collaboration features")
 
-    print(f"\n{'='*70}")
+    print(f"\n{'=' * 70}")
     print("🎉 FROM CS102 STUDENT TO GEOMETRY ENGINE ARCHITECT! 🎉")
-    print(f"{'='*70}")
+    print(f"{'=' * 70}")
 
 
 def main():

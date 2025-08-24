@@ -13,9 +13,9 @@ import sys
 
 def print_header(title):
     """Print a formatted header"""
-    print(f"\n{'='*50}")
+    print(f"\n{'=' * 50}")
     print(f"🔍 {title}")
-    print(f"{'='*50}")
+    print(f"{'=' * 50}")
 
 
 def print_success(message):
