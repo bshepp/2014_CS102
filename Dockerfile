@@ -26,8 +26,9 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
 # Install MCP server dependencies if available
-COPY mcp-server/requirements.txt mcp-requirements.txt || echo "# No MCP requirements" > mcp-requirements.txt
-RUN pip install --no-cache-dir -r mcp-requirements.txt || echo "MCP requirements not found, skipping"
+RUN echo "# Fallback MCP requirements file" > mcp-requirements.txt
+COPY mcp-server/requirements.txt mcp-requirements.txt
+RUN pip install --no-cache-dir -r mcp-requirements.txt
 
 # Production stage
 FROM python:3.12-slim AS production
