@@ -20,14 +20,14 @@ WORKDIR /app
 
 # Copy requirements first for better layer caching
 COPY requirements.txt .
-# Note: mcp-server/requirements.txt may not exist, handle gracefully
-RUN echo "# Fallback MCP requirements" > mcp-requirements.txt
-COPY mcp-server/requirements.txt mcp-requirements.txt 2>/dev/null || echo "No MCP requirements file found"
 
-# Install Python dependencies (both main and MCP server)
+# Install Python dependencies
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt && \
-    pip install --no-cache-dir -r mcp-requirements.txt
+    pip install --no-cache-dir -r requirements.txt
+
+# Install MCP server dependencies if available
+COPY mcp-server/requirements.txt mcp-requirements.txt || echo "# No MCP requirements" > mcp-requirements.txt
+RUN pip install --no-cache-dir -r mcp-requirements.txt || echo "MCP requirements not found, skipping"
 
 # Production stage
 FROM python:3.12-slim AS production
