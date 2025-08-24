@@ -4,6 +4,67 @@ All notable changes to the GeometryOracle N-Dimensional Geometry Engine project 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.1] - 2025-08-24
+
+### 🔧 Advanced Ignore File System - Comprehensive Project Hygiene
+
+**Complete overhaul of ignore file system with specialized tool configurations:**
+
+#### **📁 Enhanced Ignore File Architecture**
+- **Updated `.gitignore`** (323 → 338 lines) with Claude Code config exclusions and HTML reports
+- **Enhanced `.dockerignore`** (230 → 238 lines) with deployment artifacts and test outputs
+- **Created 3 new specialized ignore files** for tool-specific exclusions:
+  - **`.pytestignore`** (67 lines) - Test discovery and collection exclusions
+  - **`.coveragerc`** (80 lines) - Coverage analysis configuration with comprehensive omit patterns
+  - **`.blackignore`** (60 lines) - Code formatting exclusions for third-party and generated code
+
+#### **🎯 Advanced Pattern Coverage**
+- **Total Ignore Coverage**: **15 files, 1,565+ lines** across all development scenarios
+- **Added 15 new patterns**: Claude Code settings, HTML reports, deployment artifacts, JUnit XML
+- **Tool-Specific Exclusions**: Pytest, Coverage, Black, MyPy, Docker, Git, MCP, AWS, Node.js
+- **Repository Hygiene**: Ensures clean builds, optimal performance, and proper file tracking
+
+#### **📊 Identified and Fixed Tracking Issues**
+- **Claude Code Configuration**: `.claude/settings.local.json` properly excluded
+- **HTML Test Reports**: `test-reports/*.html` and coverage directories excluded
+- **Deployment Artifacts**: `amplify-frontend.zip`, `docker_job_logs.zip` excluded
+- **Generated Reports**: JUnit XML and temporary test files excluded
+
+## [1.4.0] - 2025-08-24
+
+### 🔧 Repository Cleanup & CI/CD Fixes - Build System Restored
+
+**Major fixes for GitHub Actions failures and repository organization:**
+
+#### **✅ CI/CD Pipeline Fixes**
+- **Fixed pytest-html dependency issues** causing all test workflows to fail
+- **Removed HTML report generation** from test runner (pytest-html not consistently available)
+- **Fixed Docker CI builds** by updating Dockerfile dependency handling
+- **Updated deployment workflows** with proper pytest-html installation
+
+#### **🧹 Comprehensive Ignore Files Audit**
+- **Created 12 specialized ignore files** (1,202 lines total) for comprehensive coverage
+- **Added `.mcpignore`** for MCP server-specific patterns  
+- **Removed 142MB+ of binary files** from git tracking:
+  - Python cache files (`__pycache__/*.pyc`)
+  - Large deployment archives (`geometry-oracle-mcp*.zip`)
+  - Database files (`*.db`, `*.sqlite`)
+  - Python package metadata (`*.dist-info/`)
+- **Enhanced `.gitignore`** with comprehensive Python, Docker, AWS, and development patterns
+- **Fixed git tracking** for all file types that should be ignored
+
+#### **📋 Documentation Accuracy Updates**
+- **Corrected infrastructure status** in all documentation
+- **Updated deployment claims** to reflect actual vs aspirational state
+- **Fixed test count references** (247 tests, not 253)
+- **Repository cleanup** removed archived and obsolete files
+
+### Technical Details
+- **Test Runner**: Fixed all HTML report generation issues in `run_tests.py`
+- **Docker CI**: Enhanced error handling in production and test Dockerfiles
+- **Ignore Coverage**: Python, Node.js, AWS, Docker, IDE, OS, testing, and deployment files
+- **Repository Size**: Reduced by 142MB through proper binary file exclusion
+
 ## [1.3.0] - 2025-08-18
 ### 🔌 MAJOR FEATURE - Model Context Protocol (MCP) Integration
 

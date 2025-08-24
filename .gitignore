@@ -302,3 +302,18 @@ notebook-*.html
 .pnpm-store/
 .yarn/
 .npm/
+
+# Claude Code configuration (local settings only)
+.claude/settings.local.json
+
+# HTML test reports and output
+test-reports/*.html
+test-reports/coverage-*/
+htmlcov/
+
+# Additional deployment artifacts tracked but should be ignored
+amplify-frontend.zip
+docker_job_logs.zip
+
+# Generated documentation and reports
+*.junit.xml
