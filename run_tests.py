@@ -10,7 +10,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Tuple
 
 
 class TestRunner:
@@ -22,7 +22,7 @@ class TestRunner:
         self.reports_dir = Path("test-reports")
         self.reports_dir.mkdir(exist_ok=True)
 
-    def run_command(self, cmd: List[str], description: str) -> Tuple[bool, str, str]:
+    def run_command(self, cmd: list[str], description: str) -> Tuple[bool, str, str]:
         """Run a command and return success status, stdout, stderr."""
         print(f"🔄 Running: {description}")
         print(f"   Command: {' '.join(cmd)}")
@@ -141,8 +141,6 @@ class TestRunner:
             "--cov-report=html:test-reports/coverage-unit",
             "--cov-report=xml:test-reports/coverage-unit.xml",
             "--junit-xml=test-reports/junit-unit.xml",
-            "--html=test-reports/report-unit.html",
-            "--self-contained-html",
             "-m",
             "unit",
         ]
@@ -171,8 +169,6 @@ class TestRunner:
             "--cov-report=html:test-reports/coverage-integration",
             "--cov-report=xml:test-reports/coverage-integration.xml",
             "--junit-xml=test-reports/junit-integration.xml",
-            "--html=test-reports/report-integration.html",
-            "--self-contained-html",
             "-m",
             "integration",
         ]
@@ -200,8 +196,6 @@ class TestRunner:
             "--benchmark-only",
             "--benchmark-sort=mean",
             "--benchmark-json=test-reports/benchmark.json",
-            "--html=test-reports/report-performance.html",
-            "--self-contained-html",
             "-m",
             "performance",
         ]
@@ -227,8 +221,6 @@ class TestRunner:
             "-v",
             "--tb=short",
             "--junit-xml=test-reports/junit-mathematical.xml",
-            "--html=test-reports/report-mathematical.html",
-            "--self-contained-html",
             "-m",
             "mathematical",
         ]
@@ -254,8 +246,6 @@ class TestRunner:
             "-v",
             "--tb=short",
             "--junit-xml=test-reports/junit-tiling.xml",
-            "--html=test-reports/report-tiling.html",
-            "--self-contained-html",
             "-m",
             "tiling",
         ]
@@ -285,8 +275,6 @@ class TestRunner:
             "--cov-report=xml:test-reports/coverage-comprehensive.xml",
             "--cov-report=term-missing",
             "--junit-xml=test-reports/junit-comprehensive.xml",
-            "--html=test-reports/report-comprehensive.html",
-            "--self-contained-html",
             "--durations=10",
         ]
 
@@ -336,8 +324,6 @@ class TestRunner:
             "--tb=short",
             "-m",
             "requires_java",
-            "--html=test-reports/report-java.html",
-            "--self-contained-html",
         ]
 
         success, stdout, stderr = self.run_command(cmd, "Java Bridge Tests")
@@ -400,7 +386,7 @@ class TestRunner:
 
         return summary
 
-    def generate_html_summary(self, summary: Dict) -> str:
+    def generate_html_summary(self, summary: dict) -> str:
         """Generate HTML summary report."""
 
         html = """

@@ -1,0 +1,58 @@
+# MCP Server specific ignore patterns
+# For MCP server deployments and local development
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+mcp_geometry_oracle.db
+
+# Log files
+*.log
+*.log.*
+logs/
+
+# AWS deployment packages
+deploy/
+*.zip
+lambda-package/
+node_modules/
+*.dist-info/
+
+# Environment files
+.env
+.env.*
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test and development
+test-reports/
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/

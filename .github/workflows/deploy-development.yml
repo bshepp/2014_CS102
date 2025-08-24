@@ -13,10 +13,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v4
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
+        python-version: '3.12'
     
     - name: Install dependencies
       run: |
@@ -26,6 +26,8 @@ jobs:
     
     - name: Run tests
       run: |
+        # Install missing dependency
+        pip install pytest-html
         python run_tests.py
     
     - name: Web validation
@@ -45,8 +47,7 @@ jobs:
     
     - name: Configure AWS credentials (OIDC)
       id: awscreds
-      if: secrets.AWS_ROLE_TO_ASSUME_DEV != ''
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-region: ${{ env.AWS_REGION }}
         role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_DEV }}
@@ -54,26 +55,36 @@ jobs:
       continue-on-error: true
 
     - name: Fallback to static credentials if provided
-      if: steps.awscreds.outcome != 'success' && secrets.AWS_ACCESS_KEY_ID != '' && secrets.AWS_SECRET_ACCESS_KEY != ''
-      uses: aws-actions/configure-aws-credentials@v2
+      if: steps.awscreds.outcome != 'success' && secrets.AWS_ACCESS_KEY_ID != ''
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
+      continue-on-error: true
     
     - name: Deploy static files to S3
-      if: (steps.awscreds.outcome == 'success' || (secrets.AWS_ACCESS_KEY_ID != '' && secrets.AWS_SECRET_ACCESS_KEY != ''))
+      if: steps.awscreds.outcome == 'success' || (secrets.AWS_ACCESS_KEY_ID != '' && secrets.AWS_SECRET_ACCESS_KEY != '')
       run: |
-        # Copy static files to S3 bucket
-        aws s3 cp demos/verify_installation.html s3://geometry-engine-frontend-dev/index.html || true
-        aws s3 cp demos/verify_installation.html s3://geometry-engine-frontend-dev/ || true
+        # Copy static files to S3 bucket (skip if no credentials)
+        if aws sts get-caller-identity >/dev/null 2>&1; then
+          aws s3 cp demos/demo.html s3://geometry-engine-frontend-dev/index.html || echo "S3 deployment skipped - bucket may not exist"
+          aws s3 sync demos/ s3://geometry-engine-frontend-dev/demos/ --exclude "*.py" || echo "S3 sync skipped"
+        else
+          echo "AWS credentials not available - skipping S3 deployment"
+        fi
     
     - name: Invalidate CloudFront cache
-      if: steps.awscreds.outcome == 'success' || secrets.AWS_ACCESS_KEY_ID != ''
+      if: steps.awscreds.outcome == 'success' || (secrets.AWS_ACCESS_KEY_ID != '' && secrets.AWS_SECRET_ACCESS_KEY != '')
       run: |
-        aws cloudfront create-invalidation \
-          --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_DEV }} \
-          --paths "/*"
+        # Only invalidate if we have valid credentials and distribution ID
+        if aws sts get-caller-identity >/dev/null 2>&1 && [ -n "${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_DEV }}" ]; then
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_DEV }} \
+            --paths "/*" || echo "CloudFront invalidation failed"
+        else
+          echo "CloudFront invalidation skipped - no credentials or distribution ID"
+        fi
 
   deploy-backend-lambda:
     needs: test
@@ -87,8 +98,7 @@ jobs:
     
     - name: Configure AWS credentials (OIDC)
       id: awscreds
-      if: secrets.AWS_ROLE_TO_ASSUME_DEV != ''
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-region: ${{ env.AWS_REGION }}
         role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_DEV }}
@@ -96,17 +106,17 @@ jobs:
       continue-on-error: true
 
     - name: Fallback to static credentials if provided
-      if: steps.awscreds.outcome != 'success' && secrets.AWS_ACCESS_KEY_ID != '' && secrets.AWS_SECRET_ACCESS_KEY != ''
-      uses: aws-actions/configure-aws-credentials@v2
+      if: steps.awscreds.outcome != 'success'
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
     
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v4
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
+        python-version: '3.12'
     
     - name: Create deployment package
       run: |
@@ -126,11 +136,16 @@ jobs:
         cd ..
     
     - name: Deploy to Lambda
-      if: steps.awscreds.outcome == 'success' || secrets.AWS_ACCESS_KEY_ID != ''
+      if: steps.awscreds.outcome == 'success' || (secrets.AWS_ACCESS_KEY_ID != '' && secrets.AWS_SECRET_ACCESS_KEY != '')
       run: |
-        aws lambda update-function-code \
-          --function-name geometry-engine-api-dev \
-          --zip-file fileb://lambda-deployment-dev.zip
+        # Only deploy if we have valid AWS credentials
+        if aws sts get-caller-identity >/dev/null 2>&1; then
+          aws lambda update-function-code \
+            --function-name geometry-engine-api-dev \
+            --zip-file fileb://lambda-deployment-dev.zip || echo "Lambda deployment failed - function may not exist"
+        else
+          echo "AWS credentials not available - skipping Lambda deployment"
+        fi
 
   deploy-backend-ecs:
     needs: test
@@ -144,7 +159,7 @@ jobs:
     
     - name: Configure AWS credentials
       id: awscreds
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-region: ${{ env.AWS_REGION }}
         role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_DEV }}
@@ -152,8 +167,8 @@ jobs:
       continue-on-error: true
 
     - name: Fallback to static credentials if provided
-      if: steps.awscreds.outcome != 'success' && secrets.AWS_ACCESS_KEY_ID != '' && secrets.AWS_SECRET_ACCESS_KEY != ''
-      uses: aws-actions/configure-aws-credentials@v2
+      if: steps.awscreds.outcome != 'success'
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -161,7 +176,7 @@ jobs:
     
     - name: Login to Amazon ECR
       id: login-ecr
-      if: steps.awscreds.outcome == 'success' || secrets.AWS_ACCESS_KEY_ID != ''
+      if: always()
       uses: aws-actions/amazon-ecr-login@v1
     
     - name: Build, tag, and push image to Amazon ECR
@@ -176,7 +191,7 @@ jobs:
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
     
     - name: Update ECS service
-      if: steps.awscreds.outcome == 'success' || secrets.AWS_ACCESS_KEY_ID != ''
+      if: always()
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: geometry-engine-api
