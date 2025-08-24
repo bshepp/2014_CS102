@@ -26,6 +26,8 @@ jobs:
     
     - name: Run tests
       run: |
+        # Install missing dependency
+        pip install pytest-html
         python run_tests.py
     
     - name: Web validation

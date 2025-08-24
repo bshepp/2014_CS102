@@ -72,7 +72,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python -c "import geometry_engine; print('Geometry engine OK')" || exit 1
 
 # Default command runs the comprehensive test suite
-CMD ["python", "-m", "pytest", "tests/", "-v", "--cov=.", "--cov-report=term-missing", "--cov-report=html", "--junit-xml=test-results.xml", "--html=test-report.html", "--self-contained-html"]
+CMD ["python", "-m", "pytest", "tests/", "-v", "--cov=.", "--cov-report=term-missing", "--cov-report=html", "--junit-xml=test-results.xml"]
 
 # Alternative commands for specific test types:
 # Core tests only:        pytest tests/test_core.py -v
