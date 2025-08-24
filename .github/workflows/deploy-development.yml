@@ -1,4 +1,4 @@
-name: 🚀 Deploy to Development Environment
+name: Deploy to Development
 
 on:
   push:
@@ -13,10 +13,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Set up Python 3.12
-      uses: actions/setup-python@v5
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
       with:
-        python-version: '3.12'
+        python-version: '3.11'
     
     - name: Install dependencies
       run: |
@@ -26,8 +26,6 @@ jobs:
     
     - name: Run tests
       run: |
-        # Install missing dependency
-        pip install pytest-html
         python run_tests.py
     
     - name: Web validation
@@ -36,30 +34,217 @@ jobs:
         sleep 10
         curl -f http://localhost:8000/api/health
 
-  deployment-summary:
+  deploy-frontend:
     needs: test
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write   # Required for OIDC
+      contents: read
     steps:
     - uses: actions/checkout@v4
     
-    - name: 📋 Development Deployment Summary
+    - name: Configure AWS credentials (OIDC)
+      id: awscreds
+      if: secrets.AWS_ROLE_TO_ASSUME_DEV != ''
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-region: ${{ env.AWS_REGION }}
+        role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_DEV }}
+        role-session-name: github-actions-deploy-dev
+      continue-on-error: true
+
+    - name: Fallback to static credentials if provided
+      if: steps.awscreds.outcome != 'success' && secrets.AWS_ACCESS_KEY_ID != '' && secrets.AWS_SECRET_ACCESS_KEY != ''
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+    
+    - name: Deploy static files to S3
+      if: (steps.awscreds.outcome == 'success' || (secrets.AWS_ACCESS_KEY_ID != '' && secrets.AWS_SECRET_ACCESS_KEY != ''))
       run: |
-        echo "🚀 Development Deployment Workflow"
-        echo "=================================="
-        echo ""
-        echo "✅ Tests completed successfully"
-        echo "✅ Web validation passed"
-        echo ""
-        echo "📋 Deployment Status:"
-        echo "• Frontend: Skipped (no AWS credentials configured)"
-        echo "• Backend Lambda: Skipped (no AWS credentials configured)"
-        echo "• Backend ECS: Skipped (no AWS credentials configured)"
-        echo ""
-        echo "ℹ️  Note: This workflow is configured to deploy to AWS infrastructure"
-        echo "   when proper credentials are available. All functional tests have"
-        echo "   passed and the application is ready for deployment."
-        echo ""
-        echo "🔧 To enable AWS deployment:"
-        echo "   1. Configure repository secrets for AWS credentials"
-        echo "   2. Set up OIDC role or access keys"
-        echo "   3. Configure backend type variable (lambda/ecs)"
+        # Copy static files to S3 bucket
+        aws s3 cp demos/verify_installation.html s3://geometry-engine-frontend-dev/index.html || true
+        aws s3 cp demos/verify_installation.html s3://geometry-engine-frontend-dev/ || true
+    
+    - name: Invalidate CloudFront cache
+      if: steps.awscreds.outcome == 'success' || secrets.AWS_ACCESS_KEY_ID != ''
+      run: |
+        aws cloudfront create-invalidation \
+          --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_DEV }} \
+          --paths "/*"
+
+  deploy-backend-lambda:
+    needs: test
+    runs-on: ubuntu-latest
+    if: vars.BACKEND_TYPE == 'lambda'
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Configure AWS credentials (OIDC)
+      id: awscreds
+      if: secrets.AWS_ROLE_TO_ASSUME_DEV != ''
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-region: ${{ env.AWS_REGION }}
+        role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_DEV }}
+        role-session-name: github-actions-deploy-dev
+      continue-on-error: true
+
+    - name: Fallback to static credentials if provided
+      if: steps.awscreds.outcome != 'success' && secrets.AWS_ACCESS_KEY_ID != '' && secrets.AWS_SECRET_ACCESS_KEY != ''
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+    
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Create deployment package
+      run: |
+        mkdir lambda_package
+        pip install -r requirements.txt -t lambda_package/
+        cp web_api.py geometry_engine.py lambda_package/
+        
+        # Add Lambda handler
+        echo "
+        from mangum import Mangum
+        handler = Mangum(app)
+        " >> lambda_package/web_api.py
+        
+        # Create zip
+        cd lambda_package
+        zip -r ../lambda-deployment-dev.zip .
+        cd ..
+    
+    - name: Deploy to Lambda
+      if: steps.awscreds.outcome == 'success' || secrets.AWS_ACCESS_KEY_ID != ''
+      run: |
+        aws lambda update-function-code \
+          --function-name geometry-engine-api-dev \
+          --zip-file fileb://lambda-deployment-dev.zip
+
+  deploy-backend-ecs:
+    needs: test
+    runs-on: ubuntu-latest  
+    if: vars.BACKEND_TYPE == 'ecs'
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Configure AWS credentials
+      id: awscreds
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-region: ${{ env.AWS_REGION }}
+        role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_DEV }}
+        role-session-name: github-actions-deploy-dev
+      continue-on-error: true
+
+    - name: Fallback to static credentials if provided
+      if: steps.awscreds.outcome != 'success' && secrets.AWS_ACCESS_KEY_ID != '' && secrets.AWS_SECRET_ACCESS_KEY != ''
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+    
+    - name: Login to Amazon ECR
+      id: login-ecr
+      if: steps.awscreds.outcome == 'success' || secrets.AWS_ACCESS_KEY_ID != ''
+      uses: aws-actions/amazon-ecr-login@v1
+    
+    - name: Build, tag, and push image to Amazon ECR
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: geometry-engine-api
+        IMAGE_TAG: dev-${{ github.sha }}
+      run: |
+        sudo apt-get update && sudo apt-get install -y jq >/dev/null 2>&1 || true
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+    
+    - name: Update ECS service
+      if: steps.awscreds.outcome == 'success' || secrets.AWS_ACCESS_KEY_ID != ''
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: geometry-engine-api
+        IMAGE_TAG: dev-${{ github.sha }}
+      run: |
+        sudo apt-get update && sudo apt-get install -y jq >/dev/null 2>&1 || true
+        # Update task definition with new image
+        aws ecs describe-task-definition \
+          --task-definition geometry-engine-api-dev \
+          --query taskDefinition > task-def.json
+        
+        # Update image URI in task definition
+        jq --arg IMAGE "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" \
+          '.containerDefinitions[0].image = $IMAGE' task-def.json > new-task-def.json
+        
+        # Register new task definition
+        aws ecs register-task-definition \
+          --cli-input-json file://new-task-def.json
+        
+        # Update service
+        aws ecs update-service \
+          --cluster geometry-engine-dev \
+          --service geometry-engine-api-dev \
+          --task-definition geometry-engine-api-dev
+
+  create-pr-to-production:
+    needs: [deploy-frontend, deploy-backend-lambda, deploy-backend-ecs]
+    if: always() && (needs.deploy-frontend.result == 'success' && (needs.deploy-backend-lambda.result == 'success' || needs.deploy-backend-lambda.result == 'skipped') && (needs.deploy-backend-ecs.result == 'success' || needs.deploy-backend-ecs.result == 'skipped'))
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+    
+    - name: Create Pull Request to Production
+      run: |
+        # Create PR from develop to main
+        gh pr create \
+          --title "🚀 Deploy to Production - $(date '+%Y-%m-%d %H:%M')" \
+          --body "$(cat <<'EOF'
+        ## 🚀 Production Deployment Request
+        
+        **Source Branch:** develop
+        **Target Branch:** main
+        **Status:** ✅ Development deployment successful
+        
+        ### Changes Included
+        - Latest commits from develop branch
+        - All tests passing
+        - Web validation successful
+        - Development environment deployed and verified
+        
+        ### Pre-deployment Checklist
+        - [ ] Review all changes
+        - [ ] Verify development environment functionality  
+        - [ ] Confirm no breaking changes
+        - [ ] Check security implications
+        
+        ### Post-deployment Tasks
+        - [ ] Verify production deployment
+        - [ ] Monitor application health
+        - [ ] Update documentation if needed
+        
+        **Auto-generated by GitHub Actions** 🤖
+        EOF
+        )" \
+          --base main \
+          --head develop
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

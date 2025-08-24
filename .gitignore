@@ -72,15 +72,11 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-# Python (comprehensive)
+# Python
 __pycache__/
-*/__pycache__/
 *.py[cod]
 *$py.class
 *.so
-*.pyc
-*.pyo
-*.pyd
 .Python
 build/
 develop-eggs/
@@ -262,20 +258,6 @@ amplify*.local.yml
 deployment-temp/
 build-temp/
 
-# MCP Server deployment files (large binaries)
-mcp-server/deploy/*.zip
-mcp-server/deploy/geometry-oracle-mcp*.zip
-mcp-server/deploy/lambda-package/
-mcp-server/deploy/boto3/
-mcp-server/deploy/botocore/
-mcp-server/deploy/node_modules/
-mcp-server/deploy/*.dist-info/
-
-# Large zip deployment artifacts
-geometry-oracle-mcp*.zip
-*-deploy*.zip
-lambda-deployment-*.zip
-
 # IDE workspace files (updated)
 .vscode/settings.json
 .vscode/launch.json
@@ -320,18 +302,3 @@ notebook-*.html
 .pnpm-store/
 .yarn/
 .npm/
-
-# Claude Code configuration (local settings only)
-.claude/settings.local.json
-
-# HTML test reports and output
-test-reports/*.html
-test-reports/coverage-*/
-htmlcov/
-
-# Additional deployment artifacts tracked but should be ignored
-amplify-frontend.zip
-docker_job_logs.zip
-
-# Generated documentation and reports
-*.junit.xml

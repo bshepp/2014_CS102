@@ -228,11 +228,3 @@ test.db
 benchmark-results/
 test-outputs/
 .prof
-
-# Recently identified files that should be ignored
-amplify-frontend.zip
-docker_job_logs.zip
-
-# HTML test reports
-test-reports/*.html
-test-reports/coverage-*/

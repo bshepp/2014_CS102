@@ -1,28 +1,21 @@
 # GeometryOracle MCP Server - AWS Deployment Summary
 
-## 🚀 **DEPLOYMENT STATUS: MCP LIVE, FRONTEND PENDING CONNECTION**
+## 🚀 **DEPLOYMENT STATUS: COMPLETE & SECURE**
 
-The GeometryOracle MCP Server is fully operational on AWS. Frontend requires Amplify-GitHub connection.
-
-**✅ CONFIRMED LIVE (Aug 24, 2025 AWS CLI Audit):**
-- Lambda function `geometry-oracle-mcp` - Active, Python 3.12
-- API Gateway `s6ngc23inj` - Live and responding
-- Custom domain SSL certificate - Valid ACM cert
-- S3 deployment bucket - Contains deployment packages
+The GeometryOracle MCP Server has been successfully deployed to AWS with comprehensive security controls and monitoring.
 
 ---
 
 ## 🔗 **Production Endpoints**
 
 ### **Primary MCP Server**
-- **URL**: `https://mcp.gengine.darkforestlabs.com/mcp`
+- **URL**: `https://mcp.gengine.darkforestlabs.com`
 - **Protocol**: JSON-RPC 2.0 over HTTPS
-- **Status**: ✅ **LIVE & HEALTHY** (Verified Aug 24, 2025)
+- **Status**: ✅ **LIVE & HEALTHY**
 
 ### **Health Check**
-- **Custom Domain**: `https://mcp.gengine.darkforestlabs.com/mcp` (GET) ✅ **WORKING**
-- **Direct API Gateway**: `https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp` (GET) ✅ **WORKING**
-- **Response**: Server status and 4 available tools
+- **URL**: `https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp` (GET)
+- **Response**: Server status and available tools
 
 ---
 

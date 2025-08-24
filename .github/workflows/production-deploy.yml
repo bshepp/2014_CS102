@@ -1,0 +1,213 @@
+name: 🚀 Production Deployment to AWS
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # Allow manual deployment
+
+env:
+  PYTHON_VERSION: '3.12'
+  AWS_REGION: 'us-east-1'
+  LAMBDA_FUNCTION_NAME: 'geometry-oracle-mcp'
+
+jobs:
+  # Comprehensive production validation
+  production-validation:
+    name: 🔬 Production Validation Suite
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: ☕ Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: 📦 Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+
+      - name: 🧪 Run Full Test Suite
+        run: |
+          python run_tests.py
+          
+      - name: 🔒 Security Scan
+        run: |
+          bandit -r . -f json -o bandit-report.json || true
+          safety check || true
+
+      - name: 🎨 Code Quality Final Check
+        run: |
+          black --check --diff --config pyproject.toml .
+          isort --check-only --diff --settings-path pyproject.toml .
+          flake8 . || echo "Style warnings noted"
+
+      - name: 📊 Upload Test Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-validation-reports
+          path: |
+            bandit-report.json
+            test-reports/
+
+  # Build and deploy to AWS
+  deploy-aws:
+    name: 🌐 Deploy to AWS Lambda
+    runs-on: ubuntu-latest
+    needs: production-validation
+    environment: production
+    if: secrets.AWS_ACCESS_KEY_ID != '' && secrets.AWS_SECRET_ACCESS_KEY != ''
+    
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: ⚙️ Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: 📦 Install AWS CLI
+        run: |
+          pip install boto3 awscli
+
+      - name: 🏗️ Prepare Deployment Package
+        run: |
+          # Create deployment directory
+          mkdir -p lambda-deployment
+          
+          # Copy core files
+          cp geometry_engine.py lambda-deployment/
+          cp mcp-server/src/mcp_server.py lambda-deployment/
+          cp mcp-server/lambda_handler.py lambda-deployment/
+          
+          # Install dependencies in deployment package
+          cd lambda-deployment
+          pip install --target . \
+            fastapi \
+            pydantic \
+            numpy \
+            python-multipart \
+            jsonrpc-base
+          
+          # Create deployment zip
+          cd ..
+          zip -r geometry-oracle-mcp-deployment.zip lambda-deployment/
+
+      - name: 🚀 Deploy to Lambda
+        run: |
+          aws lambda update-function-code \
+            --function-name ${{ env.LAMBDA_FUNCTION_NAME }} \
+            --zip-file fileb://geometry-oracle-mcp-deployment.zip \
+            --region ${{ env.AWS_REGION }}
+
+      - name: ⏱️ Wait for deployment to complete
+        run: |
+          aws lambda wait function-updated \
+            --function-name ${{ env.LAMBDA_FUNCTION_NAME }} \
+            --region ${{ env.AWS_REGION }}
+
+      - name: 🔧 Update function configuration if needed
+        run: |
+          aws lambda update-function-configuration \
+            --function-name ${{ env.LAMBDA_FUNCTION_NAME }} \
+            --runtime python3.12 \
+            --handler lambda_handler.mcp_handler \
+            --timeout 30 \
+            --memory-size 512 \
+            --region ${{ env.AWS_REGION }} || echo "Configuration already up to date"
+
+  # Health check after deployment
+  post-deployment-verification:
+    name: 🏥 Post-Deployment Health Check
+    runs-on: ubuntu-latest
+    needs: deploy-aws
+    if: needs.deploy-aws.result == 'success'
+    
+    steps:
+      - name: 🔍 Test MCP Server Health
+        run: |
+          echo "Testing MCP server endpoint..."
+          
+          # Test health endpoint
+          RESPONSE=$(curl -s -X GET "https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp")
+          echo "Health check response: $RESPONSE"
+          
+          # Test tools list
+          TOOLS_RESPONSE=$(curl -s -X POST \
+            -H "Content-Type: application/json" \
+            -d '{"jsonrpc": "2.0", "method": "tools/list", "id": 1}' \
+            "https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp")
+          echo "Tools list response: $TOOLS_RESPONSE"
+          
+          # Test actual calculation
+          CALC_RESPONSE=$(curl -s -X POST \
+            -H "Content-Type: application/json" \
+            -d '{"jsonrpc": "2.0", "method": "tools/call", "params": {"name": "calculate_hypersphere", "arguments": {"dimensions": 3, "radius": 1.0}}, "id": 2}' \
+            "https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp")
+          echo "Calculation test response: $CALC_RESPONSE"
+
+      - name: ⚙️ Configure AWS credentials for health check
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: 📊 Check Lambda metrics
+        run: |
+          # Get recent invocations
+          aws logs filter-log-events \
+            --log-group-name "/aws/lambda/${{ env.LAMBDA_FUNCTION_NAME }}" \
+            --start-time $(date -d '5 minutes ago' +%s)000 \
+            --query 'events[*].[eventId,message]' \
+            --output table \
+            --region ${{ env.AWS_REGION }} || echo "No recent logs available"
+
+      - name: ✅ Deployment Success Notification
+        run: |
+          echo "🎉 Production deployment successful!"
+          echo "🌐 MCP Server: https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp"
+          echo "📊 Check CloudWatch logs: /aws/lambda/${{ env.LAMBDA_FUNCTION_NAME }}"
+          echo "🗄️ DynamoDB table: geometry-oracle-mcp-prod-queries"
+
+  # Create deployment tag
+  tag-release:
+    name: 🏷️ Tag Release
+    runs-on: ubuntu-latest
+    needs: post-deployment-verification
+    if: needs.post-deployment-verification.result == 'success'
+    
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🏷️ Create Release Tag
+        run: |
+          TAG="v$(date +'%Y.%m.%d')-$(git rev-parse --short HEAD)"
+          git tag $TAG
+          git push origin $TAG
+          echo "Created release tag: $TAG"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

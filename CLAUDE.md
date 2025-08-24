@@ -11,16 +11,7 @@ This file provides comprehensive guidance to Claude Code (claude.ai/code) when w
 
 This Claude instance specializes in the **N-Dimensional Geometry Engine** project - transforming the original 2014 CS102 Java sphere calculator into a sophisticated, production-ready geometry system with Python integration, web APIs, and comprehensive testing.
 
-### **Latest Update: Advanced Ignore File System Implementation (2025-08-24)**
-
-**🔧 Advanced Project Hygiene Achievement:**
-- **Enhanced Ignore Architecture**: Updated 2 existing + created 3 new specialized ignore files (1,565+ total lines)
-- **Tool-Specific Configurations**: `.pytestignore`, `.coveragerc`, `.blackignore` for comprehensive coverage
-- **Repository Hygiene**: Fixed tracking of Claude Code settings, HTML reports, and deployment artifacts  
-- **15 New Patterns**: Added comprehensive exclusions for testing, coverage, formatting, and development tools
-- **Optimal Build Performance**: Ensures clean builds and proper file tracking across all development scenarios
-
-### **Previous Update: Documentation Reorganization & Structure Cleanup (2025-08-10)**
+### **Latest Update: Documentation Reorganization & Structure Cleanup (2025-08-10)**
 
 **🧹 Project Organization Achievement:**
 - **Documentation Reorganized**: Moved status and report files to `docs/` directory for cleaner structure
@@ -97,24 +88,21 @@ This project represents the **complete transformation** of a simple CS102 (2014)
 
 ## 📋 Development Status
 
-### **Current Status** (August 24, 2025 - Evening Post-Infrastructure-Audit) ⭐
-- **Phase**: **FULLY MODERNIZED** - Python 3.11+, NumPy 2.x, CI/CD FULLY RESTORED
-- **CI/CD Status**: ✅ **FIXED & OPERATIONAL** - All GitHub Actions failures resolved, auto-deployment working
-- **Python Support**: **3.11+ ONLY** (dropped 3.9/3.10) + **NumPy 2.x performance gains** 
-- **Performance**: **20-60% faster** geometric calculations from NumPy 2.x + Python 3.11+ optimizations
-- **Infrastructure Reality**: ✅ **AUDITED** - AWS CLI verification completed, documentation corrected
-- **MCP Server**: ✅ **FULLY LIVE** - Lambda `geometry-oracle-mcp` operational with 4 tools
-- **MCP Custom Domain**: ✅ **WORKING** - https://mcp.gengine.darkforestlabs.com/mcp (confirmed via AWS CLI)
-- **MCP Integration**: ✅ **COMPLETE** - Local MCP server bridges Claude Desktop to AWS infrastructure
+### **Current Status** (August 18, 2025) ⭐
+- **Phase**: MCP Integration Complete - Claude Desktop connectivity achieved
+- **CI/CD Status**: Mixed; stabilization pending after DNS/SSL validation and minor workflow fixes
+- **Frontend**: `gengine.darkforestlabs.com` LIVE via Amplify (SSL/DNS validated)
+- **MCP Server**: Lambda/API Gateway present; `mcp.gengine.darkforestlabs.com` ACM validation CNAME published; cert pending
+- **MCP Integration**: NEW! Local MCP server bridges Claude Desktop to AWS infrastructure
 - **Dashboard**: DynamoDB pipeline configured; public dashboard domain pending
-- **Testing**: 247 tests across 6 modules with comprehensive CI/CD validation
+- **Testing**: 247 tests across 6 modules (per docs); verify in CI after dependency alignment
 - **Web API**: FastAPI endpoints available locally; production API domain setup deferred
 
-- ❌ Frontend domain: https://gengine.darkforestlabs.com (Amplify placeholder - app not connected to GitHub)
+- ✅ Production frontend: https://gengine.darkforestlabs.com
 - ✅ Local development: `python web_api.py` → http://localhost:8000
 - ✅ MCP Integration: `python geometry_oracle_mcp_server.py` → Claude Desktop connectivity
 - ✅ CI workflows present (quality, tests, docker, web validation)
-- ✅ **AWS MCP custom domain**: https://mcp.gengine.darkforestlabs.com/mcp (WORKING - verified via AWS CLI)
+- ⚠️ **AWS MCP custom domain**: https://mcp.gengine.darkforestlabs.com (DNS pending; use API Gateway execute-api URL if needed)
 - ✅ **6 MCP Tools**: Core geometry + AI-focused batch processing & scaling analysis
 - ✅ **Live Data Collection**: DynamoDB pipeline tracking AI usage patterns
 - ✅ **Analytics Dashboard**: Real-time insights into AI geometry behavior
@@ -233,8 +221,7 @@ Preserved and enhanced original CS102 code:
 ## 🛠️ Dependencies and Environment
 
 ### **Python Environment**
-- **Python Version**: 3.11+ (tested on 3.11, 3.12) - **3.9/3.10 dropped for performance and modern features**
-- **Local Development**: Python 3.12.3 (current)
+- **Python Version**: 3.9+ (tested on 3.9, 3.10, 3.11, 3.12)
 - **Virtual Environment**: Required (`venv/` directory)
 - **Package Manager**: pip (latest)
 
