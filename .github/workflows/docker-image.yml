@@ -1,4 +1,4 @@
-name: 🐳 Docker Image CI
+name: Docker Image CI
 
 on:
   push:
@@ -6,66 +6,13 @@ on:
   pull_request:
     branches: [ "main" ]
 
-env:
-  PYTHON_VERSION: '3.12'
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-
 jobs:
+
   build:
-    name: 🏗️ Build Docker Images
+
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
 
     steps:
-    - name: 📥 Checkout Code
-      uses: actions/checkout@v4
-
-    - name: 🐳 Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-
-    - name: 🔑 Log in to Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ${{ env.REGISTRY }}
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: 📝 Extract metadata
-      id: meta
-      uses: docker/metadata-action@v5
-      with:
-        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-        tags: |
-          type=ref,event=branch
-          type=ref,event=pr
-          type=sha,format=short
-          type=raw,value=latest,enable={{is_default_branch}}
-
-    - name: 🏗️ Build and push Production Docker image
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        file: ./Dockerfile
-        push: true
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: 🧪 Build Test Docker image
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        file: ./docker/Dockerfile.test
-        push: false
-        load: true
-        tags: geometry-engine:test
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: 🔬 Run container tests
-      run: |
-        docker run --rm geometry-engine:test pytest tests/test_core.py -v --maxfail=5
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)

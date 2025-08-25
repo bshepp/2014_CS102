@@ -192,7 +192,7 @@ def main():
     total = len(tests)
 
     for test_name, test_func in tests:
-        print(f"\n{'=' * 60}")
+        print(f"\n{'='*60}")
         print(f"🧪 Running {test_name}")
         print("=" * 60)
 
@@ -205,7 +205,7 @@ def main():
         except Exception as e:
             print(f"❌ {test_name} failed with exception: {e}")
 
-    print(f"\n{'=' * 60}")
+    print(f"\n{'='*60}")
     print(f"📊 FINAL RESULTS: {passed}/{total} tests completed")
     print("=" * 60)
 

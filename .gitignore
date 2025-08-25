@@ -72,15 +72,11 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-# Python (comprehensive)
+# Python
 __pycache__/
-*/__pycache__/
 *.py[cod]
 *$py.class
 *.so
-*.pyc
-*.pyo
-*.pyd
 .Python
 build/
 develop-eggs/
@@ -261,20 +257,6 @@ mcp-server/mcp_geometry_oracle.db
 amplify*.local.yml
 deployment-temp/
 build-temp/
-
-# MCP Server deployment files (large binaries)
-mcp-server/deploy/*.zip
-mcp-server/deploy/geometry-oracle-mcp*.zip
-mcp-server/deploy/lambda-package/
-mcp-server/deploy/boto3/
-mcp-server/deploy/botocore/
-mcp-server/deploy/node_modules/
-mcp-server/deploy/*.dist-info/
-
-# Large zip deployment artifacts
-geometry-oracle-mcp*.zip
-*-deploy*.zip
-lambda-deployment-*.zip
 
 # IDE workspace files (updated)
 .vscode/settings.json
