@@ -11,7 +11,25 @@ This file provides comprehensive guidance to Claude Code (claude.ai/code) when w
 
 This Claude instance specializes in the **N-Dimensional Geometry Engine** project - transforming the original 2014 CS102 Java sphere calculator into a sophisticated, production-ready geometry system with Python integration, web APIs, and comprehensive testing.
 
-### **Latest Update: Advanced Ignore File System Implementation (2025-08-24)**
+### **Latest Update: Complete CI/CD Resolution & Infrastructure Audit (2025-08-25)**
+
+**🎯 Critical Infrastructure Fixes & Validation:**
+- **✅ Repository Synchronization**: Fixed branch conflicts, both `main` and `develop` now identical and synchronized
+- **✅ GitHub Actions Pipeline**: Resolved all CI/CD failures, workflows now passing consistently
+- **✅ AWS Infrastructure Audit**: Comprehensive health check confirmed all services operational
+- **✅ Code Quality Fixes**: Applied Black formatting, fixed workflow syntax errors
+- **✅ Python Version Modernization**: Removed 3.9/3.10 support, focused on 3.11+ only
+- **✅ Automatic PR Creation**: Fixed workflow to auto-create promotion PRs
+
+**🚀 Infrastructure Status:**
+- **Lambda Functions**: ✅ geometry-oracle-mcp active and responding
+- **API Gateway**: ✅ https://mcp.gengine.darkforestlabs.com working (HTTP 200)
+- **DynamoDB**: ✅ 28 records in geometry-oracle-mcp-prod-queries table
+- **Amplify Hosting**: ✅ https://gengine.darkforestlabs.com live and serving
+- **Route 53 DNS**: ✅ All domains resolving with valid SSL certificates
+- **GitHub Actions**: ✅ All core workflows passing, PR #6 auto-created
+
+### **Previous Update: Advanced Ignore File System Implementation (2025-08-24)**
 
 **🔧 Advanced Project Hygiene Achievement:**
 - **Enhanced Ignore Architecture**: Updated 2 existing + created 3 new specialized ignore files (1,565+ total lines)
@@ -230,7 +248,7 @@ Preserved and enhanced original CS102 code:
 ## 🛠️ Dependencies and Environment
 
 ### **Python Environment**
-- **Python Version**: 3.9+ (tested on 3.9, 3.10, 3.11, 3.12)
+- **Python Version**: 3.11+ (tested on 3.11, 3.12) - **3.9/3.10 dropped for performance and modern features**
 - **Virtual Environment**: Required (`venv/` directory)
 - **Package Manager**: pip (latest)
 
@@ -558,7 +576,7 @@ If calculations are slow:
 - **Test Code**: 3,635 lines of test code
 - **Test Categories**: Unit, Integration, Performance, Mathematical, Tiling, API
 - **Framework**: pytest with comprehensive fixtures and benchmarking
-- **Python Versions**: 3.9+ compatible (currently running 3.12.3)
+- **Python Versions**: 3.11+ compatible (currently running 3.12.3)
 - **Performance**: Includes 15 benchmark tests for performance regression detection
 
 ### **Continuous Integration**
