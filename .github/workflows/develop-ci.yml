@@ -181,8 +181,7 @@ jobs:
           EOF
           )" \
             --base main \
-            --head develop \
-            --assignee "@me"
+            --head develop
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
