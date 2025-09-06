@@ -11,23 +11,23 @@ This file provides comprehensive guidance to Claude Code (claude.ai/code) when w
 
 This Claude instance specializes in the **N-Dimensional Geometry Engine** project - transforming the original 2014 CS102 Java sphere calculator into a sophisticated, production-ready geometry system with Python integration, web APIs, and comprehensive testing.
 
-### **Latest Update: Complete CI/CD Resolution & Infrastructure Audit (2025-08-25)**
+### **Latest Update: Complete Deployment Architecture Fix (2025-09-06)**
 
-**🎯 Critical Infrastructure Fixes & Validation:**
+**🎯 Critical Infrastructure & Deployment Resolution:**
 - **✅ Repository Synchronization**: Fixed branch conflicts, both `main` and `develop` now identical and synchronized
 - **✅ GitHub Actions Pipeline**: Resolved all CI/CD failures, workflows now passing consistently
 - **✅ AWS Infrastructure Audit**: Comprehensive health check confirmed all services operational
-- **✅ Code Quality Fixes**: Applied Black formatting, fixed workflow syntax errors
-- **✅ Python Version Modernization**: Removed 3.9/3.10 support, focused on 3.11+ only
-- **✅ Automatic PR Creation**: Fixed workflow to auto-create promotion PRs
+- **✅ Amplify Deployment Architecture Fix**: Removed manual deployments, proper GitHub integration now working
+- **✅ Workflow Conflicts Resolution**: Eliminated duplicate conflicting workflows
+- **✅ AWS Credential Configuration**: Fixed secret names and Lambda function references
 
 **🚀 Infrastructure Status:**
 - **Lambda Functions**: ✅ geometry-oracle-mcp active and responding
-- **API Gateway**: ✅ https://mcp.gengine.darkforestlabs.com working (HTTP 200)
-- **DynamoDB**: ✅ 28 records in geometry-oracle-mcp-prod-queries table
-- **Amplify Hosting**: ✅ https://gengine.darkforestlabs.com live and serving
+- **API Gateway**: ✅ https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp working
+- **DynamoDB**: ✅ geometry-oracle-mcp-prod-queries table operational with live logging
+- **Amplify Hosting**: ✅ https://gengine.darkforestlabs.com - automatic GitHub deployment working
 - **Route 53 DNS**: ✅ All domains resolving with valid SSL certificates
-- **GitHub Actions**: ✅ All core workflows passing, PR #6 auto-created
+- **GitHub Actions**: ✅ All core workflows passing, proper deployment architecture implemented
 
 ### **Previous Update: Advanced Ignore File System Implementation (2025-08-24)**
 

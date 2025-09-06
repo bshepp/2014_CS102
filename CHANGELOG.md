@@ -4,6 +4,52 @@ All notable changes to the GeometryOracle N-Dimensional Geometry Engine project 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.3] - 2025-09-06
+
+### 🚀 Complete Deployment Architecture Resolution - Proper GitHub Integration
+
+**Major deployment pipeline fixes and infrastructure optimization:**
+
+#### **✅ Amplify Deployment Architecture Fix**
+- **Removed manual deployment**: Eliminated incorrect manual Amplify deployments from GitHub Actions
+- **Proper GitHub Integration**: Amplify now automatically builds on main branch pushes via GitHub webhooks
+- **Workflow Optimization**: GitHub Actions focuses solely on backend Lambda deployments
+- **Architecture Alignment**: Fixed "manual deployment" issue - now fully automated end-to-end
+
+#### **✅ GitHub Actions Workflow Conflicts Resolution**
+- **Duplicate Workflow Elimination**: Removed conflicting `production-deploy.yml` workflow  
+- **AWS Credential Configuration**: Fixed secret names and Lambda function references
+- **Proper Job Dependencies**: Updated workflow dependencies to reflect new architecture
+- **Clean Deployment Pipeline**: Streamlined workflow removing unnecessary manual steps
+
+#### **✅ Infrastructure Validation & Health Check**
+- **Lambda Functions**: Confirmed `geometry-oracle-mcp` active and properly configured
+- **API Gateway**: Verified https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp operational
+- **DynamoDB**: Validated live data logging in `geometry-oracle-mcp-prod-queries` table
+- **Amplify Hosting**: Confirmed automatic GitHub integration working (jobs running)
+- **GitHub Actions**: All workflows passing with proper deployment architecture
+
+### **Technical Implementation**
+- **Deployment Strategy**: Frontend via Amplify GitHub integration, Backend via GitHub Actions
+- **Webhook Configuration**: Amplify automatically triggers on GitHub pushes to main
+- **Workflow Simplification**: Reduced GitHub Actions complexity by removing manual steps
+- **Error Resolution**: Fixed BadRequestException and deployment ID conflicts
+
+### **Fixed**
+- **Manual Amplify deployment approach** (replaced with proper GitHub integration)
+- **Duplicate conflicting GitHub Actions workflows**
+- **AWS credential secret naming inconsistencies**
+- **Lambda function name mismatches in deployment scripts**
+- **Workflow job dependency references**
+- **Deployment pipeline architecture misalignment**
+
+### **Architecture Status**
+- **Frontend Deployment**: ✅ Automatic via Amplify GitHub integration
+- **Backend Deployment**: ✅ GitHub Actions Lambda deployment  
+- **CI/CD Pipeline**: ✅ All workflows passing with proper separation of concerns
+- **AWS Infrastructure**: ✅ All services operational and properly integrated
+- **Automation Level**: ✅ Fully automated without manual intervention
+
 ## [1.4.2] - 2025-08-25
 
 ### 🎯 Critical Infrastructure Resolution - Complete CI/CD & AWS Audit
