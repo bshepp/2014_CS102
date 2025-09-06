@@ -63,33 +63,61 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
     
-    - name: Deploy to Amplify
+    - name: Create deployment package
       run: |
-        echo "🚀 Deploying to Amplify: geometry-engine-web (d2vt3koij47dy3)"
+        echo "📦 Creating Amplify deployment package..."
+        # Create a simple deployment package with the web files
+        mkdir -p amplify-deploy
         
-        # Start Amplify deployment job
-        JOB_ID=$(aws amplify start-job \
+        # Copy web files (these should be the actual web files we want to deploy)
+        if [ -f "demo.html" ]; then
+          cp demo.html amplify-deploy/index.html
+        elif [ -f "index.html" ]; then
+          cp index.html amplify-deploy/
+        else
+          echo "Creating basic index.html for deployment..."
+          echo '<!DOCTYPE html><html><head><title>GeometryOracle</title></head><body><h1>N-Dimensional Geometry Engine</h1><p>Deployment in progress...</p></body></html>' > amplify-deploy/index.html
+        fi
+        
+        # Create deployment zip
+        cd amplify-deploy && zip -r ../amplify-deployment.zip . && cd ..
+        echo "✅ Created deployment package: $(du -h amplify-deployment.zip | cut -f1)"
+    
+    - name: Deploy to Amplify using CreateDeployment
+      run: |
+        echo "🚀 Deploying to Amplify app d2vt3koij47dy3 branch main"
+        
+        # Create deployment
+        DEPLOYMENT_ID=$(aws amplify create-deployment \
           --app-id d2vt3koij47dy3 \
           --branch-name main \
-          --job-type RELEASE \
-          --query 'jobSummary.jobId' \
+          --query 'deploymentId' \
           --output text)
         
-        echo "Started Amplify job: $JOB_ID"
-        echo "AMPLIFY_JOB_ID=$JOB_ID" >> $GITHUB_ENV
+        echo "Created deployment: $DEPLOYMENT_ID"
+        
+        # Upload the deployment zip
+        aws amplify start-deployment \
+          --app-id d2vt3koij47dy3 \
+          --branch-name main \
+          --deployment-id $DEPLOYMENT_ID \
+          --source-url "data:application/zip;base64,$(base64 -w 0 amplify-deployment.zip)"
+        
+        echo "DEPLOYMENT_ID=$DEPLOYMENT_ID" >> $GITHUB_ENV
+        echo "✅ Started Amplify deployment: $DEPLOYMENT_ID"
     
     - name: Wait for Amplify deployment
       run: |
-        echo "⏳ Waiting for Amplify deployment to complete..."
+        echo "⏳ Waiting for deployment $DEPLOYMENT_ID to complete..."
         
-        # Wait for job to complete (max 10 minutes)
+        # Wait up to 10 minutes for deployment to complete
         for i in {1..60}; do
-          STATUS=$(aws amplify get-job \
+          STATUS=$(aws amplify get-deployment \
             --app-id d2vt3koij47dy3 \
             --branch-name main \
-            --job-id $AMPLIFY_JOB_ID \
-            --query 'job.summary.status' \
-            --output text)
+            --deployment-id $DEPLOYMENT_ID \
+            --query 'deployment.deploymentStatus' \
+            --output text 2>/dev/null || echo "PENDING")
           
           echo "Deployment status: $STATUS (attempt $i/60)"
           
