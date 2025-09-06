@@ -2,7 +2,7 @@
 # Multi-stage build optimized for AWS deployment with MCP server support
 
 # Build stage
-FROM python:3.12-slim AS builder
+FROM python:3.11-slim AS builder
 
 # Set build environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -20,18 +20,15 @@ WORKDIR /app
 
 # Copy requirements first for better layer caching
 COPY requirements.txt .
-
-# Install Python dependencies
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
-
-# Install MCP server dependencies if available
-RUN echo "# Fallback MCP requirements file" > mcp-requirements.txt
 COPY mcp-server/requirements.txt mcp-requirements.txt
-RUN pip install --no-cache-dir -r mcp-requirements.txt
+
+# Install Python dependencies (both main and MCP server)
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir -r mcp-requirements.txt
 
 # Production stage
-FROM python:3.12-slim AS production
+FROM python:3.11-slim AS production
 
 # Set production environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -50,7 +47,7 @@ RUN apt-get update && apt-get install -y \
 # Java tools (javac/java) are on PATH via alternatives; JAVA_HOME not required
 
 # Copy Python dependencies from builder stage
-COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 
 # Create non-root user for security

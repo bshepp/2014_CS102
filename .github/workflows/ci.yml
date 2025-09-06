@@ -10,7 +10,7 @@ on:
     - cron: '0 2 * * *'
 
 env:
-  PYTHON_VERSION: '3.12'
+  PYTHON_VERSION: '3.11'
   NODE_VERSION: '18'
   JAVA_VERSION: '11'
 
@@ -26,7 +26,7 @@ jobs:
           fetch-depth: 0
 
       - name: 🐍 Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
@@ -84,19 +84,19 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.12']
+        python-version: ['3.11', '3.12']
     
     steps:
       - name: 📥 Checkout Code
         uses: actions/checkout@v4
 
       - name: 🐍 Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: ☕ Setup Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: ${{ env.JAVA_VERSION }}
@@ -128,12 +128,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 🐍 Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
       - name: ☕ Setup Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: ${{ env.JAVA_VERSION }}
@@ -146,12 +146,8 @@ jobs:
 
       - name: ☕ Compile Java Classes
         run: |
-          # Compile Java files in their organized location with error handling
-          if [ -d "src/java/original" ]; then
-            cd src/java/original && javac *.java 2>/dev/null || echo "Java compilation skipped (optional)"
-          else
-            echo "Java source directory not found - skipping compilation"
-          fi
+          # Compile Java files in their new organized location
+          cd src/java/original && javac *.java
 
       - name: 🚀 Start API Server
         run: |
@@ -194,7 +190,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 🐍 Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
@@ -218,7 +214,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 🐍 Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
@@ -245,12 +241,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 🐍 Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
       - name: ☕ Setup Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: ${{ env.JAVA_VERSION }}
@@ -294,7 +290,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 🐍 Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
@@ -325,7 +321,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 🐍 Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 

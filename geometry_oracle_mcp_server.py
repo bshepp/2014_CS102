@@ -20,7 +20,7 @@ import json
 import logging
 import os
 import sys
-from typing import Any, Optional
+from typing import Any, Dict, List, Optional
 
 import httpx
 from mcp.server.fastmcp import FastMCP
@@ -50,8 +50,8 @@ class AWSMCPProxy:
         self.client = httpx.AsyncClient(timeout=30.0)
 
     async def call_aws_tool(
-        self, tool_name: str, arguments: dict[str, Any]
-    ) -> dict[str, Any]:
+        self, tool_name: str, arguments: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Call AWS MCP server and return result"""
         request_data = {
             "jsonrpc": "2.0",
@@ -95,7 +95,7 @@ async def calculate_hypersphere(
     radius: float,
     session_id: Optional[str] = None,
     client_info: Optional[str] = None,
-) -> dict[str, Any]:
+) -> Dict[str, Any]:
     """
     Calculate volume and surface area of N-dimensional hypersphere.
 
@@ -124,7 +124,7 @@ async def calculate_hypercube(
     side_length: float,
     session_id: Optional[str] = None,
     client_info: Optional[str] = None,
-) -> dict[str, Any]:
+) -> Dict[str, Any]:
     """
     Calculate volume and surface area of N-dimensional hypercube.
 
@@ -149,10 +149,10 @@ async def calculate_hypercube(
 
 @mcp.tool()
 async def compare_shapes(
-    shapes: list[dict[str, Any]],
+    shapes: List[Dict[str, Any]],
     session_id: Optional[str] = None,
     client_info: Optional[str] = None,
-) -> dict[str, Any]:
+) -> Dict[str, Any]:
     """
     Compare volumes and properties of multiple N-dimensional shapes.
 
@@ -181,7 +181,7 @@ async def compare_shapes(
 
 
 @mcp.tool()
-async def get_usage_statistics(days: int = 7) -> dict[str, Any]:
+async def get_usage_statistics(days: int = 7) -> Dict[str, Any]:
     """
     Get usage statistics for the GeometryOracle MCP server.
 
@@ -200,7 +200,7 @@ async def get_server_status() -> str:
     """Get current server status and health"""
     try:
         # Test AWS connectivity
-        await aws_proxy.call_aws_tool("get_usage_statistics", {"days": 1})
+        test_result = await aws_proxy.call_aws_tool("get_usage_statistics", {"days": 1})
         status = {
             "status": "healthy",
             "aws_endpoint": AWS_ENDPOINT,
@@ -264,7 +264,9 @@ def main():
     # Test AWS connectivity on startup
     async def test_connectivity():
         try:
-            await aws_proxy.call_aws_tool("get_usage_statistics", {"days": 1})
+            test_result = await aws_proxy.call_aws_tool(
+                "get_usage_statistics", {"days": 1}
+            )
             logger.info("✅ AWS connectivity verified")
         except Exception as e:
             logger.error(f"❌ AWS connectivity failed: {e}")
