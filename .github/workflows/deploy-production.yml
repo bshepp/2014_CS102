@@ -49,111 +49,23 @@ jobs:
         # Simple performance check - API response time
         time curl -f http://localhost:8000/api/health
 
-  deploy-frontend-production:
+  # Note: Frontend deployment handled automatically by Amplify
+  # The Amplify app is connected to GitHub and should auto-deploy on main branch pushes
+  verify-frontend-available:
     needs: pre-deployment-checks
     runs-on: ubuntu-latest
-    environment: production
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v2
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ env.AWS_REGION }}
-    
-    - name: Create deployment package
+    - name: Verify frontend is accessible
       run: |
-        echo "📦 Creating Amplify deployment package..."
-        # Create a simple deployment package with the web files
-        mkdir -p amplify-deploy
-        
-        # Copy web files (these should be the actual web files we want to deploy)
-        if [ -f "demo.html" ]; then
-          cp demo.html amplify-deploy/index.html
-        elif [ -f "index.html" ]; then
-          cp index.html amplify-deploy/
-        else
-          echo "Creating basic index.html for deployment..."
-          echo '<!DOCTYPE html><html><head><title>GeometryOracle</title></head><body><h1>N-Dimensional Geometry Engine</h1><p>Deployment in progress...</p></body></html>' > amplify-deploy/index.html
-        fi
-        
-        # Create deployment zip
-        cd amplify-deploy && zip -r ../amplify-deployment.zip . && cd ..
-        echo "✅ Created deployment package: $(du -h amplify-deployment.zip | cut -f1)"
-    
-    - name: Connect repository and trigger Amplify build
-      run: |
-        echo "🚀 Triggering Amplify build for connected repository"
-        
-        # The issue is that our app should be connected to GitHub repository
-        # Let's first check if we can update the app to connect to repository
-        echo "Checking current app configuration..."
-        
-        # Instead of manual deployment, trigger a webhook or build
-        # Since we can't easily connect the repo via CLI, let's use a different approach
-        # Trigger build by updating the branch configuration
-        aws amplify update-branch \
-          --app-id d2vt3koij47dy3 \
-          --branch-name main \
-          --description "Triggered from GitHub Actions - $(date)" \
-          --enable-auto-build || echo "Branch update completed"
-        
-        # Now trigger the build job
-        JOB_ID=$(aws amplify start-job \
-          --app-id d2vt3koij47dy3 \
-          --branch-name main \
-          --job-type RELEASE \
-          --query 'jobSummary.jobId' \
-          --output text)
-        
-        echo "JOB_ID=$JOB_ID" >> $GITHUB_ENV
-        echo "✅ Started Amplify build job: $JOB_ID"
-    
-    - name: Wait for Amplify deployment
-      run: |
-        echo "⏳ Waiting for deployment job $JOB_ID to complete..."
-        
-        # Wait up to 10 minutes for deployment to complete
-        for i in {1..60}; do
-          STATUS=$(aws amplify get-job \
-            --app-id d2vt3koij47dy3 \
-            --branch-name main \
-            --job-id "$JOB_ID" \
-            --query 'job.summary.status' \
-            --output text 2>/dev/null || echo "PENDING")
-          
-          echo "Deployment status: $STATUS (attempt $i/60)"
-          
-          if [ "$STATUS" = "SUCCEED" ]; then
-            echo "✅ Amplify deployment completed successfully!"
-            break
-          elif [ "$STATUS" = "FAILED" ] || [ "$STATUS" = "CANCELLED" ]; then
-            echo "❌ Amplify deployment failed with status: $STATUS"
-            exit 1
-          fi
-          
-          sleep 10
-        done
-        
-        # Final status check
-        if [ "$STATUS" != "SUCCEED" ]; then
-          echo "❌ Deployment timed out or failed. Final status: $STATUS"
-          exit 1
-        fi
-    
-    - name: Verify production deployment
-      run: |
-        echo "🔍 Verifying production deployment..."
-        sleep 30  # Allow DNS/CDN propagation
+        echo "🔍 Verifying frontend accessibility..."
+        echo "Note: Amplify handles deployment automatically via GitHub integration"
         
         # Test production URL
         if curl -f -s -o /dev/null https://gengine.darkforestlabs.com; then
-          echo "✅ Frontend deployment successful: https://gengine.darkforestlabs.com"
+          echo "✅ Frontend is accessible: https://gengine.darkforestlabs.com"
         else
-          echo "⚠️ Frontend check failed, but deployment may still be propagating"
-          echo "Check manually: https://gengine.darkforestlabs.com"
+          echo "⚠️ Frontend check failed - Amplify may still be deploying"
+          echo "Check Amplify console: https://console.aws.amazon.com/amplify/"
         fi
 
   deploy-backend-lambda-production:
@@ -279,8 +191,8 @@ jobs:
         echo "Skipping ECS deployment - use Lambda deployment instead"
 
   post-deployment-verification:
-    needs: [deploy-frontend-production, deploy-backend-lambda-production, deploy-backend-ecs-production]
-    if: always() && (needs.deploy-frontend-production.result == 'success' && (needs.deploy-backend-lambda-production.result == 'success' || needs.deploy-backend-lambda-production.result == 'skipped') && (needs.deploy-backend-ecs-production.result == 'success' || needs.deploy-backend-ecs-production.result == 'skipped'))
+    needs: [verify-frontend-available, deploy-backend-lambda-production, deploy-backend-ecs-production]
+    if: always() && (needs.verify-frontend-available.result == 'success' && (needs.deploy-backend-lambda-production.result == 'success' || needs.deploy-backend-lambda-production.result == 'skipped') && (needs.deploy-backend-ecs-production.result == 'success' || needs.deploy-backend-ecs-production.result == 'skipped'))
     runs-on: ubuntu-latest
     steps:
     - name: Comprehensive production health check
@@ -320,7 +232,7 @@ jobs:
         echo "✅ Deployment completed successfully"
 
   rollback-on-failure:
-    needs: [deploy-frontend-production, deploy-backend-lambda-production, deploy-backend-ecs-production, post-deployment-verification]
+    needs: [verify-frontend-available, deploy-backend-lambda-production, deploy-backend-ecs-production, post-deployment-verification]
     if: failure()
     runs-on: ubuntu-latest
     environment: production
