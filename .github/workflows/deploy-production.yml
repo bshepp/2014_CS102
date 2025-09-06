@@ -87,36 +87,47 @@ jobs:
       run: |
         echo "🚀 Deploying to Amplify app d2vt3koij47dy3 branch main"
         
-        # Create deployment
-        DEPLOYMENT_ID=$(aws amplify create-deployment \
+        # Create deployment and get upload URL
+        DEPLOYMENT_RESULT=$(aws amplify create-deployment \
           --app-id d2vt3koij47dy3 \
           --branch-name main \
-          --query 'deploymentId' \
-          --output text)
+          --output json)
         
-        echo "Created deployment: $DEPLOYMENT_ID"
+        echo "Deployment result: $DEPLOYMENT_RESULT"
         
-        # Upload the deployment zip
+        # Extract jobId and uploadUrl
+        JOB_ID=$(echo "$DEPLOYMENT_RESULT" | jq -r '.jobId')
+        UPLOAD_URL=$(echo "$DEPLOYMENT_RESULT" | jq -r '.zipUploadUrl')
+        
+        echo "Job ID: $JOB_ID"
+        echo "Upload URL: $UPLOAD_URL"
+        
+        # Upload the deployment zip to the provided URL
+        curl -X PUT \
+          -T amplify-deployment.zip \
+          "$UPLOAD_URL"
+        
+        # Start the deployment
         aws amplify start-deployment \
           --app-id d2vt3koij47dy3 \
           --branch-name main \
-          --deployment-id $DEPLOYMENT_ID \
-          --source-url "data:application/zip;base64,$(base64 -w 0 amplify-deployment.zip)"
+          --job-id "$JOB_ID" \
+          --source-url "$UPLOAD_URL"
         
-        echo "DEPLOYMENT_ID=$DEPLOYMENT_ID" >> $GITHUB_ENV
-        echo "✅ Started Amplify deployment: $DEPLOYMENT_ID"
+        echo "JOB_ID=$JOB_ID" >> $GITHUB_ENV
+        echo "✅ Started Amplify deployment: $JOB_ID"
     
     - name: Wait for Amplify deployment
       run: |
-        echo "⏳ Waiting for deployment $DEPLOYMENT_ID to complete..."
+        echo "⏳ Waiting for deployment job $JOB_ID to complete..."
         
         # Wait up to 10 minutes for deployment to complete
         for i in {1..60}; do
-          STATUS=$(aws amplify get-deployment \
+          STATUS=$(aws amplify get-job \
             --app-id d2vt3koij47dy3 \
             --branch-name main \
-            --deployment-id $DEPLOYMENT_ID \
-            --query 'deployment.deploymentStatus' \
+            --job-id "$JOB_ID" \
+            --query 'job.summary.status' \
             --output text 2>/dev/null || echo "PENDING")
           
           echo "Deployment status: $STATUS (attempt $i/60)"
