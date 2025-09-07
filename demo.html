@@ -10,7 +10,7 @@
     <meta property="og:title" content="N-Dimensional Geometry Engine">
     <meta property="og:description" content="Interactive geometry calculator supporting 1D to 100D+ shapes with AI assistance">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://geometry-engine-api.com">
+    <meta property="og:url" content="https://gengine.darkforestlabs.com">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="N-Dimensional Geometry Engine">
     <meta name="twitter:description" content="Interactive geometry calculator supporting 1D to 100D+ shapes">
@@ -50,6 +50,20 @@
         .header p {
             font-size: 1.2em;
             opacity: 0.9;
+        }
+        
+        .status-banner {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4CAF50;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .status-banner.error {
+            background: rgba(244, 67, 54, 0.2);
+            border-color: #f44336;
         }
         
         .demo-grid {
@@ -115,6 +129,12 @@
         .btn:hover {
             background: #45a049;
             transform: translateY(-2px);
+        }
+        
+        .btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
         }
         
         .btn-secondary {
@@ -213,358 +233,467 @@
     <div class="container">
         <header class="header" role="banner">
             <h1>🌌 N-Dimensional Geometry Engine</h1>
-            <p>Interactive Demo - From CS102 to Infinite Dimensions</p>
+            <p>Interactive Demo - Powered by MCP Server</p>
         </header>
+
+        <div id="statusBanner" class="status-banner">
+            🔄 Checking MCP server connection...
+        </div>
         
         <main class="demo-grid" role="main">
-            <!-- Sphere Creator Panel -->
+            <!-- Hypersphere Calculator Panel -->
             <div class="panel">
-                <h2>🔢 Create N-Dimensional Sphere</h2>
+                <h2>🔮 N-Dimensional Hypersphere</h2>
                 <div class="input-group">
-                    <label for="dimensions">Dimensions (1-100):</label>
-                    <input type="number" id="dimensions" min="1" max="100" value="3" aria-label="Number of dimensions for the sphere" />
+                    <label for="sphereDimensions">Dimensions (1-100):</label>
+                    <input type="number" id="sphereDimensions" min="1" max="100" value="3" aria-label="Number of dimensions for the hypersphere" />
                 </div>
                 <div class="input-group">
-                    <label for="radius">Radius:</label>
-                    <input type="number" id="radius" min="0.1" step="0.1" value="1.0" aria-label="Radius of the sphere" />
+                    <label for="sphereRadius">Radius:</label>
+                    <input type="number" id="sphereRadius" min="0.1" step="0.1" value="1.0" aria-label="Radius of the hypersphere" />
                 </div>
-                <button class="btn" onclick="createSphere()" aria-label="Create N-dimensional sphere">Create Sphere</button>
+                <button class="btn" onclick="calculateHypersphere()" aria-label="Calculate hypersphere properties">Calculate Hypersphere</button>
                 <div id="sphereResult" class="result" style="display: none;"></div>
             </div>
             
-            <!-- Natural Language Query Panel -->
+            <!-- Hypercube Calculator Panel -->
             <div class="panel">
-                <h2>🤖 AI Query Interface</h2>
+                <h2>📦 N-Dimensional Hypercube</h2>
                 <div class="input-group">
-                    <label for="nlQuery">Ask anything about geometry:</label>
-                    <textarea id="nlQuery" rows="3" aria-label="Natural language geometry query" placeholder="Examples:
-• create a 5D sphere with radius 2
-• volume of 4D sphere radius 1.5
-• compare sphere vs cube in 6 dimensions
-• explain how volume scales with dimension"></textarea>
+                    <label for="cubeDimensions">Dimensions (1-100):</label>
+                    <input type="number" id="cubeDimensions" min="1" max="100" value="3" aria-label="Number of dimensions for the hypercube" />
                 </div>
-                <button class="btn btn-secondary" onclick="processQuery()" aria-label="Submit query to AI">Ask AI</button>
-                <div id="queryResult" class="result" style="display: none;"></div>
+                <div class="input-group">
+                    <label for="cubeSide">Side Length:</label>
+                    <input type="number" id="cubeSide" min="0.1" step="0.1" value="1.0" aria-label="Side length of the hypercube" />
+                </div>
+                <button class="btn" onclick="calculateHypercube()" aria-label="Calculate hypercube properties">Calculate Hypercube</button>
+                <div id="cubeResult" class="result" style="display: none;"></div>
             </div>
             
-            <!-- Original Java Integration Panel -->
+            <!-- Shape Comparison Panel -->
             <div class="panel">
-                <h2>☕ Original CS102 Java Code</h2>
+                <h2>⚖️ Compare Shapes</h2>
                 <div class="input-group">
-                    <label for="diameter">Diameter (for original code):</label>
-                    <input type="number" id="diameter" min="0.1" step="0.1" value="2.0" aria-label="Diameter for original Java code" />
+                    <label for="compareDimensions">Dimensions:</label>
+                    <input type="number" id="compareDimensions" min="1" max="100" value="4" aria-label="Dimensions for shape comparison" />
                 </div>
-                <button class="btn btn-warning" onclick="runOriginalJava()" aria-label="Run original CS102 Java code">Run Original Java</button>
-                <div id="javaResult" class="result" style="display: none;"></div>
+                <div class="input-group">
+                    <label for="compareSize">Size (radius/side):</label>
+                    <input type="number" id="compareSize" min="0.1" step="0.1" value="2.0" aria-label="Size parameter for shapes" />
+                </div>
+                <button class="btn btn-secondary" onclick="compareShapes()" aria-label="Compare hypersphere and hypercube">Compare Shapes</button>
+                <div id="compareResult" class="result" style="display: none;"></div>
             </div>
             
-            <!-- Dimension Explorer Panel -->
+            <!-- Usage Statistics Panel -->
             <div class="panel">
-                <h2>📊 Dimension Explorer</h2>
+                <h2>📊 Server Statistics</h2>
                 <div class="input-group">
-                    <label for="exploreDim">Explore dimension:</label>
-                    <input type="number" id="exploreDim" min="1" max="100" value="5" aria-label="Dimension to explore" />
+                    <label for="statsDays">Days to analyze:</label>
+                    <input type="number" id="statsDays" min="1" max="30" value="7" aria-label="Number of days for statistics" />
                 </div>
-                <button class="btn" onclick="exploreDimension()" aria-label="Explore selected dimension">Explore</button>
-                <div id="dimensionResult" class="result" style="display: none;"></div>
+                <button class="btn btn-warning" onclick="getUsageStatistics()" aria-label="Get server usage statistics">Get Statistics</button>
+                <div id="statsResult" class="result" style="display: none;"></div>
             </div>
             
-            <!-- Visualization Panel -->
+            <!-- Batch Calculations Panel -->
             <div class="panel visualization-panel">
-                <h2>📈 Interactive Visualization</h2>
+                <h2>🚀 Dimension Scaling Analysis</h2>
                 <div class="input-group">
-                    <label for="vizDim">Visualization Dimensions (1-4):</label>
-                    <select id="vizDim" aria-label="Visualization dimensions">
-                        <option value="1">1D - Line Segment</option>
-                        <option value="2">2D - Circle</option>
-                        <option value="3" selected>3D - Sphere</option>
-                        <option value="4">4D - Cross-section</option>
+                    <label for="scalingShape">Shape Type:</label>
+                    <select id="scalingShape" aria-label="Shape type for scaling analysis">
+                        <option value="hypersphere">Hypersphere</option>
+                        <option value="hypercube">Hypercube</option>
                     </select>
                 </div>
                 <div class="input-group">
-                    <label for="vizRadius">Radius:</label>
-                    <input type="number" id="vizRadius" min="0.1" step="0.1" value="1.0" aria-label="Radius for visualization" />
+                    <label for="scalingProperty">Property to Analyze:</label>
+                    <select id="scalingProperty" aria-label="Property for scaling analysis">
+                        <option value="volume">Volume</option>
+                        <option value="surface_area">Surface Area</option>
+                    </select>
                 </div>
-                <div class="input-group" id="crossSectionGroup" style="display: none;">
-                    <label for="crossSection">Cross-section position (for 4D):</label>
-                    <input type="number" id="crossSection" step="0.1" value="0.0" aria-label="Cross-section position for 4D visualization" />
+                <div class="input-group">
+                    <label for="scalingMaxDim">Maximum Dimension:</label>
+                    <input type="number" id="scalingMaxDim" min="2" max="20" value="10" aria-label="Maximum dimension for analysis" />
                 </div>
-                <button class="btn btn-secondary" onclick="createVisualization()" aria-label="Create visualization">Visualize</button>
-                <div id="visualization" style="margin-top: 20px;" role="img" aria-label="Geometry visualization"></div>
+                <button class="btn btn-secondary" onclick="analyzeDimensionScaling()" aria-label="Analyze dimension scaling">Analyze Scaling</button>
+                <div id="scalingVisualization" style="margin-top: 20px;" role="img" aria-label="Dimension scaling visualization"></div>
             </div>
         </main>
         
-        <!-- Quick Stats Panel -->
+        <!-- Quick Info Panel -->
         <div class="panel">
-            <h2>⚡ Quick Dimensional Comparison</h2>
-            <div class="dimension-slider">
-                <label for="dimSlider">Dimension: <span id="dimValue">3</span></label>
-                <input type="range" id="dimSlider" min="1" max="20" value="3" oninput="updateDimensionComparison()" aria-label="Dimension slider" />
-            </div>
-            <div id="dimensionInfo" class="dimension-info">
-                <!-- Populated by JavaScript -->
-            </div>
+            <h2>ℹ️ MCP Server Information</h2>
+            <p>This interface connects to the GeometryOracle MCP Server deployed on AWS Lambda.</p>
+            <p><strong>Available Tools:</strong></p>
+            <ul style="list-style: none; padding-left: 0;">
+                <li>✅ calculate_hypersphere - N-dimensional sphere calculations</li>
+                <li>✅ calculate_hypercube - N-dimensional cube calculations</li>
+                <li>✅ compare_shapes - Compare different geometric shapes</li>
+                <li>✅ get_usage_statistics - Server usage analytics</li>
+                <li>✅ batch_geometry_calculations - Process multiple shapes</li>
+                <li>✅ analyze_dimension_scaling - Analyze property scaling</li>
+            </ul>
+            <p style="margin-top: 15px;"><small>MCP Endpoint: <code id="mcpEndpoint">Loading...</code></small></p>
         </div>
     </div>
     
     <script>
-        // API base URL - Switch based on environment
-        const API_BASE = window.location.hostname === 'localhost' 
-            ? 'http://localhost:8000/api'
-            : 'https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod';
+        // MCP Server configuration
+        const MCP_ENDPOINT = window.location.hostname === 'localhost' 
+            ? 'http://localhost:8000/mcp'  // For local testing with a proxy
+            : 'https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp';
         
-        // Show/hide cross-section input for 4D
-        document.getElementById('vizDim').addEventListener('change', function() {
-            const crossSectionGroup = document.getElementById('crossSectionGroup');
-            if (this.value === '4') {
-                crossSectionGroup.style.display = 'block';
-            } else {
-                crossSectionGroup.style.display = 'none';
-            }
+        let requestId = 1;
+
+        // Initialize and check server status
+        window.addEventListener('DOMContentLoaded', async () => {
+            document.getElementById('mcpEndpoint').textContent = MCP_ENDPOINT;
+            await checkServerStatus();
+            document.getElementById('dimSlider').addEventListener('input', updateDimensionComparison);
+            updateDimensionComparison();
         });
-        
-        // Create sphere
-        async function createSphere() {
-            const dimensions = document.getElementById('dimensions').value;
-            const radius = document.getElementById('radius').value;
+
+        // Check MCP server status
+        async function checkServerStatus() {
+            const statusBanner = document.getElementById('statusBanner');
+            try {
+                const response = await fetch(MCP_ENDPOINT, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    statusBanner.innerHTML = `✅ MCP Server Connected - Version ${data.version || '1.0.0'}`;
+                    statusBanner.classList.remove('error');
+                } else {
+                    throw new Error('Server not responding');
+                }
+            } catch (error) {
+                statusBanner.innerHTML = '⚠️ MCP Server Offline - Some features may be unavailable';
+                statusBanner.classList.add('error');
+                console.error('Server check failed:', error);
+            }
+        }
+
+        // Generic MCP tool caller
+        async function callMCPTool(toolName, args) {
+            const response = await fetch(MCP_ENDPOINT, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    jsonrpc: '2.0',
+                    method: 'tools/call',
+                    params: {
+                        name: toolName,
+                        arguments: args
+                    },
+                    id: requestId++
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            
+            if (data.error) {
+                throw new Error(data.error.message || 'Unknown error');
+            }
+            
+            return data.result;
+        }
+
+        // Calculate Hypersphere
+        async function calculateHypersphere() {
+            const dimensions = parseInt(document.getElementById('sphereDimensions').value);
+            const radius = parseFloat(document.getElementById('sphereRadius').value);
             const resultDiv = document.getElementById('sphereResult');
             
             try {
                 resultDiv.style.display = 'block';
-                resultDiv.innerHTML = '<div class="loading">Creating sphere...</div>';
+                resultDiv.innerHTML = '<div class="loading">Calculating hypersphere properties...</div>';
                 
-                const response = await fetch(`${API_BASE}/sphere`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
+                const result = await callMCPTool('calculate_hypersphere', {
+                    dimensions: dimensions,
+                    radius: radius
+                });
+                
+                resultDiv.innerHTML = `🔮 Hypersphere Results
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Dimensions: ${result.dimensions}D
+Radius: ${result.radius}
+Diameter: ${result.diameter}
+
+Volume: ${result.volume.toExponential(4)}
+Surface Area: ${result.surface_area.toExponential(4)}
+
+${getDimensionName(result.dimensions)}`;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        // Calculate Hypercube
+        async function calculateHypercube() {
+            const dimensions = parseInt(document.getElementById('cubeDimensions').value);
+            const sideLength = parseFloat(document.getElementById('cubeSide').value);
+            const resultDiv = document.getElementById('cubeResult');
+            
+            try {
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = '<div class="loading">Calculating hypercube properties...</div>';
+                
+                const result = await callMCPTool('calculate_hypercube', {
+                    dimensions: dimensions,
+                    side_length: sideLength
+                });
+                
+                resultDiv.innerHTML = `📦 Hypercube Results
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Dimensions: ${result.dimensions}D
+Side Length: ${result.side_length}
+
+Volume: ${result.volume.toExponential(4)}
+Surface Area: ${result.surface_area.toExponential(4)}
+Vertices: ${result.vertices}
+Edges: ${result.edges}
+Diagonal: ${result.diagonal.toFixed(4)}
+
+${getDimensionName(result.dimensions, 'cube')}`;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        // Compare Shapes
+        async function compareShapes() {
+            const dimensions = parseInt(document.getElementById('compareDimensions').value);
+            const size = parseFloat(document.getElementById('compareSize').value);
+            const resultDiv = document.getElementById('compareResult');
+            
+            try {
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = '<div class="loading">Comparing shapes...</div>';
+                
+                const result = await callMCPTool('compare_shapes', {
+                    shapes: [
+                        {type: 'hypersphere', dimensions: dimensions, radius: size},
+                        {type: 'hypercube', dimensions: dimensions, side_length: size}
+                    ]
+                });
+                
+                const sphere = result.shapes[0];
+                const cube = result.shapes[1];
+                const comparison = result.comparison;
+                
+                resultDiv.innerHTML = `⚖️ Shape Comparison (${dimensions}D)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔮 Hypersphere (r=${size})
+  Volume: ${sphere.volume.toExponential(4)}
+  Surface: ${sphere.surface_area.toExponential(4)}
+
+📦 Hypercube (s=${size})
+  Volume: ${cube.volume.toExponential(4)}
+  Surface: ${cube.surface_area.toExponential(4)}
+
+📊 Comparison:
+  Volume Ratio: ${comparison.volume_ratio.toFixed(4)}
+  Surface Ratio: ${comparison.surface_area_ratio.toFixed(4)}
+  Larger Volume: ${comparison.larger_volume}`;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        // Get Usage Statistics
+        async function getUsageStatistics() {
+            const days = parseInt(document.getElementById('statsDays').value);
+            const resultDiv = document.getElementById('statsResult');
+            
+            try {
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = '<div class="loading">Fetching usage statistics...</div>';
+                
+                const result = await callMCPTool('get_usage_statistics', {
+                    days: days
+                });
+                
+                resultDiv.innerHTML = `📊 Usage Statistics (Last ${days} Days)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Total Queries: ${result.total_queries}
+Unique Sessions: ${result.unique_sessions}
+Average per Day: ${result.average_queries_per_day.toFixed(1)}
+
+Most Used Tools:
+${Object.entries(result.tool_usage)
+    .sort((a, b) => b[1] - a[1])
+    .map(([tool, count]) => `  • ${tool}: ${count}`)
+    .join('\n')}
+
+Peak Hour: ${result.peak_hour}
+Response Time: ${result.average_response_time_ms.toFixed(0)}ms`;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        // Analyze Dimension Scaling
+        async function analyzeDimensionScaling() {
+            const shapeType = document.getElementById('scalingShape').value;
+            const property = document.getElementById('scalingProperty').value;
+            const maxDim = parseInt(document.getElementById('scalingMaxDim').value);
+            const vizDiv = document.getElementById('scalingVisualization');
+            
+            try {
+                vizDiv.innerHTML = '<div class="loading">Analyzing dimension scaling...</div>';
+                
+                const result = await callMCPTool('analyze_dimension_scaling', {
+                    shape_type: shapeType,
+                    property: property,
+                    dimension_range: {start: 1, end: maxDim},
+                    parameter_value: 1.0
+                });
+                
+                // Create Plotly visualization
+                const trace = {
+                    x: result.dimensions,
+                    y: result.values,
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    name: `${property} scaling`,
+                    line: {
+                        color: '#4CAF50',
+                        width: 3
                     },
-                    body: JSON.stringify({
-                        dimensions: parseInt(dimensions),
-                        radius: parseFloat(radius)
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
-                    resultDiv.innerHTML = `
-🌟 ${data.shape_type} Created!
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Dimensions: ${data.dimensions}D
-Radius: ${data.radius}
-Diameter: ${data.diameter}
-Volume: ${data.volume.toFixed(6)}
-Surface Area: ${data.surface_area.toFixed(6)}
-
-📐 Formulas:
-Volume: ${data.volume_formula}
-Surface: ${data.surface_area_formula}
-                    `;
-                } else {
-                    resultDiv.innerHTML = `❌ Error: ${data.detail}`;
-                    resultDiv.className = 'result error';
-                }
-            } catch (error) {
-                resultDiv.innerHTML = `❌ Network error: ${error.message}`;
-                resultDiv.className = 'result error';
-            }
-        }
-        
-        // Process natural language query
-        async function processQuery() {
-            const query = document.getElementById('nlQuery').value;
-            const resultDiv = document.getElementById('queryResult');
-            
-            if (!query.trim()) {
-                alert('Please enter a query!');
-                return;
-            }
-            
-            try {
-                resultDiv.style.display = 'block';
-                resultDiv.innerHTML = '<div class="loading">Processing query...</div>';
-                
-                const response = await fetch(`${API_BASE}/query`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        query: query
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok && data.success) {
-                    resultDiv.innerHTML = `
-🤖 AI Response:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Query: "${data.query}"
-
-${data.response}
-                    `;
-                } else {
-                    resultDiv.innerHTML = `❌ ${data.response}`;
-                    resultDiv.className = 'result error';
-                }
-            } catch (error) {
-                resultDiv.innerHTML = `❌ Network error: ${error.message}`;
-                resultDiv.className = 'result error';
-            }
-        }
-        
-        // Run original Java code
-        async function runOriginalJava() {
-            const diameter = document.getElementById('diameter').value;
-            const resultDiv = document.getElementById('javaResult');
-            
-            try {
-                resultDiv.style.display = 'block';
-                resultDiv.innerHTML = '<div class="loading">Running original CS102 Java code...</div>';
-                
-                const response = await fetch(`${API_BASE}/original-java?diameter=${diameter}`, {
-                    method: 'POST'
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok && data.success) {
-                    resultDiv.innerHTML = `
-☕ Original CS102 Java Output:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Diameter: ${data.diameter}
-Java Available: ${data.java_available ? '✅ Yes' : '❌ No (using Python fallback)'}
-
-${data.result}
-                    `;
-                } else {
-                    resultDiv.innerHTML = `❌ Error: ${data.detail}`;
-                    resultDiv.className = 'result error';
-                }
-            } catch (error) {
-                resultDiv.innerHTML = `❌ Network error: ${error.message}`;
-                resultDiv.className = 'result error';
-            }
-        }
-        
-        // Explore dimension
-        async function exploreDimension() {
-            const dimension = document.getElementById('exploreDim').value;
-            const resultDiv = document.getElementById('dimensionResult');
-            
-            try {
-                resultDiv.style.display = 'block';
-                resultDiv.innerHTML = '<div class="loading">Exploring dimension...</div>';
-                
-                const response = await fetch(`${API_BASE}/dimensions/${dimension}`);
-                const data = await response.json();
-                
-                if (response.ok) {
-                    resultDiv.innerHTML = `
-📊 ${dimension}D Geometry Analysis:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Unit Sphere Properties:
-• Volume: ${data.unit_sphere.volume.toFixed(6)}
-• Surface Area: ${data.unit_sphere.surface_area.toFixed(6)}
-• Surface/Volume Ratio: ${data.insights.surface_to_volume_ratio.toFixed(3)}
-
-📐 Formulas:
-• Volume: ${data.unit_sphere.volume_formula}
-• Surface: ${data.unit_sphere.surface_formula}
-
-🔍 Mathematical Insights:
-• ${data.insights.mathematical_note}
-• ${data.insights.volume_peaks_at}
-                    `;
-                } else {
-                    resultDiv.innerHTML = `❌ Error: ${data.detail}`;
-                    resultDiv.className = 'result error';
-                }
-            } catch (error) {
-                resultDiv.innerHTML = `❌ Network error: ${error.message}`;
-                resultDiv.className = 'result error';
-            }
-        }
-        
-        // Create visualization
-        async function createVisualization() {
-            const dimensions = document.getElementById('vizDim').value;
-            const radius = document.getElementById('vizRadius').value;
-            const crossSection = document.getElementById('crossSection').value;
-            const vizDiv = document.getElementById('visualization');
-            
-            try {
-                vizDiv.innerHTML = '<div class="loading">Creating visualization...</div>';
-                
-                const requestBody = {
-                    dimensions: parseInt(dimensions),
-                    parameter: parseFloat(radius)
+                    marker: {
+                        size: 8,
+                        color: '#4CAF50'
+                    }
                 };
                 
-                if (dimensions === '4') {
-                    requestBody.cross_section = parseFloat(crossSection);
-                }
-                
-                const response = await fetch(`${API_BASE}/visualize`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
+                const layout = {
+                    title: `${shapeType} ${property} vs Dimension`,
+                    xaxis: { 
+                        title: 'Dimension',
+                        gridcolor: 'rgba(255,255,255,0.2)'
                     },
-                    body: JSON.stringify(requestBody)
-                });
+                    yaxis: { 
+                        title: property.replace('_', ' '),
+                        type: result.scaling_type === 'exponential' ? 'log' : 'linear',
+                        gridcolor: 'rgba(255,255,255,0.2)'
+                    },
+                    paper_bgcolor: 'rgba(0,0,0,0)',
+                    plot_bgcolor: 'rgba(255,255,255,0.05)',
+                    font: { color: 'white' },
+                    height: 400
+                };
                 
-                const data = await response.json();
+                Plotly.newPlot(vizDiv, [trace], layout, {responsive: true});
                 
-                if (response.ok) {
-                    const plotData = JSON.parse(data.plot_json);
-                    Plotly.newPlot('visualization', plotData.data, plotData.layout);
-                } else {
-                    vizDiv.innerHTML = `❌ Error: ${data.detail}`;
-                }
+                // Add scaling analysis below
+                vizDiv.innerHTML += `
+<div style="margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 5px;">
+    <strong>Scaling Analysis:</strong><br>
+    • Type: ${result.scaling_type}<br>
+    • Max at dimension ${result.max_dimension}: ${result.max_value.toExponential(2)}<br>
+    • Min at dimension ${result.min_dimension}: ${result.min_value.toExponential(2)}<br>
+    • Growth factor: ${result.growth_factor.toFixed(4)}x per dimension
+</div>`;
             } catch (error) {
-                vizDiv.innerHTML = `❌ Network error: ${error.message}`;
+                vizDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
             }
         }
-        
-        // Update dimension comparison
-        async function updateDimensionComparison() {
-            const dimension = document.getElementById('dimSlider').value;
+
+        // Update dimension comparison slider
+        function updateDimensionComparison() {
+            const dimension = parseInt(document.getElementById('dimSlider').value);
             document.getElementById('dimValue').textContent = dimension;
             
-            try {
-                const response = await fetch(`${API_BASE}/dimensions/${dimension}`);
-                const data = await response.json();
-                
-                if (response.ok) {
-                    document.getElementById('dimensionInfo').innerHTML = `
-                        <div class="info-card">
-                            <h3>Volume</h3>
-                            <div class="value">${data.unit_sphere.volume.toFixed(6)}</div>
-                        </div>
-                        <div class="info-card">
-                            <h3>Surface Area</h3>
-                            <div class="value">${data.unit_sphere.surface_area.toFixed(6)}</div>
-                        </div>
-                        <div class="info-card">
-                            <h3>Surface/Volume</h3>
-                            <div class="value">${data.insights.surface_to_volume_ratio.toFixed(3)}</div>
-                        </div>
-                        <div class="info-card">
-                            <h3>Formula</h3>
-                            <div class="value">${data.unit_sphere.volume_formula}</div>
-                        </div>
-                    `;
-                }
-            } catch (error) {
-                console.error('Error updating dimension comparison:', error);
-            }
+            // Quick calculations for radius = 1
+            const sphereVolume = calculateSphereVolume(dimension, 1);
+            const cubeVolume = Math.pow(2, dimension); // side = 2 to match diameter
+            
+            document.getElementById('dimensionInfo').innerHTML = `
+                <div class="info-card">
+                    <h3>Hypersphere</h3>
+                    <div class="value">${sphereVolume.toExponential(2)}</div>
+                    <small>Volume (r=1)</small>
+                </div>
+                <div class="info-card">
+                    <h3>Hypercube</h3>
+                    <div class="value">${cubeVolume.toExponential(2)}</div>
+                    <small>Volume (s=2)</small>
+                </div>
+                <div class="info-card">
+                    <h3>Vertices</h3>
+                    <div class="value">${Math.pow(2, dimension)}</div>
+                    <small>Hypercube</small>
+                </div>
+                <div class="info-card">
+                    <h3>Ratio</h3>
+                    <div class="value">${(sphereVolume/cubeVolume).toFixed(4)}</div>
+                    <small>Sphere/Cube</small>
+                </div>
+            `;
         }
-        
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            updateDimensionComparison();
-        });
+
+        // Helper function to calculate sphere volume (simplified)
+        function calculateSphereVolume(n, r) {
+            const pi = Math.PI;
+            let volume = Math.pow(r, n);
+            
+            if (n % 2 === 0) {
+                // Even dimensions: π^(n/2) / (n/2)!
+                const k = n / 2;
+                volume *= Math.pow(pi, k);
+                for (let i = 1; i <= k; i++) {
+                    volume /= i;
+                }
+            } else {
+                // Odd dimensions: 2 * (2π)^((n-1)/2) / n!!
+                const k = (n - 1) / 2;
+                volume *= 2 * Math.pow(2 * pi, k);
+                let factorial = 1;
+                for (let i = n; i > 0; i -= 2) {
+                    factorial *= i;
+                }
+                volume /= factorial;
+            }
+            
+            return volume;
+        }
+
+        // Get friendly dimension names
+        function getDimensionName(dim, type = 'sphere') {
+            const sphereNames = {
+                1: '1D: Line Segment',
+                2: '2D: Circle (Disk)',
+                3: '3D: Sphere (Ball)',
+                4: '4D: Hypersphere (3-sphere)',
+                5: '5D: 4-sphere'
+            };
+            
+            const cubeNames = {
+                1: '1D: Line Segment',
+                2: '2D: Square',
+                3: '3D: Cube',
+                4: '4D: Tesseract (8-cell)',
+                5: '5D: Penteract'
+            };
+            
+            const names = type === 'sphere' ? sphereNames : cubeNames;
+            return names[dim] || `${dim}D: ${dim-1}-${type}`;
+        }
     </script>
 </body>
 </html>
