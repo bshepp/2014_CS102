@@ -308,8 +308,10 @@
     </div>
     
     <script>
-        // API base URL
-        const API_BASE = 'http://localhost:8000/api';
+        // API base URL - Switch based on environment
+        const API_BASE = window.location.hostname === 'localhost' 
+            ? 'http://localhost:8000/api'
+            : 'https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod';
         
         // Show/hide cross-section input for 4D
         document.getElementById('vizDim').addEventListener('change', function() {

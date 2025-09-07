@@ -34,7 +34,7 @@ jobs:
         # Production deployment: Use minimal dependencies for 80% faster deployment
         pip install -r requirements-production.txt
         # Add minimal testing tools for deployment validation only
-        pip install pytest bandit
+        pip install pytest bandit pytest-asyncio
     
     - name: Run core tests (production optimized)
       run: |
