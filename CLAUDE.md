@@ -11,15 +11,16 @@ This file provides comprehensive guidance to Claude Code (claude.ai/code) when w
 
 This Claude instance specializes in the **N-Dimensional Geometry Engine** project - transforming the original 2014 CS102 Java sphere calculator into a sophisticated, production-ready geometry system with Python integration, web APIs, and comprehensive testing.
 
-### **Latest Update: Professional CI/CD Pipeline Optimization (2025-09-06)**
+### **Latest Update: Complete CI/CD & Deployment Resolution (2025-09-07)**
 
-**🚀 Professional Two-Tiered CI/CD Implementation:**
-- **✅ Production Deployment Optimization**: 80% faster deployments (3m42s → 45s) with minimal dependencies
-- **✅ Dependency Analysis & Cleanup**: Removed 120MB+ of unused packages (scipy, matplotlib, pandas, python-multipart)
-- **✅ Professional Caching Strategy**: Added pip caching for both development and production workflows  
-- **✅ Optimized Testing Strategy**: Core tests for production, comprehensive for development
-- **✅ Industry-Standard Workflow**: Develop branch (comprehensive) → Main branch (fast deployment)
-- **✅ Requirements Optimization**: Created `requirements-production.txt` with only 7 essential packages
+**🎯 Critical Production Pipeline & Infrastructure Resolution:**
+- **✅ CI/CD Pipeline Optimization**: Implemented professional two-tiered deployment strategy (develop = comprehensive, main = optimized)
+- **✅ Production Workflow Performance**: Reduced deployment time from 4+ minutes to <1 minute (80% improvement)
+- **✅ Amplify Deployment Fix**: Resolved IAM role conflicts and GitHub integration issues - deployment now successful
+- **✅ Frontend API Integration**: Fixed hardcoded localhost endpoints to use production MCP API Gateway
+- **✅ Custom Domain Setup**: gengine.darkforestlabs.com configured and updating (pending DNS CNAME verification)
+- **✅ Requirements Optimization**: Created requirements-production.txt with only 7 essential packages vs 11+ bloated dependencies
+- **✅ pytest-asyncio Fix**: Resolved ImportError in production workflow testing dependencies
 
 **Previous Achievement: Complete Deployment Architecture Fix (2025-09-06)**
 - **✅ Repository Synchronization**: Fixed branch conflicts, both `main` and `develop` now identical and synchronized
@@ -32,10 +33,10 @@ This Claude instance specializes in the **N-Dimensional Geometry Engine** projec
 **🚀 Infrastructure Status:**
 - **Lambda Functions**: ✅ geometry-oracle-mcp active and responding
 - **API Gateway**: ✅ https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp working
-- **DynamoDB**: ✅ geometry-oracle-mcp-prod-queries table operational with live logging
-- **Amplify Hosting**: ✅ https://gengine.darkforestlabs.com - automatic GitHub deployment working
-- **Route 53 DNS**: ✅ All domains resolving with valid SSL certificates
-- **GitHub Actions**: ✅ All core workflows passing, proper deployment architecture implemented
+- **DynamoDB**: ✅ geometry-oracle-mcp-prod-queries table operational with live logging  
+- **Amplify Hosting**: ✅ Deployment successful - https://gengine.darkforestlabs.com (pending DNS propagation)
+- **GitHub Actions**: ✅ Optimized production workflow with dependency caching and minimal testing
+- **CI/CD Performance**: ✅ 80% faster production deployments through professional optimization
 
 ### **Previous Update: Advanced Ignore File System Implementation (2025-08-24)**
 
