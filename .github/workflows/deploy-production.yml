@@ -40,7 +40,7 @@ jobs:
       run: |
         # Production deployment: Run core tests only for fast validation
         # Full test suite runs on develop branch
-        python -m pytest tests/test_core.py tests/test_api_integration.py -v --tb=short
+        python -m pytest tests/test_core.py tests/test_mcp_integration.py -v --tb=short
     
     - name: Security scan (essential only)  
       run: |
@@ -59,7 +59,7 @@ jobs:
     - name: Performance baseline check
       run: |
         # Simple performance check - geometry calculation
-        python -c "from geometry_engine import HyperSphere; s = HyperSphere(3, 1.0); print(f'Volume: {s.volume()}')"
+        python -c "from geometry_engine import HyperSphere; s = HyperSphere(3, 1.0); print(f'Volume: {s.get_volume()}')"
 
   # Note: Web interface removed - this is now an MCP-only server
 

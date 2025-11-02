@@ -76,7 +76,7 @@ CMD ["python", "-m", "pytest", "tests/", "-v", "--cov=.", "--cov-report=term-mis
 
 # Alternative commands for specific test types:
 # Core tests only:        pytest tests/test_core.py -v
-# API tests only:         pytest tests/test_api_integration.py -v
+# MCP tests only:         pytest tests/test_mcp_integration.py -v
 # Performance tests:      pytest tests/test_performance.py -v --benchmark-only
 # Mathematical tests:     pytest tests/test_mathematics.py -v
 # All tests with coverage: pytest tests/ -v --cov=. --cov-report=html
