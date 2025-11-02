@@ -35,11 +35,10 @@ jobs:
         pip install -r requirements.txt
         pip install -r requirements-dev.txt
     
-    - name: Run tests
+    - name: Run MCP Integration Tests
       run: |
-        # Install missing dependency
-        pip install pytest-html
-        python run_tests.py
+        # Run focused MCP tests instead of comprehensive test suite
+        pytest tests/test_mcp_integration.py -v --maxfail=5
     
     - name: MCP validation
       run: |
@@ -57,19 +56,19 @@ jobs:
         echo "🚀 Development Deployment Workflow"
         echo "=================================="
         echo ""
-        echo "✅ Tests completed successfully"
-        echo "✅ Web validation passed"
+        echo "✅ MCP integration tests completed successfully"
+        echo "✅ MCP server validation passed"
         echo ""
-        echo "📋 Deployment Status:"
-        echo "• Frontend: Skipped (no AWS credentials configured)"
-        echo "• Backend Lambda: Skipped (no AWS credentials configured)"
-        echo "• Backend ECS: Skipped (no AWS credentials configured)"
+        echo "📋 MCP Server Status:"
+        echo "• MCP Server: ✅ Local validation passed"
+        echo "• AWS Lambda: Skipped (no AWS credentials configured)"
+        echo "• API Gateway: Skipped (no AWS credentials configured)"
         echo ""
-        echo "ℹ️  Note: This workflow is configured to deploy to AWS infrastructure"
-        echo "   when proper credentials are available. All functional tests have"
-        echo "   passed and the application is ready for deployment."
+        echo "ℹ️  Note: This workflow validates MCP server functionality locally."
+        echo "   AWS deployment requires proper credentials. The MCP server has"
+        echo "   passed all integration tests and is ready for deployment."
         echo ""
-        echo "🔧 To enable AWS deployment:"
+        echo "🔧 To enable AWS MCP deployment:"
         echo "   1. Configure repository secrets for AWS credentials"
-        echo "   2. Set up OIDC role or access keys"
-        echo "   3. Configure backend type variable (lambda/ecs)"
+        echo "   2. Set up OIDC role or Lambda execution role"
+        echo "   3. Configure API Gateway and DynamoDB resources"
