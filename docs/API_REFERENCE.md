@@ -1,6 +1,6 @@
-# N-Dimensional Geometry Engine API Reference
+# GeometryOracle MCP Tools Reference
 
-**Complete API Documentation for the N-Dimensional Geometry Engine**
+**Complete MCP Tools Documentation for the GeometryOracle MCP Server**
 
 ## Table of Contents
 
@@ -19,74 +19,68 @@
 
 ## Overview
 
-The N-Dimensional Geometry Engine provides a RESTful API for creating, analyzing, and visualizing geometric shapes in N-dimensional space. The API supports mathematical operations, tiling patterns, and natural language queries.
+The GeometryOracle MCP Server provides Model Context Protocol (MCP) tools for creating, analyzing, and processing geometric shapes in N-dimensional space. The tools support mathematical operations, batch processing, and AI-focused analysis capabilities.
 
 ### **Key Features**
 - **N-Dimensional Support**: 1D to 100D+ geometric shapes
 - **Mathematical Accuracy**: Verified to 1e-10 tolerance
 - **Real-time Calculations**: Instant geometric computations
-- **Visualization Data**: 3D/4D plotting coordinates
-- **Natural Language Processing**: Intuitive geometry queries
+- **Batch Processing**: Efficient multi-shape analysis
+- **AI-Focused Tools**: Optimized for Claude Desktop integration
 
 ---
 
 ## 🔐 **Authentication**
 
-Currently, the API does not require authentication. All endpoints are publicly accessible.
+MCP tools communicate through the Model Context Protocol. Authentication is handled by Claude Desktop's MCP client.
 
-**Future Enhancement**: Authentication will be added in v2.0 with API key support.
+**Security**: Tools operate within Claude Desktop's sandbox environment.
 
 ---
 
-## 🌍 **Base URL**
+## 🌍 **MCP Server Connection**
 
 ```
-http://localhost:8000
+python geometry_oracle_mcp_server.py
 ```
 
-**Production URL**: TBD (when deployed)
+**Production Server**: AWS Lambda (auto-scaling, serverless)
 
 ---
 
-##  **Common Parameters**
+## 🛠️ **Available MCP Tools**
 
-### **Dimensional Parameters**
-- `dimensions` (integer): Number of dimensions (1-100+)
-- `radius` (float): Radius value for spherical shapes
-- `side_length` (float): Side length for cubic shapes
+### **Core Geometry Tools**
+- `calculate_shape_properties`: Calculate geometric properties for any N-dimensional shape
+- `compare_shapes`: Compare multiple shapes and analyze relationships
+- `generate_tiling_pattern`: Create tessellation patterns with mathematical analysis
 
-### **Visualization Parameters**
-- `include_visualization` (boolean): Include 3D/4D plot data
-- `resolution` (integer): Visualization resolution (10-1000)
-
-### **Precision Parameters**
-- `precision` (integer): Decimal precision (1-15)
-- `tolerance` (float): Calculation tolerance (default: 1e-10)
+### **AI-Focused Tools**  
+- `batch_process_shapes`: Efficient processing of multiple geometric calculations
+- `analyze_dimensional_scaling`: Study how properties scale across dimensions
+- `geometry_insights`: Generate mathematical insights and pattern analysis
 
 ---
 
-## 📄 **Response Format**
+## 📄 **Tool Response Format**
 
-All API responses follow a consistent JSON structure:
+All MCP tool responses follow a consistent structure:
 
 ```json
 {
-  "success": true,
-  "data": {
-    "shape_type": "hypersphere",
-    "dimensions": 4,
-    "properties": {
-      "volume": 19.7392,
-      "surface_area": 39.4784
-    },
-    "metadata": {
-      "calculation_time": 0.001,
-      "precision": 1e-10
-    }
+  "shape_type": "hypersphere",
+  "dimensions": 4,
+  "properties": {
+    "volume": 19.7392,
+    "surface_area": 39.4784
   },
-  "visualization": {
-    "coordinates": [...],
-    "plot_data": {...}
+  "metadata": {
+    "calculation_time": 0.001,
+    "precision": 1e-10
+  },
+  "analysis": {
+    "mathematical_insights": "...",
+    "scaling_behavior": "..."
   }
 }
 ```
@@ -95,500 +89,315 @@ All API responses follow a consistent JSON structure:
 
 ## ⚠️ **Error Handling**
 
-### **Error Response Format**
-```json
-{
-  "success": false,
-  "error": {
-    "code": "INVALID_DIMENSIONS",
-    "message": "Dimensions must be between 1 and 100",
-    "details": {
-      "provided_value": 150,
-      "valid_range": [1, 100]
-    }
-  }
-}
+### **MCP Tool Errors**
+MCP tools return detailed error information when validation fails:
+
+```
+Error: Invalid dimensions value
+Details: Dimensions must be between 1 and 100 (provided: 150)
+Suggestion: Try using dimensions between 1-50 for optimal performance
 ```
 
-### **HTTP Status Codes**
-- **200 OK**: Successful request
-- **400 Bad Request**: Invalid input parameters
-- **422 Unprocessable Entity**: Validation error
-- **500 Internal Server Error**: Server error
+### **Common Error Types**
+- **Validation Errors**: Invalid parameter values
+- **Calculation Errors**: Mathematical computation failures  
+- **Resource Errors**: Memory or computation limits exceeded
+- **Input Errors**: Malformed or missing required parameters
 
-### **Error Codes**
-- `INVALID_DIMENSIONS`: Invalid dimension count
-- `INVALID_RADIUS`: Invalid radius value
-- `CALCULATION_ERROR`: Mathematical computation failed
-- `VISUALIZATION_ERROR`: Visualization generation failed
-- `QUERY_PARSING_ERROR`: Natural language query parsing failed
+### **Error Recovery**
+All tools provide suggestions for fixing invalid inputs and alternative approaches.
 
 ---
 
-##  **Endpoints**
+## 🛠️ **MCP Tools Documentation**
 
-### **1. Create Hypersphere**
+### **1. calculate_shape_properties**
 
-Create and analyze an N-dimensional hypersphere.
+Calculate geometric properties for any N-dimensional shape.
 
-```http
-POST /api/sphere
+**Usage:**
+```
+Calculate the volume of a 4D sphere with radius 2.5
 ```
 
-**Request Body:**
-```json
-{
-  "radius": 2.5,
-  "dimensions": 4,
-  "include_visualization": true,
-  "precision": 6
-}
+**Parameters:**
+- `shape_type`: "sphere", "cube", "ellipsoid", "simplex", or "pyramid"
+- `dimensions`: Number of dimensions (1-100)
+- `size_parameters`: Radius, side length, or axis lengths
+- `analysis_level`: "basic", "detailed", or "comprehensive"
+
+**Example Response:**
+```
+Shape: 4D Hypersphere
+Dimensions: 4
+Radius: 2.5
+Volume: 19.7392 cubic units
+Surface Area: 39.4784 square units
+Formula: V = π²r⁴/2
+Scaling: Volume grows as r⁴ in 4D space
 ```
 
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "shape_type": "hypersphere",
-    "dimensions": 4,
-    "radius": 2.5,
-    "properties": {
-      "volume": 19.7392,
-      "surface_area": 39.4784,
-      "diameter": 5.0,
-      "circumference": 15.7080
-    },
-    "formulas": {
-      "volume": "π² * r⁴ / 2",
-      "surface_area": "2π² * r³"
-    }
-  }
-}
+### **2. compare_shapes**
+
+Compare multiple shapes and analyze their relationships.
+
+**Usage:**
+```
+Compare a 3D sphere (radius 2) with a 3D cube (side 2)
 ```
 
-### **2. Create Hypercube**
+**Parameters:**
+- `shapes`: List of shape definitions to compare
+- `comparison_metrics`: Properties to compare (volume, surface area, etc.)
+- `include_ratios`: Calculate ratios between shapes
+- `analysis_depth`: Level of mathematical analysis
 
-Generate and analyze an N-dimensional hypercube.
+**Example Response:**
+```
+Shape Comparison Analysis:
 
-```http
-POST /api/cube
+3D Sphere (r=2):
+- Volume: 33.51 cubic units
+- Surface Area: 50.27 square units
+
+3D Cube (s=2):
+- Volume: 8.00 cubic units  
+- Surface Area: 24.00 square units
+
+Comparison:
+- Sphere volume is 4.19× larger
+- Sphere surface area is 2.09× larger
+- Sphere has optimal volume-to-surface ratio
 ```
 
-**Request Body:**
-```json
-{
-  "side_length": 3.0,
-  "dimensions": 5,
-  "include_edges": true,
-  "include_vertices": true
-}
+### **3. generate_tiling_pattern**
+
+Create tessellation patterns with mathematical analysis.
+
+**Usage:**
+```
+Generate a hexagonal tiling pattern for a 10×10 area
 ```
 
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "shape_type": "hypercube",
-    "dimensions": 5,
-    "side_length": 3.0,
-    "properties": {
-      "volume": 243.0,
-      "surface_area": 486.0,
-      "vertices": 32,
-      "edges": 80,
-      "faces": 80
-    },
-    "vertex_coordinates": [...],
-    "edge_list": [...]
-  }
-}
+**Parameters:**
+- `pattern_type`: "regular", "hexagonal", "voronoi", or "custom"
+- `dimensions`: Spatial dimensions for tiling
+- `area_size`: Dimensions of the area to tile
+- `tile_parameters`: Size and spacing parameters
+- `include_analysis`: Mathematical properties analysis
+
+**Example Response:**
+```
+Hexagonal Tiling Pattern:
+
+Pattern: Regular Hexagonal
+Area: 10×10 square units
+Tile Count: 87 hexagons
+Coverage Efficiency: 90.69%
+Coordination Number: 6
+Symmetry Group: p6m
+
+Properties:
+- Optimal 2D space-filling pattern
+- Maximum area-to-perimeter ratio
+- 6-fold rotational symmetry
+- Used in nature (honeycomb, basalt columns)
 ```
 
-### **3. Create Hyperellipsoid**
+### **4. batch_process_shapes**
 
-Create an N-dimensional hyperellipsoid with custom axis lengths.
+Efficient processing of multiple geometric calculations.
 
-```http
-POST /api/ellipsoid
+**Usage:**
+```
+Calculate volumes for spheres with radii 1,2,3,4,5 in dimensions 2,3,4
 ```
 
-**Request Body:**
-```json
-{
-  "axis_lengths": [2.0, 3.0, 1.5],
-  "dimensions": 3,
-  "include_eccentricity": true
-}
+**Parameters:**
+- `shape_configurations`: List of shapes to process
+- `processing_mode`: "parallel", "sequential", or "optimized"
+- `output_format`: "table", "summary", or "detailed"
+- `include_statistics`: Statistical analysis of results
+
+**Example Response:**
+```
+Batch Processing Results:
+
+Processed: 15 shapes (5 radii × 3 dimensions)
+Execution Time: 0.023 seconds
+Success Rate: 100%
+
+Results Summary:
+┌─────────┬──────┬──────┬──────┐
+│ Radius  │  2D  │  3D  │  4D  │
+├─────────┼──────┼──────┼──────┤
+│    1    │ 3.14 │ 4.19 │ 4.93 │
+│    2    │12.57 │33.51 │78.96 │
+│    3    │28.27 │113.1 │445.1 │
+└─────────┴──────┴──────┴──────┘
+
+Trends: Volume scales as r^n where n = dimensions
 ```
 
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "shape_type": "hyperellipsoid",
-    "dimensions": 3,
-    "axis_lengths": [2.0, 3.0, 1.5],
-    "properties": {
-      "volume": 18.8496,
-      "surface_area": 45.2389,
-      "eccentricity": 0.8165,
-      "semi_axes": [2.0, 3.0, 1.5]
-    }
-  }
-}
+### **5. analyze_dimensional_scaling**
+
+Study how geometric properties scale across dimensions.
+
+**Usage:**
+```
+Analyze how sphere volume scales from 1D to 10D with unit radius
 ```
 
-### **4. Create Simplex**
+**Parameters:**
+- `shape_type`: Shape to analyze across dimensions
+- `dimension_range`: Range of dimensions to study
+- `scaling_parameter`: Property to track (volume, surface area, etc.)
+- `analysis_type`: "scaling", "optimization", or "comparison"
 
-Generate an N-dimensional simplex (generalized triangle).
+**Example Response:**
+```
+Dimensional Scaling Analysis: Unit Sphere Volume
 
-```http
-POST /api/simplex
+Dimension Range: 1D to 10D
+Parameter: Volume
+Radius: 1.0 (constant)
+
+Scaling Pattern:
+1D: Length = 2.000
+2D: Area = 3.142 (π)
+3D: Volume = 4.189 (4π/3)
+4D: Hypervolume = 4.935 (π²/2)
+5D: Hypervolume = 5.264
+6D: Hypervolume = 5.168
+7D: Hypervolume = 4.725
+8D: Hypervolume = 4.059
+9D: Hypervolume = 3.299
+10D: Hypervolume = 2.550
+
+Key Insight: Unit sphere volume peaks at 5D!
+Phenomenon: "Curse of dimensionality" - volume concentrates near surface in high dimensions
 ```
 
-**Request Body:**
-```json
-{
-  "dimensions": 4,
-  "edge_length": 2.0,
-  "include_coordinates": true
-}
+### **6. geometry_insights**
+
+Generate mathematical insights and pattern analysis.
+
+**Usage:**
+```
+Provide insights about the relationship between cube and sphere volumes in 3D
 ```
 
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "shape_type": "simplex",
-    "dimensions": 4,
-    "edge_length": 2.0,
-    "properties": {
-      "volume": 0.9428,
-      "surface_area": 6.9282,
-      "vertices": 5,
-      "circumradius": 1.5811,
-      "inradius": 0.3953
-    },
-    "vertex_coordinates": [...]
-  }
-}
+**Parameters:**
+- `topic`: Geometric concept or relationship to analyze
+- `context_shapes`: Relevant shapes for the analysis
+- `insight_type`: "mathematical", "historical", "applications", or "connections"
+- `depth_level`: "overview", "detailed", or "research"
+
+**Example Response:**
+```
+Geometric Insights: Cube vs Sphere Volume Relationship
+
+Mathematical Relationship:
+- Sphere inscribed in unit cube: Volume ratio = π/6 ≈ 0.524
+- Cube inscribed in unit sphere: Volume ratio = 6/π ≈ 1.910
+- Maximum sphere in unit cube fills ~52.4% of space
+
+Historical Context:
+- Archimedes (3rd century BC) first calculated sphere volume
+- Relationship appears in sphere packing problems
+- Connected to isoperimetric inequality
+
+Applications:
+- Sphere packing in crystallography
+- Optimal container design
+- Error analysis in high-dimensional data
+
+Mathematical Beauty:
+"The sphere is nature's solution to maximizing volume while minimizing surface area - the isoperimetric champion of geometry."
 ```
 
-### **5. Create Hyperpyramid**
 
-Create an N-dimensional hyperpyramid.
 
-```http
-POST /api/pyramid
+
+
+---
+
+## 💡 **Usage Examples**
+
+### **Example 1: Basic Shape Calculation**
+```
+User: Calculate the volume of a 3D sphere with radius 5
+Claude: I'll use the calculate_shape_properties tool to find that.
+
+[Tool Result: Volume = 523.6 cubic units, Formula: V = (4/3)πr³]
 ```
 
-**Request Body:**
-```json
-{
-  "base_dimensions": 3,
-  "height": 4.0,
-  "base_side_length": 2.0
-}
+### **Example 2: Dimensional Analysis**
+```
+User: How does sphere volume change as we go from 2D to 6D?
+Claude: I'll analyze dimensional scaling for you.
+
+[Tool Result: Shows volume peaks at 5D, then decreases - demonstrates curse of dimensionality]
 ```
 
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "shape_type": "hyperpyramid",
-    "base_dimensions": 3,
-    "height": 4.0,
-    "base_side_length": 2.0,
-    "properties": {
-      "volume": 2.3094,
-      "surface_area": 15.4641,
-      "slant_height": 4.2426,
-      "lateral_edges": 4.4721
-    }
-  }
-}
+### **Example 3: Complex Comparison**
 ```
+User: Compare packing efficiency of spheres vs cubes in 3D space
+Claude: I'll compare these shapes and analyze their packing properties.
 
-### **6. Generate Tiling Pattern**
-
-Create tiling and tessellation patterns.
-
-```http
-POST /api/tiling
-```
-
-**Request Body:**
-```json
-{
-  "pattern_type": "hexagonal",
-  "dimensions": 2,
-  "size": [10, 10],
-  "tile_size": 1.0,
-  "include_analysis": true
-}
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "pattern_type": "hexagonal",
-    "dimensions": 2,
-    "tile_count": 100,
-    "properties": {
-      "coverage_efficiency": 0.9069,
-      "coordination_number": 6,
-      "symmetry_group": "p6m"
-    },
-    "tiles": [
-      {
-        "id": 1,
-        "center": [0.5, 0.866],
-        "vertices": [...]
-      }
-    ]
-  }
-}
-```
-
-### **7. Natural Language Query**
-
-Process natural language geometry queries.
-
-```http
-POST /api/query
-```
-
-**Request Body:**
-```json
-{
-  "query": "What is the volume of a 4D sphere with radius 3?",
-  "include_explanation": true,
-  "include_visualization": false
-}
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "query": "What is the volume of a 4D sphere with radius 3?",
-    "parsed_intent": {
-      "shape_type": "hypersphere",
-      "dimensions": 4,
-      "radius": 3.0,
-      "requested_property": "volume"
-    },
-    "result": {
-      "volume": 111.2654,
-      "formula": "π² * r⁴ / 2",
-      "calculation_steps": [
-        "π² ≈ 9.8696",
-        "r⁴ = 3⁴ = 81",
-        "Volume = 9.8696 * 81 / 2 = 111.2654"
-      ]
-    },
-    "explanation": "A 4D hypersphere with radius 3 has a volume of approximately 111.27 cubic units."
-  }
-}
-```
-
-### **8. Compare Shapes**
-
-Compare properties of multiple geometric shapes.
-
-```http
-POST /api/compare
-```
-
-**Request Body:**
-```json
-{
-  "shapes": [
-    {
-      "type": "sphere",
-      "radius": 2.0,
-      "dimensions": 3
-    },
-    {
-      "type": "cube",
-      "side_length": 2.0,
-      "dimensions": 3
-    }
-  ],
-  "comparison_properties": ["volume", "surface_area"]
-}
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "comparison": [
-      {
-        "shape": "sphere",
-        "properties": {
-          "volume": 33.5103,
-          "surface_area": 50.2655
-        }
-      },
-      {
-        "shape": "cube",
-        "properties": {
-          "volume": 8.0,
-          "surface_area": 24.0
-        }
-      }
-    ],
-    "analysis": {
-      "volume_ratio": 4.1888,
-      "surface_area_ratio": 2.0944
-    }
-  }
-}
-```
-
-### **9. Health Check**
-
-Check API health and status.
-
-```http
-GET /api/health
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "status": "healthy",
-    "version": "1.0.0",
-    "uptime": "2h 34m 12s",
-    "capabilities": {
-      "max_dimensions": 100,
-      "supported_shapes": ["sphere", "cube", "ellipsoid", "simplex", "pyramid"],
-      "tiling_patterns": ["regular", "hexagonal", "voronoi"]
-    }
-  }
-}
-```
-
-### **10. Get Supported Dimensions**
-
-Retrieve information about supported dimensions for each shape type.
-
-```http
-GET /api/dimensions
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "supported_dimensions": {
-      "sphere": {"min": 1, "max": 100, "optimal": 20},
-      "cube": {"min": 1, "max": 50, "optimal": 10},
-      "ellipsoid": {"min": 2, "max": 50, "optimal": 10},
-      "simplex": {"min": 1, "max": 30, "optimal": 10},
-      "pyramid": {"min": 2, "max": 30, "optimal": 8}
-    },
-    "performance_notes": {
-      "high_dimensions": "Dimensions > 20 may have increased computation time",
-      "memory_usage": "Memory usage scales exponentially with dimensions"
-    }
-  }
-}
+[Tool Result: Sphere packing ~74% (face-centered cubic), cube packing 100%, with trade-offs]
 ```
 
 ---
 
-##  **Examples**
+## 🚦 **Performance and Limits**
 
-### **Example 1: Basic Hypersphere**
+**MCP Tool Performance**:
+- Sub-millisecond calculations for dimensions 1-20
+- Automatic optimization for high-dimensional computations
+- Efficient batch processing for multiple shapes
+
+**Computational Limits**:
+- Maximum dimensions: 100 (with performance warnings >20)
+- Batch processing: Up to 1000 shapes per request
+- Memory usage scales with dimension complexity
+
+---
+
+## 🔧 **Integration and Setup**
+
+### **Claude Desktop Configuration**
+Add to your Claude Desktop MCP settings:
+```json
+{
+  "mcpServers": {
+    "geometry-oracle": {
+      "command": "python",
+      "args": ["/path/to/geometry_oracle_mcp_server.py"],
+      "env": {}
+    }
+  }
+}
+```
+
+### **Local Development**
 ```bash
-curl -X POST "http://localhost:8000/api/sphere" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "radius": 1.0,
-    "dimensions": 3
-  }'
-```
+# Install dependencies
+pip install -r requirements-production.txt
 
-### **Example 2: Complex Tiling Pattern**
-```bash
-curl -X POST "http://localhost:8000/api/tiling" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "pattern_type": "voronoi",
-    "dimensions": 2,
-    "size": [20, 20],
-    "seed_points": 50,
-    "include_analysis": true
-  }'
-```
+# Start MCP server
+python geometry_oracle_mcp_server.py
 
-### **Example 3: Natural Language Query**
-```bash
-curl -X POST "http://localhost:8000/api/query" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "query": "Compare the volume of a 4D cube with side length 2 to a 4D sphere with radius 2",
-    "include_explanation": true
-  }'
+# Connect Claude Desktop to use tools
 ```
 
 ---
 
-## 🚦 **Rate Limiting**
+## 📖 **Documentation and Resources**
 
-**Current Status**: No rate limiting implemented.
-
-**Future Implementation**: 
-- 1000 requests per hour per IP
-- Premium tier: 10,000 requests per hour
-- Burst limit: 100 requests per minute
-
----
-
-##  **SDKs and Libraries**
-
-### **Python SDK** (Planned)
-```python
-from geometry_engine import GeometryAPI
-
-client = GeometryAPI(base_url="http://localhost:8000")
-sphere = client.create_sphere(radius=2.0, dimensions=4)
-print(f"Volume: {sphere.volume}")
-```
-
-### **JavaScript SDK** (Planned)
-```javascript
-import { GeometryAPI } from 'geometry-engine-js';
-
-const client = new GeometryAPI('http://localhost:8000');
-const sphere = await client.createSphere({
-  radius: 2.0,
-  dimensions: 4
-});
-console.log(`Volume: ${sphere.volume}`);
-```
-
----
-
-##  **Interactive Documentation**
-
-- **Swagger UI**: http://localhost:8000/api/docs
-- **ReDoc**: http://localhost:8000/api/redoc
-- **OpenAPI Spec**: http://localhost:8000/api/openapi.json
+- **Tool Testing**: Use Claude Desktop's MCP inspector
+- **Source Code**: geometry_oracle_mcp_server.py
+- **Examples**: Available in Claude Desktop chat interface
 
 ---
 
@@ -600,22 +409,21 @@ console.log(`Volume: ${sphere.volume}`);
 
 ---
 
-## 🔄 **Changelog**
+## 🔄 **Version History**
 
-### **v1.0.0** (Current)
-- Initial API release
-- 10 core endpoints
-- N-dimensional geometry support
-- Natural language processing
-- Tiling pattern generation
+### **v2.0.0** (Current - MCP Architecture)
+- Complete transformation to MCP-only architecture
+- 6 specialized MCP tools for Claude Desktop
+- AI-focused batch processing capabilities
+- Dimensional scaling analysis tools
+- Mathematical insights generation
+- AWS Lambda production deployment
 
-### **v1.1.0** (Planned)
-- Authentication system
-- Rate limiting
-- Enhanced visualization
-- Batch processing
-- Python/JavaScript SDKs
+### **v1.0.0** (Legacy - Web API)
+- Previous REST API implementation
+- Deprecated in favor of MCP architecture
+- Archived for reference
 
 ---
 
-*This API reference is comprehensive and covers all available endpoints and functionality of the N-Dimensional Geometry Engine.*
+*This reference covers all available MCP tools and functionality of the GeometryOracle MCP Server.*

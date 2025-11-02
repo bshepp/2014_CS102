@@ -88,11 +88,10 @@ def check_required_packages():
     print_header("Required Package Check")
 
     packages = [
-        ("fastapi", "FastAPI"),
-        ("uvicorn", "Uvicorn"),
         ("numpy", "NumPy"),
-        ("plotly", "Plotly"),
-        ("pydantic", "Pydantic"),
+        ("mcp", "MCP Framework"),
+        ("httpx", "HTTPX"),
+        ("packaging", "Packaging"),
     ]
 
     all_good = True
@@ -105,7 +104,7 @@ def check_required_packages():
     else:
         print_error("Some packages are missing")
         print("\nTo install missing packages:")
-        print("  pip install fastapi uvicorn numpy plotly pydantic python-multipart")
+        print("  pip install -r requirements-production.txt")
 
     return all_good
 
@@ -115,9 +114,9 @@ def check_project_files():
     print_header("Project Files Check")
 
     required_files = [
-        "web_api.py",
+        "geometry_oracle_mcp_server.py",
         "geometry_engine.py",
-        "requirements.txt",
+        "requirements-production.txt",
         "CLAUDE.md",
         "docs/TROUBLESHOOTING.md",
     ]
@@ -161,48 +160,48 @@ def check_geometry_engine():
         return False
 
 
-def check_web_api():
-    """Check if web API can be imported"""
-    print_header("Web API Check")
+def check_mcp_server():
+    """Check if MCP server can be imported"""
+    print_header("MCP Server Check")
 
     try:
         import os
         import sys
 
         sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-        from web_api import app
+        from geometry_oracle_mcp_server import app
 
-        print_success("Web API imported successfully")
+        print_success("MCP Server imported successfully")
 
-        # Check if app is FastAPI instance
-        if hasattr(app, "openapi"):
-            print_success("FastAPI app structure is valid")
+        # Check if app is MCP instance
+        if hasattr(app, "tools"):
+            print_success("MCP app structure is valid")
         else:
             print_warning("App structure may be invalid")
 
         return True
     except Exception as e:
-        print_error(f"Web API test failed: {e}")
+        print_error(f"MCP Server test failed: {e}")
         return False
 
 
-def test_server_start():
-    """Test if server can start (dry run)"""
-    print_header("Server Start Test")
+def test_mcp_server_start():
+    """Test if MCP server can start (dry run)"""
+    print_header("MCP Server Start Test")
 
     try:
         # Import required modules
-        import web_api  # noqa: F401
+        import geometry_oracle_mcp_server  # noqa: F401
 
-        print_success("Server components ready")
-        print("To start server manually:")
-        print("  python web_api.py")
+        print_success("MCP Server components ready")
+        print("To start MCP server manually:")
+        print("  python geometry_oracle_mcp_server.py")
         print("  or")
-        print("  uvicorn web_api:app --host 0.0.0.0 --port 8000")
+        print("  mcp run geometry_oracle_mcp_server.py")
 
         return True
     except Exception as e:
-        print_error(f"Server start test failed: {e}")
+        print_error(f"MCP Server start test failed: {e}")
         return False
 
 
@@ -216,14 +215,14 @@ def provide_recommendations():
     print("  source venv/bin/activate")
     print("")
     print("  # Install dependencies")
-    print("  pip install fastapi uvicorn numpy plotly pydantic python-multipart")
+    print("  pip install -r requirements-production.txt")
     print("")
-    print("  # Start server")
-    print("  python web_api.py")
+    print("  # Start MCP server")
+    print("  python geometry_oracle_mcp_server.py")
     print("")
-    print("  # Access web interface")
-    print("  # Browser: http://localhost:8000")
-    print("  # API Docs: http://localhost:8000/api/docs")
+    print("  # Connect to Claude Desktop")
+    print("  # Configure MCP server in Claude Desktop settings")
+    print("  # Use geometry calculation tools in Claude")
     print("")
     print("📚 For more help:")
     print("  - Read docs/TROUBLESHOOTING.md")
@@ -236,7 +235,7 @@ def provide_recommendations():
 
 def main():
     """Main verification function"""
-    print("🔍 N-Dimensional Geometry Engine - Installation Verification")
+    print("🔍 GeometryOracle MCP Server - Installation Verification")
     print("=" * 60)
 
     checks = [
@@ -245,8 +244,8 @@ def main():
         check_required_packages(),
         check_project_files(),
         check_geometry_engine(),
-        check_web_api(),
-        test_server_start(),
+        check_mcp_server(),
+        test_mcp_server_start(),
     ]
 
     passed = sum(checks)
@@ -257,7 +256,7 @@ def main():
 
     if passed == total:
         print_success("🎉 All checks passed! Installation is ready.")
-        print("Run 'python web_api.py' to start the server.")
+        print("Run 'python geometry_oracle_mcp_server.py' to start the MCP server.")
     elif passed >= total - 1:
         print_warning("⚠️  Almost ready! Check warnings above.")
     else:
