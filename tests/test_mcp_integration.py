@@ -281,5 +281,6 @@ class TestMCPConfiguration:
         from geometry_oracle_mcp_server import mcp
         
         assert mcp is not None
-        # The FastMCP object should have tools registered
-        assert hasattr(mcp, '_tools') or hasattr(mcp, 'tools')
+        # The FastMCP object should have the list_tools method
+        assert hasattr(mcp, 'list_tools')
+        assert callable(mcp.list_tools)

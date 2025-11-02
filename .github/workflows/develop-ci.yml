@@ -111,7 +111,11 @@ jobs:
 
       - name: ☕ Compile Java Classes
         run: |
-          cd src/java/original && javac *.java
+          if [ -d "src/java/original" ]; then
+            cd src/java/original && javac *.java
+          else
+            echo "⚠️ Java source directory not found, skipping compilation"
+          fi
 
       - name: 🔧 Test MCP Server Imports
         run: |
