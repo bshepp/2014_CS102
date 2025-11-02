@@ -83,9 +83,9 @@ jobs:
         run: |
           pytest tests/ -v --maxfail=10
 
-  # API Integration Tests
-  test-api-develop:
-    name: 🌐 API Tests (Develop)
+  # MCP Integration Tests
+  test-mcp-develop:
+    name: 🌐 MCP Tests (Develop)
     runs-on: ubuntu-latest
     
     steps:
@@ -113,30 +113,20 @@ jobs:
         run: |
           cd src/java/original && javac *.java
 
-      - name: 🚀 Start API Server
+      - name: 🔧 Test MCP Server Imports
         run: |
-          uvicorn web_api:app --host 0.0.0.0 --port 8000 &
-          API_PID=$!
-          
-          # Wait for server to start
-          for i in {1..30}; do
-            if curl -f http://localhost:8000/api/health >/dev/null 2>&1; then
-              echo "✅ API server is ready"
-              break
-            fi
-            echo "⏳ Waiting for API server... ($i/30)"
-            sleep 1
-          done
+          python -c "import geometry_oracle_mcp_server; print('✅ MCP server imports successfully')"
+          python -c "from geometry_engine import HyperSphere; s = HyperSphere(3, 1.0); print(f'✅ Geometry engine working: {s.get_volume():.3f}')"
         
-      - name: 🌐 Test API Endpoints
+      - name: 🌐 Test MCP Integration
         run: |
-          pytest tests/test_api_integration.py -v
+          pytest tests/test_mcp_integration.py -v
 
   # Create PR to main after successful develop tests
   create-main-pr:
     name: 🚀 Create PR to Main
     runs-on: ubuntu-latest
-    needs: [develop-validation, test-python-develop, test-api-develop]
+    needs: [develop-validation, test-python-develop, test-mcp-develop]
     if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
     
     steps:
