@@ -44,48 +44,30 @@ jobs:
     
     - name: Security scan (essential only)  
       run: |
-        # Production deployment: Essential security scan only
-        bandit -r geometry_engine.py web_api.py geometry_oracle_mcp_server.py -f json -o bandit-report.json || true
+        # Production deployment: Essential security scan only (MCP-focused)
+        bandit -r geometry_engine.py geometry_oracle_mcp_server.py -f json -o bandit-report.json || true
         if [ -s bandit-report.json ]; then
           echo "Security issues found in production files:"
           cat bandit-report.json
         fi
     
-    - name: Web validation
+    - name: MCP server validation
       run: |
-        python web_api.py &
-        sleep 10
-        curl -f http://localhost:8000/api/health
+        echo "Testing MCP server functionality..."
+        python -c "import geometry_oracle_mcp_server; print('MCP server imports successfully')"
         
     - name: Performance baseline check
       run: |
-        # Simple performance check - API response time
-        time curl -f http://localhost:8000/api/health
+        # Simple performance check - geometry calculation
+        python -c "from geometry_engine import HyperSphere; s = HyperSphere(3, 1.0); print(f'Volume: {s.volume()}')"
 
-  # Note: Frontend deployment handled automatically by Amplify
-  # The Amplify app is connected to GitHub and should auto-deploy on main branch pushes
-  verify-frontend-available:
-    needs: pre-deployment-checks
-    runs-on: ubuntu-latest
-    steps:
-    - name: Verify frontend is accessible
-      run: |
-        echo "🔍 Verifying frontend accessibility..."
-        echo "Note: Amplify handles deployment automatically via GitHub integration"
-        
-        # Test production URL
-        if curl -f -s -o /dev/null https://gengine.darkforestlabs.com; then
-          echo "✅ Frontend is accessible: https://gengine.darkforestlabs.com"
-        else
-          echo "⚠️ Frontend check failed - Amplify may still be deploying"
-          echo "Check Amplify console: https://console.aws.amazon.com/amplify/"
-        fi
+  # Note: Web interface removed - this is now an MCP-only server
 
-  deploy-backend-lambda-production:
+  deploy-mcp-server-production:
     needs: pre-deployment-checks
     runs-on: ubuntu-latest
     environment: production
-    if: vars.BACKEND_TYPE == 'lambda'
+    # MCP server deployment to AWS Lambda
     steps:
     - uses: actions/checkout@v4
     
@@ -204,21 +186,13 @@ jobs:
         echo "Skipping ECS deployment - use Lambda deployment instead"
 
   post-deployment-verification:
-    needs: [verify-frontend-available, deploy-backend-lambda-production, deploy-backend-ecs-production]
-    if: always() && (needs.verify-frontend-available.result == 'success' && (needs.deploy-backend-lambda-production.result == 'success' || needs.deploy-backend-lambda-production.result == 'skipped') && (needs.deploy-backend-ecs-production.result == 'success' || needs.deploy-backend-ecs-production.result == 'skipped'))
+    needs: [deploy-mcp-server-production, deploy-backend-ecs-production]
+    if: always() && ((needs.deploy-mcp-server-production.result == 'success' || needs.deploy-mcp-server-production.result == 'skipped') && (needs.deploy-backend-ecs-production.result == 'success' || needs.deploy-backend-ecs-production.result == 'skipped'))
     runs-on: ubuntu-latest
     steps:
     - name: Comprehensive production health check
       run: |
-        echo "🔍 Running comprehensive production verification..."
-        
-        # Test frontend
-        echo "Testing frontend: https://gengine.darkforestlabs.com"
-        if curl -f -s -o /dev/null https://gengine.darkforestlabs.com; then
-          echo "✅ Frontend is accessible"
-        else
-          echo "⚠️ Frontend check failed (may be propagating)"
-        fi
+        echo "🔍 Running MCP server production verification..."
         
         # Test MCP server functionality
         echo "Testing MCP server functionality..."
@@ -245,7 +219,7 @@ jobs:
         echo "✅ Deployment completed successfully"
 
   rollback-on-failure:
-    needs: [verify-frontend-available, deploy-backend-lambda-production, deploy-backend-ecs-production, post-deployment-verification]
+    needs: [deploy-mcp-server-production, deploy-backend-ecs-production, post-deployment-verification]
     if: failure()
     runs-on: ubuntu-latest
     environment: production
@@ -259,28 +233,12 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
     
-    - name: Rollback Amplify frontend
+    - name: MCP server rollback notice
       run: |
-        echo "🔄 Rolling back Amplify frontend..."
-        
-        # Get previous successful deployment
-        PREVIOUS_JOB=$(aws amplify list-jobs \
-          --app-id d2vt3koij47dy3 \
-          --branch-name main \
-          --max-results 5 \
-          --query 'jobSummaries[?status==`SUCCEED`][0].jobId' \
-          --output text)
-        
-        if [ "$PREVIOUS_JOB" != "None" ] && [ -n "$PREVIOUS_JOB" ]; then
-          echo "Found previous successful job: $PREVIOUS_JOB"
-          echo "⚠️ Manual rollback required - check Amplify console"
-          echo "Previous successful deployment: $PREVIOUS_JOB"
-        else
-          echo "⚠️ No previous successful deployment found"
-        fi
+        echo "🔄 MCP server deployment failure detected..."
+        echo "Only Lambda-based MCP server rollback is applicable"
     
-    - name: Rollback Lambda (if applicable)
-      if: vars.BACKEND_TYPE == 'lambda'
+    - name: Rollback Lambda MCP server
       run: |
         echo "🔄 Checking Lambda rollback options..."
         
@@ -305,8 +263,8 @@ jobs:
         echo "🚨 Production deployment failed and rollback initiated"
         echo ""
         echo "📋 Manual steps may be required:"
-        echo "  - Check Amplify console for frontend rollback"
-        echo "  - Verify Lambda function versions"
+        echo "  - Verify Lambda MCP server function versions"
         echo "  - Review deployment logs above"
+        echo "  - Test MCP server functionality"
         echo ""
         echo "🔍 Please check logs and fix issues before next deployment"
