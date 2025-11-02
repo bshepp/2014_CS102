@@ -1,8 +1,8 @@
-# 🛠️ Installation Guide
+#  Installation Guide
 
 **Complete setup instructions for the N-Dimensional Geometry Engine**
 
-## 📋 **Table of Contents**
+##  **Table of Contents**
 
 - [Prerequisites](#prerequisites)
 - [Quick Start](#quick-start)
@@ -14,7 +14,7 @@
 
 ---
 
-## 🎯 **Prerequisites**
+##  **Prerequisites**
 
 ### **System Requirements**
 - **Operating System**: Linux, macOS, or Windows 10+
@@ -37,7 +37,7 @@ This project has been recently organized with a clean structure:
 
 ---
 
-## ⚡ **Quick Start**
+##  **Quick Start**
 
 ### **1. Clone and Install**
 ```bash
@@ -75,7 +75,7 @@ python run_tests.py
 
 ---
 
-## 🔧 **Detailed Installation**
+##  **Detailed Installation**
 
 ### **Step 1: Install Python**
 
@@ -264,12 +264,12 @@ docker-compose up
 
 ---
 
-## ✅ **Verification**
+##  **Verification**
 
 ### **1. Basic Functionality Test**
 ```bash
 # Test Python import
-python -c "import geometry_engine; print('✅ Python engine OK')"
+python -c "import geometry_engine; print(' Python engine OK')"
 
 # Test Java compilation
 javac Sphere.java MultiSphere.java
@@ -396,7 +396,7 @@ pip install ujson
 
 ---
 
-## 📞 **Getting Help**
+##  **Getting Help**
 
 ### **Documentation**
 - **API Reference**: [API_REFERENCE.md](API_REFERENCE.md)
@@ -438,7 +438,7 @@ git tag -l
 
 ---
 
-## 🎉 **Next Steps**
+##  **Next Steps**
 
 After successful installation:
 
@@ -450,4 +450,4 @@ After successful installation:
 
 ---
 
-**Installation complete! Your N-Dimensional Geometry Engine is ready to use. 🚀**
+**Installation complete! Your N-Dimensional Geometry Engine is ready to use. **

@@ -1,4 +1,4 @@
-# 🌌 GeometryOracle MCP Server
+# GeometryOracle MCP Server
 
 **Advanced N-Dimensional Geometry MCP Server for AI Agents**  
 *Transform Claude Desktop into an N-dimensional geometry powerhouse*
@@ -7,7 +7,7 @@
 [![AWS MCP Server](https://img.shields.io/badge/AWS%20MCP-Live-brightgreen)](https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp)
 [![Claude Desktop](https://img.shields.io/badge/Claude%20Desktop-Ready-blue)](https://claude.ai/desktop)
 
-## 🚀 Quick Start
+## Quick Start
 
 ### MCP Server Setup
 ```bash
@@ -28,32 +28,32 @@ python geometry_oracle_mcp_server.py
 # Configure Claude Desktop (see MCP_SETUP.md for details)
 ```
 
-### 🤖 Available MCP Tools
+### Available MCP Tools
 
 Once configured with Claude Desktop, you get access to:
 
-**🔮 calculate_hypersphere** - N-dimensional sphere calculations (1D to 100D+)  
-**📦 calculate_hypercube** - N-dimensional cube calculations  
-**⚖️ compare_shapes** - Multi-shape analysis and comparisons  
-**📊 get_usage_statistics** - Real-time server analytics  
+**calculate_hypersphere** - N-dimensional sphere calculations (1D to 100D+)  
+**calculate_hypercube** - N-dimensional cube calculations  
+**compare_shapes** - Multi-shape analysis and comparisons  
+**get_usage_statistics** - Real-time server analytics  
 
 **Natural language examples:**
 - *"What's the volume of a 7-dimensional sphere with radius 2?"*
 - *"Compare a 4D cube and 4D sphere with the same 'size'"*
 - *"Show me usage statistics for the last week"*
 
-### 🚀 Live Production Infrastructure
+### Live Production Infrastructure
 
-- **⚡ MCP Server**: https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp (AWS Lambda)
-- **💾 Analytics**: DynamoDB usage tracking with 34+ real usage entries
-- **💰 Cost**: ~$1.50/month total infrastructure 
-- **📊 Performance**: Serverless auto-scaling, sub-second response times
+- **MCP Server**: https://s6ngc23inj.execute-api.us-east-1.amazonaws.com/prod/mcp (AWS Lambda)
+- **Analytics**: DynamoDB usage tracking with 34+ real usage entries
+- **Cost**: ~$1.50/month total infrastructure 
+- **Performance**: Serverless auto-scaling, sub-second response times
 
-### 🔧 Local Development  
+### Local Development  
 - **Local MCP Server**: `python geometry_oracle_mcp_server.py`
 - **Test Connectivity**: Validates AWS connection on startup
 
-## 🌳 GitFlow Development Pipeline
+## GitFlow Development Pipeline
 
 ### Complete Development Workflow
 ```bash
@@ -85,7 +85,7 @@ git push origin feature/your-feature
 
 See [BRANCH_STRATEGY.md](docs/BRANCH_STRATEGY.md) for complete workflow details.
 
-## 🧮 Features
+## Features
 
 ### Core Capabilities
 - **N-Dimensional Shapes**: Spheres, cubes, ellipsoids, simplices, pyramids (1D to 100D+)
@@ -103,7 +103,7 @@ See [BRANCH_STRATEGY.md](docs/BRANCH_STRATEGY.md) for complete workflow details.
 - **Security**: Comprehensive scanning with bandit and safety
 - **Performance**: Sub-second response times for complex N-dimensional calculations
 
-## 📊 Architecture
+## Architecture
 
 ### MCP Server
 - **Local Bridge**: `geometry_oracle_mcp_server.py` - Claude Desktop to AWS proxy
@@ -125,7 +125,7 @@ See [BRANCH_STRATEGY.md](docs/BRANCH_STRATEGY.md) for complete workflow details.
 - **Quality Gates**: Black, flake8, mypy, bandit security scanning
 - **Performance Testing**: Mathematical accuracy and calculation benchmarks
 
-## 📁 Project Structure
+## Project Structure
 
 The project has been organized for clarity and production readiness:
 
@@ -152,7 +152,7 @@ Non-essential files have been moved to `.archive/` for cleaner organization:
 
 See [.archive/README.md](.archive/README.md) for restoration instructions.
 
-## 📚 Documentation
+## Documentation
 
 ### User Guides
 - [DEPLOYMENT.md](DEPLOYMENT.md) - AWS deployment guide
@@ -165,7 +165,7 @@ See [.archive/README.md](.archive/README.md) for restoration instructions.
 - [API Documentation](http://localhost:8000/api/docs) - Interactive API docs (when running locally)
 - [Cognitive Framework](config/ai_cognitive_framework_geometry_engine.json) - AI collaboration framework
 
-## 🧪 Testing
+## Testing
 
 ```bash
 # Run all tests
@@ -183,38 +183,38 @@ lighthouse http://localhost:8000/demo.html
 pa11y http://localhost:8000/demo.html
 ```
 
-## 🌐 Web Standards Compliance
+## Web Standards Compliance
 
-- ✅ **HTML5 Validation**: W3C compliant markup
-- ✅ **Accessibility**: WCAG 2.0 AA with Pa11y testing
-- ✅ **Performance**: Lighthouse performance budget >80
-- ✅ **Security**: Comprehensive security headers
-- ✅ **SEO**: Proper meta tags and Open Graph support
+- **HTML5 Validation**: W3C compliant markup
+- **Accessibility**: WCAG 2.0 AA with Pa11y testing
+- **Performance**: Lighthouse performance budget >80
+- **Security**: Comprehensive security headers
+- **SEO**: Proper meta tags and Open Graph support
 
-## 🚀 Deployment Environments
+## Deployment Environments
 
 | Environment | Endpoint | Type | Branch | Cost | Status |
 |-------------|----------|------|--------|------|---------|
-| **Production Web** | https://gengine.darkforestlabs.com | Amplify Static | main | $1/mo | 🟢 LIVE |
+| **Production Web** | https://gengine.darkforestlabs.com | Amplify Static | main | $1/mo | LIVE |
 | **Production API (MCP)** | https://mcp.gengine.darkforestlabs.com | Lambda MCP | main | $0.50/mo | target |
-| **Analytics** | DynamoDB | Usage Tracking | main | Free tier | 🟢 **LIVE** |
+| **Analytics** | DynamoDB | Usage Tracking | main | Free tier | LIVE |
 | Local Dev | http://localhost:8000 | Web Interface | any | $0 | Manual |
 
-## 🎯 Key Achievements
+## Key Achievements
 
-- **🎉 MASSIVE COST OPTIMIZATION**: 99.2% infrastructure cost reduction ($231→$1.50/month)
-- **🚀 Production Deployment**: Live AWS Amplify + Lambda architecture
-- **💻 Complete Transformation**: From CS102 educational code to enterprise-grade system
-- **🌐 Modern Web Interface**: Static hosting with MCP JSON-RPC integration
-- **📊 Real-time Analytics**: DynamoDB usage tracking and statistics
-- **🛡️ Comprehensive Backup**: 361MB ECS container backup with restoration capability
-- **🧹 Project Hygiene**: 6 specialized ignore files, 400MB+ artifacts excluded
-- **📈 100% CI/CD Success**: All GitHub Actions pipelines operational
-- **🔢 Mathematical Precision**: All formulas verified to 1e-10 tolerance  
-- **📐 N-Dimensional Support**: Calculations up to 100+ dimensions
-- **🧪 Comprehensive Testing**: 247 tests with systematic coverage across all components
+- **MASSIVE COST OPTIMIZATION**: 99.2% infrastructure cost reduction ($231→$1.50/month)
+- **Production Deployment**: Live AWS Amplify + Lambda architecture
+- **Complete Transformation**: From CS102 educational code to enterprise-grade system
+- **Modern Web Interface**: Static hosting with MCP JSON-RPC integration
+- **Real-time Analytics**: DynamoDB usage tracking and statistics
+- **Comprehensive Backup**: 361MB ECS container backup with restoration capability
+- **Project Hygiene**: 6 specialized ignore files, 400MB+ artifacts excluded
+- **100% CI/CD Success**: All GitHub Actions pipelines operational
+- **Mathematical Precision**: All formulas verified to 1e-10 tolerance  
+- **N-Dimensional Support**: Calculations up to 100+ dimensions
+- **Comprehensive Testing**: 247 tests with systematic coverage across all components
 
-## 🔧 Development
+## Development
 
 ### Prerequisites
 - Python 3.11+
@@ -242,7 +242,7 @@ pre-commit install
 - **Accessibility**: `.pa11yrc`
 - **Performance**: `.lighthouserc.json`
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create feature branch from `develop`
@@ -250,10 +250,10 @@ pre-commit install
 4. Ensure all CI checks pass
 5. Create pull request to `develop`
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-**🌌 Explore infinite dimensions with mathematical precision!**
+**Explore infinite dimensions with mathematical precision!**

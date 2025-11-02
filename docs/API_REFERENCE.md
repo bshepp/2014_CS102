@@ -1,8 +1,8 @@
-# 🔌 N-Dimensional Geometry Engine API Reference
+# N-Dimensional Geometry Engine API Reference
 
 **Complete API Documentation for the N-Dimensional Geometry Engine**
 
-## 📋 **Table of Contents**
+## Table of Contents
 
 - [Overview](#overview)
 - [Authentication](#authentication)
@@ -17,7 +17,7 @@
 
 ---
 
-## 🌐 **Overview**
+## Overview
 
 The N-Dimensional Geometry Engine provides a RESTful API for creating, analyzing, and visualizing geometric shapes in N-dimensional space. The API supports mathematical operations, tiling patterns, and natural language queries.
 
@@ -48,7 +48,7 @@ http://localhost:8000
 
 ---
 
-## 📊 **Common Parameters**
+##  **Common Parameters**
 
 ### **Dimensional Parameters**
 - `dimensions` (integer): Number of dimensions (1-100+)
@@ -125,7 +125,7 @@ All API responses follow a consistent JSON structure:
 
 ---
 
-## 🎯 **Endpoints**
+##  **Endpoints**
 
 ### **1. Create Hypersphere**
 
@@ -511,7 +511,7 @@ GET /api/dimensions
 
 ---
 
-## 💡 **Examples**
+##  **Examples**
 
 ### **Example 1: Basic Hypersphere**
 ```bash
@@ -559,7 +559,7 @@ curl -X POST "http://localhost:8000/api/query" \
 
 ---
 
-## 📚 **SDKs and Libraries**
+##  **SDKs and Libraries**
 
 ### **Python SDK** (Planned)
 ```python
@@ -584,7 +584,7 @@ console.log(`Volume: ${sphere.volume}`);
 
 ---
 
-## 🔧 **Interactive Documentation**
+##  **Interactive Documentation**
 
 - **Swagger UI**: http://localhost:8000/api/docs
 - **ReDoc**: http://localhost:8000/api/redoc
@@ -592,7 +592,7 @@ console.log(`Volume: ${sphere.volume}`);
 
 ---
 
-## 📞 **Support and Feedback**
+## Support and Feedback
 
 - **GitHub Issues**: [Report bugs or request features](https://github.com/bshepp/2014_CS102/issues)
 - **Documentation**: See [TESTING.md](TESTING.md) for testing examples

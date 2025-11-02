@@ -18,8 +18,8 @@ Navigate to: `Settings` → `Branches` → `Add rule`
   - [x] Require branches to be up to date before merging
   - Required status checks:
     - `🔬 Production Validation Suite`
-    - `🧪 Test Results Summary` 
-    - `🌐 Web Standards Validation`
+    - ` Test Results Summary` 
+    - ` Web Standards Validation`
 - [x] Require conversation resolution before merging
 - [x] Require signed commits
 - [x] Include administrators
@@ -37,9 +37,9 @@ Navigate to: `Settings` → `Branches` → `Add rule`
   - [x] Require approvals: 1
 - [x] Require status checks to pass before merging
   - Required status checks:
-    - `🔍 Develop Branch Validation`
-    - `🧪 Python Tests (Develop)`
-    - `🌐 API Tests (Develop)`
+    - ` Develop Branch Validation`
+    - ` Python Tests (Develop)`
+    - ` API Tests (Develop)`
 - [x] Require conversation resolution before merging
 - [x] Include administrators
 - [x] Allow force pushes: OFF

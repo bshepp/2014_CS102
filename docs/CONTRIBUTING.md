@@ -4,7 +4,7 @@
 
 This guide will help you understand how to contribute effectively to the N-Dimensional Geometry Engine project.
 
-## 📋 **Table of Contents**
+##  **Table of Contents**
 
 - [Code of Conduct](#code-of-conduct)
 - [Getting Started](#getting-started)
@@ -17,7 +17,7 @@ This guide will help you understand how to contribute effectively to the N-Dimen
 
 ---
 
-## 🌟 **Code of Conduct**
+##  **Code of Conduct**
 
 We are committed to fostering a welcoming, inclusive, and harassment-free environment for all contributors. By participating in this project, you agree to abide by our code of conduct:
 
@@ -28,7 +28,7 @@ We are committed to fostering a welcoming, inclusive, and harassment-free enviro
 
 ---
 
-## 🚀 **Getting Started**
+##  **Getting Started**
 
 ### **Prerequisites**
 - Python 3.9+
@@ -51,7 +51,7 @@ git checkout -b feature/your-feature-name
 
 ---
 
-## 🔧 **Development Setup**
+##  **Development Setup**
 
 ### **Environment Setup**
 ```bash
@@ -79,7 +79,7 @@ pre-commit install
 
 ---
 
-## 📝 **Contribution Guidelines**
+##  **Contribution Guidelines**
 
 ### **Types of Contributions**
 
@@ -154,7 +154,7 @@ def calculate_hypersphere_volume(radius: float, dimensions: int) -> float:
 
 ---
 
-## 🧪 **Testing Requirements**
+##  **Testing Requirements**
 
 ### **Before Submitting**
 All contributions must pass the following tests:
@@ -203,7 +203,7 @@ class TestHyperSphere:
 
 ---
 
-## 📚 **Documentation Standards**
+##  **Documentation Standards**
 
 ### **Code Documentation**
 - **Docstrings**: Use Google-style docstrings
@@ -327,7 +327,7 @@ Other approaches that were considered
 
 ---
 
-## 🎯 **Development Areas**
+##  **Development Areas**
 
 ### **High Priority**
 - **Mathematical accuracy**: Improve precision of calculations
@@ -349,7 +349,7 @@ Other approaches that were considered
 
 ---
 
-## 🏆 **Recognition**
+##  **Recognition**
 
 ### **Contributors**
 All contributors are recognized in:
@@ -367,7 +367,7 @@ Active contributors may be invited to become maintainers with:
 
 ---
 
-## 📞 **Getting Help**
+##  **Getting Help**
 
 ### **Resources**
 - **Documentation**: [CLAUDE.md](CLAUDE.md), [TESTING.md](TESTING.md), [API_REFERENCE.md](API_REFERENCE.md)
@@ -382,7 +382,7 @@ Active contributors may be invited to become maintainers with:
 
 ---
 
-## 📈 **Project Roadmap**
+##  **Project Roadmap**
 
 ### **Current Focus**
 - **Stability**: Bug fixes and testing improvements
@@ -398,7 +398,7 @@ Active contributors may be invited to become maintainers with:
 
 ---
 
-**Thank you for contributing to the N-Dimensional Geometry Engine! Your contributions help make this project better for everyone. 🚀**
+**Thank you for contributing to the N-Dimensional Geometry Engine! Your contributions help make this project better for everyone. **
 
 ---
 
