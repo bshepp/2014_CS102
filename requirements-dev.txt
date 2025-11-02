@@ -33,17 +33,15 @@ memory-profiler>=0.61.0     # Memory usage profiling
 faker>=22.0.0               # Generate fake test data (2024 version)
 hypothesis>=6.98.0          # Property-based testing
 
-# Web Testing
-httpx>=0.26.0               # HTTP client for testing
-# Starlette is pulled in via FastAPI dependency; avoid pinning
+# MCP Testing
+httpx>=0.26.0               # HTTP client for testing MCP endpoints
 
 # Scientific Computing (for mathematical tests)
 numpy>=2.0.0,<3.0.0        # NumPy 2.x for performance gains (Python 3.11+ compatible)
 scipy>=1.11.0,<2.0.0
 
-# Visualization Testing
-matplotlib>=3.8.0           # For plot generation tests
-plotly>=5.18.0              # For interactive visualizations
+# Visualization Testing (optional)
+matplotlib>=3.8.0           # For plot generation tests (if needed)
 
 # Development Tools
 pre-commit>=3.3.0           # Pre-commit hooks

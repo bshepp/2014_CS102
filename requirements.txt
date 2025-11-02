@@ -1,40 +1,18 @@
-# N-Dimensional Geometry Engine - Dependencies
-# Updated: 2025-08-18
-# Python 3.11+ compatible for CI/CD - using 2024-2025 versions
+# GeometryOracle MCP Server - Core Dependencies
+# Updated: 2025-11-02
+# Python 3.11+ compatible - MCP-focused architecture
 
-# Core scientific computing (NumPy 2.x for performance - Python 3.11+ compatible)
-numpy>=2.0.0,<3.0.0  # NumPy 2.x stable since June 2024, 20-60% performance gains
+# Core scientific computing (NumPy 2.x for performance)
+numpy>=2.0.0,<3.0.0         # High-performance N-dimensional calculations
+packaging>=24.0              # Utility library
 
-# Utility libraries
-packaging>=24.0
+# Mathematical libraries (for geometry engine)
+scipy>=1.14.0,<2.0.0        # Advanced mathematical functions
+matplotlib>=3.9.0,<4.0.0    # Optional: visualization support
 
-# Current runtime dependencies (2024-2025 versions)
-# All packages tested and working as of 2025-08-18
+# MCP (Model Context Protocol) dependencies - PRIMARY FOCUS
+mcp[cli]>=1.13.0,<2.0.0     # Official MCP Python SDK with CLI tools
+httpx>=0.28.0,<1.0.0        # HTTP client for AWS API calls
 
-# Optional dependencies for enhanced functionality
-# (required for web interface) - 2024-2025 stable versions
-scipy>=1.14.0,<2.0.0         # Latest stable with NumPy 2.x compatibility
-matplotlib>=3.9.0,<4.0.0     # 2024 stable release with performance improvements
-plotly>=5.24.0,<6.0.0        # Latest 2024 version with enhanced features
-pandas>=2.2.0,<3.0.0         # 2024 stable with NumPy 2.x support
-
-# Development dependencies
-# (commented out - will be added for CI/CD)
-# pytest>=8.0.0,<9.0.0
-# black>=24.0.0,<25.0.0
-# flake8>=7.0.0,<8.0.0
-# mypy>=1.8.0,<2.0.0
-
-# Web framework dependencies (for web deployment - 2024-2025 versions)
-fastapi>=0.115.0,<0.116.0    # Latest stable with security patches (Nov 2024)
-uvicorn>=0.32.0,<0.33.0      # Latest stable ASGI server (Dec 2024)  
-pydantic>=2.10.0,<3.0.0      # Pydantic 2.x latest stable (Python 3.11+)
-python-multipart>=0.0.12     # Latest for FastAPI file uploads (security fixes)
-
-# MCP (Model Context Protocol) dependencies - Added 2025-08-18  
-mcp[cli]>=1.13.0,<2.0.0      # Official MCP Python SDK with CLI tools
-httpx>=0.28.0,<1.0.0         # HTTP client for AWS API calls with security updates
-
-# Note: Java dependencies managed separately via SDKMAN
-# - OpenJDK 11.0.21 (LTS)
-# - Compatible with original CS102 code
+# Note: Web framework dependencies removed (FastAPI, uvicorn, pydantic, etc.)
+# This is now an MCP-only server - no web interface

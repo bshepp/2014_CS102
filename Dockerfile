@@ -20,12 +20,12 @@ WORKDIR /app
 
 # Copy requirements first for better layer caching
 COPY requirements.txt .
-COPY mcp-server/requirements.txt mcp-requirements.txt
+COPY requirements-dev.txt .
 
-# Install Python dependencies (both main and MCP server)
+# Install Python dependencies (main and dev packages for MCP server)
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt && \
-    pip install --no-cache-dir -r mcp-requirements.txt
+    pip install --no-cache-dir httpx mcp
 
 # Production stage
 FROM python:3.11-slim AS production
@@ -58,15 +58,14 @@ WORKDIR /app
 
 # Copy application code
 COPY geometry_engine.py .
-COPY web_api.py .
+COPY geometry_oracle_mcp_server.py .
 
 # Copy Java source files from their actual locations to both root and source directory
 COPY src/java/original/Sphere.java .
 COPY src/java/original/MultiSphere.java .
 COPY src/java/ src/java/
 
-# Copy MCP server components
-COPY mcp-server/ mcp-server/
+# MCP server is geometry_oracle_mcp_server.py (already copied above)
 
 # Compile Java files in root directory (for JavaBridge)
 RUN javac Sphere.java MultiSphere.java
@@ -80,14 +79,12 @@ RUN chown -R appuser:appuser /app
 # Switch to non-root user
 USER appuser
 
-# Expose ports (web API and potential MCP server)
-EXPOSE $PORT
-EXPOSE 8002
+# Expose port for MCP server
+EXPOSE 8000
 
-# Health check for web API
+# Health check for MCP server (check if process is running)
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:$PORT/api/health || exit 1
+    CMD python -c "import geometry_oracle_mcp_server; print('MCP server available')" || exit 1
 
-# Default: Run the web API
-# Alternative: Run MCP server with ENTRYPOINT ["python", "-m", "mcp-server.src.mcp_server"]
-CMD ["python", "web_api.py"]
+# Default: Run the MCP server
+CMD ["python", "geometry_oracle_mcp_server.py"]

@@ -2,7 +2,7 @@
 
 This guide covers deployment of the N-Dimensional Geometry Engine to production environments, following web standards and best practices.
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 - AWS Account with appropriate permissions
@@ -52,7 +52,7 @@ main (production)
 - Production Web: `https://gengine.darkforestlabs.com` (Amplify) — LIVE
 - MCP/API: `https://mcp.gengine.darkforestlabs.com/mcp` (API Gateway custom domain) — LIVE
 
-## 🌐 AWS Deployment Options
+##  AWS Deployment Options
 
 ### Option 1: Static Web + Lambda API (Frontend domain associated)
 
@@ -126,7 +126,7 @@ aws apigatewayv2 create-api \
 #### Current Production Setup
 Production custom domains are pending DNS/SSL cutover. ECS/ECR workflows exist, but backend deployment target is selected via `BACKEND_TYPE` variable (lambda or ecs). No public endpoints are live at `*.gengine.darkforestlabs.com` yet.
 
-## 📋 Web Standards Compliance
+##  Web Standards Compliance
 
 ### Security Headers
 The API automatically adds these security headers:
@@ -153,7 +153,7 @@ ALLOWED_ORIGINS = [
 - Keyboard navigation supported
 - Screen reader compatible
 
-## 🔧 Configuration Files
+##  Configuration Files
 
 ### amplify.yml
 Controls AWS Amplify build and deployment:
@@ -174,7 +174,7 @@ Accessibility testing configuration:
 - Chrome headless configuration
 - Timeout and retry settings
 
-## 📊 Monitoring & Maintenance
+##  Monitoring & Maintenance
 
 ### Health Checks
 - API Health (local): `GET /api/health` → 200
@@ -246,7 +246,7 @@ aws lambda update-function-code \
    - Enable HSTS headers
    - Use AWS Certificate Manager
 
-## 📈 Scaling Considerations
+##  Scaling Considerations
 
 ### Auto-Scaling Configuration
 ```yaml
@@ -264,7 +264,7 @@ TargetTrackingScalingPolicy:
 - Implement database connection pooling
 - Optimize Lambda cold starts
 
-## 🎯 Production Checklist
+##  Production Checklist
 
 - [ ] Security headers configured
 - [ ] CORS settings updated for production
@@ -277,7 +277,7 @@ TargetTrackingScalingPolicy:
 - [ ] Documentation updated
 - [ ] Team access configured
 
-## 📚 Additional Resources
+##  Additional Resources
 
 - [AWS Amplify Documentation](https://docs.amplify.aws/)
 - [AWS Lambda Best Practices](https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html)
