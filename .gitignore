@@ -327,12 +327,28 @@ mcp-server/deploy/urllib3/
 mcp-server/deploy/*.zip
 mcp-server/deploy/node_modules/
 
-# Session summary documents (temporary status reports)
+# Development session documents (internal development artifacts)
+CLAUDE.md
+*_DEPLOYMENT_ANALYSIS.md
+*_AUDIT_REPORT.md
+*_SETUP.md
+config/ai_cognitive_framework*.json
+
+# Session summary documents (temporary status reports)  
 docs/*_SESSION_SUMMARY.md
 docs/*_STATUS_UPDATE.md
 docs/*_SUCCESS_REPORT.md
+docs/*_STRATEGY.md
+docs/*_FEATURES.md
+docs/*_IMPROVEMENTS.md
+docs/*_SUMMARY.md
 docs/REMEDIATION_PLAN.md
 docs/DNS_CUTOVER_CHECKLIST.md
+
+# Development directories (experimental code)
+mcp-server/
+dashboard-experiments/
+prototype-*/
 
 # Generated documentation and reports
 *.junit.xml
