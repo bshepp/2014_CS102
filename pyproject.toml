@@ -15,8 +15,6 @@ extend-exclude = '''
     | buck-out
     | build
     | dist
-    | mcp-server           # Entire vendored MCP server tree
-    | mcp-server/deploy   # AWS Lambda deployment files (auto-generated)
     | \.archive           # Archived files
 )/
 '''
@@ -30,7 +28,6 @@ use_parentheses = true
 ensure_newline_before_comments = true
 line_length = 88
 extend_skip_glob = [
-    "mcp-server/**",
     ".archive/*"
 ]
 
