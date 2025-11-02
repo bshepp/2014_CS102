@@ -111,6 +111,13 @@ jobs:
           --function-name geometry-oracle-mcp \
           --zip-file fileb://mcp-deployment-prod.zip
         
+        # Wait for function update to complete
+        echo "⏳ Waiting for Lambda function update to complete..."
+        aws lambda wait function-updated \
+          --function-name geometry-oracle-mcp
+        
+        echo "✅ Lambda function update completed"
+        
         # Publish new version
         NEW_VERSION=$(aws lambda publish-version \
           --function-name geometry-oracle-mcp \
