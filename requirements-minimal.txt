@@ -1,0 +1,7 @@
+# N-Dimensional Geometry - Minimal Requirements
+
+# For the library (ndgeometry.py): nothing! Pure Python stdlib.
+
+# For the MCP server (mcp_server.py):
+mcp[cli]>=1.0.0
+
