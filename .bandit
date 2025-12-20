@@ -1,4 +1,0 @@
-[bandit]
-exclude_dirs = venv,.venv,.git,__pycache__,.pytest_cache,.mypy_cache,.benchmarks,.archive,htmlcov,build,dist,tests,mcp-server/deploy
-exclude = */tests/*,*/test_*.py,*/*_test.py,*/conftest.py,demo*.py,verify_installation.py,run_tests.py
-skips = B101,B601,B602
