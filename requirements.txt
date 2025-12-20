@@ -1,18 +1,7 @@
-# GeometryOracle MCP Server - Core Dependencies
-# Updated: 2025-11-02
-# Python 3.11+ compatible - MCP-focused architecture
+# N-Dimensional Geometry - Minimal Requirements
 
-# Core scientific computing (NumPy 2.x for performance)
-numpy>=2.0.0,<3.0.0         # High-performance N-dimensional calculations
-packaging>=24.0              # Utility library
+# For the library (ndgeometry.py): nothing! Pure Python stdlib.
 
-# Mathematical libraries (for geometry engine)
-scipy>=1.14.0,<2.0.0        # Advanced mathematical functions
-matplotlib>=3.9.0,<4.0.0    # Optional: visualization support
+# For the MCP server (mcp_server.py):
+mcp[cli]>=1.0.0
 
-# MCP (Model Context Protocol) dependencies - PRIMARY FOCUS
-mcp[cli]>=1.13.0,<2.0.0     # Official MCP Python SDK with CLI tools
-httpx>=0.28.0,<1.0.0        # HTTP client for AWS API calls
-
-# Note: Web framework dependencies removed (FastAPI, uvicorn, pydantic, etc.)
-# This is now an MCP-only server - no web interface
