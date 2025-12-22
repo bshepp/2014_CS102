@@ -51,7 +51,7 @@ Add to your `claude_desktop_config.json`:
   "mcpServers": {
     "geometry": {
       "command": "python",
-      "args": ["/path/to/mcp_server.py"]
+      "args": ["F:\\utility-projects\\2014_CS102\\mcp_server.py"]
     }
   }
 }
