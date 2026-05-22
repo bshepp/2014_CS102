@@ -42,10 +42,8 @@ class Sphere:
     @property
     def surface_area(self) -> float:
         """(N-1)-dimensional surface area."""
-        if self.dimensions == 1:
-            return 2  # Two endpoints
         return self.dimensions * self.volume / self.radius
-    
+
     @property
     def diameter(self) -> float:
         return 2 * self.radius
@@ -76,8 +74,6 @@ class Cube:
     @property
     def surface_area(self) -> float:
         """(N-1)-dimensional surface area."""
-        if self.dimensions == 1:
-            return 2  # Two endpoints
         return 2 * self.dimensions * self.side ** (self.dimensions - 1)
     
     @property

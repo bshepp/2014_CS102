@@ -10,7 +10,7 @@ Setup for Claude Desktop (add to claude_desktop_config.json):
   "mcpServers": {
     "geometry": {
       "command": "python",
-      "args": ["F:\\utility-projects\\2014_CS102\\mcp_server.py"]
+      "args": ["/path/to/2014_CS102/mcp_server.py"]
     }
   }
 }
@@ -29,9 +29,9 @@ mcp = FastMCP("GeometryOracle")
 def sphere(dimensions: int, radius: float) -> Dict[str, Any]:
     """
     Calculate n-dimensional sphere properties.
-    
+
     Args:
-        dimensions: Number of dimensions (1-100)
+        dimensions: Number of dimensions
         radius: Radius of the sphere
     
     Returns:
@@ -52,9 +52,9 @@ def sphere(dimensions: int, radius: float) -> Dict[str, Any]:
 def cube(dimensions: int, side: float) -> Dict[str, Any]:
     """
     Calculate n-dimensional hypercube properties.
-    
+
     Args:
-        dimensions: Number of dimensions (1-100)
+        dimensions: Number of dimensions
         side: Side length
     
     Returns:
@@ -98,9 +98,9 @@ def ellipsoid(semi_axes: List[float]) -> Dict[str, Any]:
 def simplex(dimensions: int, side: float) -> Dict[str, Any]:
     """
     Calculate n-dimensional regular simplex properties.
-    
+
     Args:
-        dimensions: Number of dimensions (1-100)
+        dimensions: Number of dimensions
         side: Edge length
     
     Returns:
@@ -154,8 +154,8 @@ def compare(
     return {
         "shape1": {"name": s1.name, "volume": s1.volume, "surface_area": s1.surface_area},
         "shape2": {"name": s2.name, "volume": s2.volume, "surface_area": s2.surface_area},
-        "volume_ratio": s1.volume / s2.volume if s2.volume > 0 else None,
-        "surface_ratio": s1.surface_area / s2.surface_area if s2.surface_area > 0 else None,
+        "volume_ratio": s1.volume / s2.volume,
+        "surface_ratio": s1.surface_area / s2.surface_area,
     }
 
 
@@ -175,22 +175,25 @@ def volume_by_dimension(
         Volumes for dimensions 1 through max_dim
     """
     max_dim = min(max_dim or 10, 50)  # Cap at 50
-    
+    stype = shape_type.lower()
+    if stype not in ("sphere", "cube"):
+        raise ValueError(f"shape_type must be 'sphere' or 'cube', got: {shape_type}")
+
     volumes = {}
     for d in range(1, max_dim + 1):
-        if shape_type.lower() == "sphere":
+        if stype == "sphere":
             volumes[d] = Sphere(d, size).volume
         else:
             volumes[d] = Cube(d, size).volume
-    
+
     peak_dim = max(volumes, key=volumes.get)
-    
+
     return {
         "shape_type": shape_type,
         "size": size,
         "volumes_by_dimension": volumes,
-        "peak_dimension": peak_dim if shape_type.lower() == "sphere" else None,
-        "note": "For unit spheres, volume peaks around 5D then decreases!" if shape_type.lower() == "sphere" else None,
+        "peak_dimension": peak_dim if stype == "sphere" else None,
+        "note": "For unit spheres, volume peaks around 5D then decreases!" if stype == "sphere" else None,
     }
 
 

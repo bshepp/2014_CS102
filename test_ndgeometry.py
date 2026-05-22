@@ -79,6 +79,14 @@ class TestCube:
         assert Cube(3, 1).name == "cube"
         assert Cube(4, 1).name == "tesseract"
 
+    def test_invalid_inputs(self):
+        with pytest.raises(ValueError):
+            Cube(0, 1.0)
+        with pytest.raises(ValueError):
+            Cube(3, 0.0)
+        with pytest.raises(ValueError):
+            Cube(3, -1.0)
+
 
 class TestEllipsoid:
     def test_3d_ellipsoid_volume(self):
@@ -98,6 +106,14 @@ class TestEllipsoid:
         e = Ellipsoid((2.0, 2.0, 2.0))
         s = Sphere(3, 2.0)
         assert abs(e.volume - s.volume) < 1e-10
+
+    def test_invalid_inputs(self):
+        with pytest.raises(ValueError):
+            Ellipsoid(())
+        with pytest.raises(ValueError):
+            Ellipsoid((1.0, 0.0, 2.0))
+        with pytest.raises(ValueError):
+            Ellipsoid((1.0, -1.0))
 
 
 class TestSimplex:
@@ -125,6 +141,14 @@ class TestSimplex:
     def test_names(self):
         assert Simplex(2, 1).name == "triangle"
         assert Simplex(3, 1).name == "tetrahedron"
+
+    def test_invalid_inputs(self):
+        with pytest.raises(ValueError):
+            Simplex(0, 1.0)
+        with pytest.raises(ValueError):
+            Simplex(3, 0.0)
+        with pytest.raises(ValueError):
+            Simplex(3, -1.0)
 
 
 class TestHighDimensions:

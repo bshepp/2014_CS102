@@ -4,7 +4,7 @@ A tiny Python library for n-dimensional shape calculations.
 
 ## Origin Story
 
-This started as an 84-line Java assignment in CS102 (Fall 2014) to calculate sphere volume and surface area. Eleven years and much over-engineering later, we've returned to simplicity: ~150 lines of Python that actually do something useful.
+This started as an 84-line Java assignment in CS102 (Fall 2014) to calculate sphere volume and surface area. Eleven years and much over-engineering later, we've returned to simplicity: ~180 lines of Python that actually do something useful.
 
 The original Java is preserved in `src/java/original/` for historical purposes.
 
@@ -51,7 +51,7 @@ Add to your `claude_desktop_config.json`:
   "mcpServers": {
     "geometry": {
       "command": "python",
-      "args": ["F:\\utility-projects\\2014_CS102\\mcp_server.py"]
+      "args": ["/path/to/2014_CS102/mcp_server.py"]
     }
   }
 }
@@ -95,8 +95,8 @@ python -m pytest test_ndgeometry.py -v
 ## Files
 
 ```
-ndgeometry.py          # The library (~150 lines)
-mcp_server.py          # MCP server for Claude Desktop (~160 lines)
+ndgeometry.py          # The library (~180 lines)
+mcp_server.py          # MCP server for Claude Desktop (~200 lines)
 src/java/original/     # The original 2014 CS102 Java code
   Sphere.java
   MultiSphere.java
@@ -114,7 +114,7 @@ The previous version had:
 - Incomplete Voronoi diagrams
 - Documentation for features that didn't exist
 
-Now we have ~300 lines total that actually work.
+Now we have under 400 lines total that actually work.
 
 ## License
 
