@@ -8,6 +8,8 @@ This started as an 84-line Java assignment in CS102 (Fall 2014) to calculate sph
 
 The original Java is preserved in `src/java/original/` for historical purposes.
 
+The `master` branch is the repository as it originally was — my first repo. It's kept purely for nostalgia; all development happens on `main`.
+
 ## Installation
 
 ```bash

@@ -136,9 +136,11 @@ def compare(
         shape2_type: "sphere" or "cube"
         shape2_dim: Dimensions for shape 2
         shape2_size: Radius (sphere) or side (cube) for shape 2
-    
+
     Returns:
-        Comparison of volumes and surface areas
+        Comparison of volumes and surface areas. Note: ratios between shapes
+        of different dimensionality compare an n-volume to an m-volume, which
+        is not dimensionally meaningful — a note is included when this happens.
     """
     def make_shape(stype: str, dim: int, size: float):
         if stype.lower() == "sphere":
@@ -151,12 +153,18 @@ def compare(
     s1 = make_shape(shape1_type, shape1_dim, shape1_size)
     s2 = make_shape(shape2_type, shape2_dim, shape2_size)
     
-    return {
+    result = {
         "shape1": {"name": s1.name, "volume": s1.volume, "surface_area": s1.surface_area},
         "shape2": {"name": s2.name, "volume": s2.volume, "surface_area": s2.surface_area},
         "volume_ratio": s1.volume / s2.volume,
         "surface_ratio": s1.surface_area / s2.surface_area,
     }
+    if shape1_dim != shape2_dim:
+        result["note"] = (
+            f"Shapes have different dimensionality ({shape1_dim}D vs {shape2_dim}D); "
+            "the ratios compare volumes of different dimension and are not directly meaningful."
+        )
+    return result
 
 
 @mcp.tool()
@@ -169,8 +177,8 @@ def volume_by_dimension(
     Args:
         shape_type: "sphere" or "cube"
         size: Radius (sphere) or side (cube)
-        max_dim: Maximum dimension to calculate (default 10)
-    
+        max_dim: Maximum dimension to calculate (default 10, capped at 50)
+
     Returns:
         Volumes for dimensions 1 through max_dim
     """

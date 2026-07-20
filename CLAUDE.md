@@ -30,6 +30,8 @@ Two files do all the real work:
 
 `src/java/original/` holds the 2014 CS102 Java assignment (`Sphere.java`, `MultiSphere.java`) preserved as historical artifact — **do not modify or build from it.**
 
+The `master` branch (local and on origin) is the repository's original pre-rewrite history — the author's first repo, kept purely for nostalgia. **Never delete, rebase, or merge it.** All development happens on `main`.
+
 ## Design philosophy — read before adding features
 
 This repo was deliberately rewritten from a ~2,300-line over-engineered version (AWS Lambda, DynamoDB, regex NLP parser, runtime Java compilation, incomplete Voronoi code) down to under 400 lines that work. The README's "What We Threw Away" section is load-bearing context.
