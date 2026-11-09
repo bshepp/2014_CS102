@@ -35,7 +35,7 @@ The `master` branch (local and on origin) is the repository's original pre-rewri
 
 ## Design philosophy — read before adding features
 
-This repo was deliberately rewritten from a ~2,300-line over-engineered version (AWS Lambda, DynamoDB, regex NLP parser, runtime Java compilation, incomplete Voronoi code) down to under 400 lines that work. The README's "What We Threw Away" section is load-bearing context.
+This repo was deliberately rewritten from a ~2,300-line over-engineered version (AWS Lambda, DynamoDB, regex NLP parser, runtime Java compilation, incomplete Voronoi code) down to under 400 lines that work (now ~650 lines of library and server after the any-dimension and arbitrary-precision work). The README's "What We Threw Away" section is load-bearing context.
 
 Implications for changes:
 - Prefer extending an existing dataclass over introducing new abstractions, infrastructure, or layers.
