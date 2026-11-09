@@ -22,10 +22,10 @@ jobs:
           python-version: ${{ matrix.python-version }}
       
       - name: Install test dependencies
-        run: pip install pytest
+        run: pip install pytest "mcp[cli]"
       
       - name: Run tests
-        run: python -m pytest test_ndgeometry.py -v
+        run: python -m pytest -v
       
       - name: Run demo
         run: python ndgeometry.py

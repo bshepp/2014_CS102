@@ -2,7 +2,7 @@
 
 # For the library (ndgeometry.py): nothing! Pure Python stdlib.
 
-# For the MCP server (mcp_server.py):
+# For the MCP server (mcp_server.py) and test_mcp_server.py; 1.x and 2.x both work:
 mcp[cli]>=1.0.0
 
 # For running tests:
